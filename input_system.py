@@ -3,7 +3,7 @@ class Uma:
         self.name = ""
         self.star = 0
 
-    def perkenalan(self):
+    def isi_identitas(self): #masukkan self(global) ke parameter(local) agar fungsi mengetahui self itu apa 
         while True:
             self.name = input(f"your Uma's Name:").strip().title()
 
@@ -42,17 +42,76 @@ class Stats:
                     hasil_input = int(input(f"Insert the {s} of Your Uma:" ))
                 except ValueError:
                     print("Stats must be integers and between 0-1200")
-                    continue
+                    continue #continue digunakan untuk mengulang kembali ke awal loop saat terjadi error, sehingga tidak perlu menggunakan else untuk memisahkan antara input yang benar dan salah
                 if 0<=hasil_input<=1200:
-                    setattr(self, s, hasil_input)
+                    setattr(self, s, hasil_input) #setattr(object, attribute, value) diusahakan ditaruh di bawah saat input sudah benar, agar tidak menyimpan nilai yang salah duluan ke dalam class Stats
                     break
                 else:
                     print("Stats must be between 0-1200")
                
+class Distance:
+    def __init__(self):
+        self.sprint = "E"
+        self.mile = "E"
+        self.medium = "E"
+        self.long = "E"
+
+    def isi_distance(self):
+        list_distance = ["sprint","mile","medium","long"]
+        for t in list_distance:
+            while True:
+                input_distance = input(f"Insert the {t} Grade Distance of Your Uma (S/A/B/C/D/E):").strip().upper()
+                if input_distance in ["S","A","B","C","D","E"]:
+                    setattr(self, t, input_distance)
+                    break
+                else:
+                    print("Distance must be S/A/B/C/D/E") 
+
+class Track:
+    def __init__(self):
+        self.dirt = "E" 
+        self.turf = "E"
+
+    def isi_track(self):
+        list_track = ["dirt", "turf"]
+        for u in list_track:
+            while True:
+                input_track = input(f"Insert the {u} Grade Track of Your Uma (S/A/B/C/D/E):").strip().upper()
+                if input_track in ["S","A","B","C","D","E"]:
+                    setattr(self, u, input_track)
+                    break
+                else:
+                    print("Track must be S/A/B/C/D/E")
+
+class Style:
+    def __init__(self):
+        self.front_runner = "E"
+        self.pace_chaser = "E"
+        self.late_surger = "E" 
+        self.end_closer = "E"
+
+    def isi_style(self):
+        list_style = ["front runner", "pace chaser", "late surger", "end closer"]
+        for v in list_style:
+            while True:
+                input_style = input(f"Insert the {v} grade Style of Your Uma (S/A/B/C/D/E):").strip().upper()
+                if input_style in ["S","A","B","C","D","E"]:
+                    setattr(self, v, input_style)
+                    break
+                else:
+                    print("Track must be S/A/B/C/D/E")
+
 my_uma = Uma()
 my_stats = Stats()
+my_distance = Distance()
+my_track = Track()
+my_style = Style()
 
-my_uma.perkenalan()
+my_uma.isi_identitas()
+my_track.isi_track()
+my_distance.isi_distance()
+my_style.isi_style()
 my_stats.isi_stats()
 
-print(my_stats.speed)
+#buat data skills
+#buat sistem input skills
