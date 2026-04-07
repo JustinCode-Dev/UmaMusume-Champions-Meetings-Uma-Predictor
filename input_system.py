@@ -16,7 +16,7 @@ class Uma:
             try:
                 input_star = int(input(f"Limit Break star:"))
 
-                if 1<=input_star<=4:
+                if 0<=input_star<=4:
                     self.star = input_star
                     break
                 else:
@@ -36,14 +36,23 @@ class Stats:
 
     def isi_stats(self):
         list_stats = ["speed","stamina","power","guts","wit"]
-
         for s in list_stats:
-            hasil_input = int(input(f"Insert the {s} of Your Uma:" ))
-            setattr(self, s, hasil_input)
-
+            while True:
+                try:
+                    hasil_input = int(input(f"Insert the {s} of Your Uma:" ))
+                except ValueError:
+                    print("Stats must be integers and between 0-1200")
+                    continue
+                if 0<=hasil_input<=1200:
+                    setattr(self, s, hasil_input)
+                    break
+                else:
+                    print("Stats must be between 0-1200")
+               
 my_uma = Uma()
 my_stats = Stats()
 
 my_uma.perkenalan()
 my_stats.isi_stats()
 
+print(my_stats.speed)
