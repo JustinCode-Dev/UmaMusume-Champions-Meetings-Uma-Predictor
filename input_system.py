@@ -91,7 +91,7 @@ class Style:
         self.end_closer = "E"
 
     def isi_style(self):
-        list_style = ["front runner", "pace chaser", "late surger", "end closer"]
+        list_style = ["front_runner", "pace_chaser", "late_surger", "end_closer"]
         for v in list_style:
             while True:
                 input_style = input(f"Insert the {v} grade Style of Your Uma (S/A/B/C/D/E):").strip().upper()
@@ -101,17 +101,26 @@ class Style:
                 else:
                     print("Track must be S/A/B/C/D/E")
 
-my_uma = Uma()
-my_stats = Stats()
-my_distance = Distance()
-my_track = Track()
-my_style = Style()
+class UmaMusume(Uma):
+    def __init__(self):
+        super().__init__()
+        self.distance = Distance()
+        self.track = Track()
+        self.style = Style()
+        self.stats = Stats()
 
-my_uma.isi_identitas()
-my_track.isi_track()
-my_distance.isi_distance()
-my_style.isi_style()
-my_stats.isi_stats()
+    def setup(self):
+        self.isi_identitas()
+        self.distance.isi_distance()
+        self.track.isi_track()
+        self.style.isi_style()
+        self.stats.isi_stats()
+
+            
+my_uma = UmaMusume()
+my_uma.setup()
+
+
 
 #buat data skills
 #buat sistem input skills
