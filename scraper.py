@@ -27,3 +27,5 @@ with open("skills.json", "w") as f:
     json.dump(skills, f, indent=2)
 
 print("Done!")
+
+# Data sourced from game8 (https://game8.co/games/Umamusume-Pretty-Derby/archives/535927)
