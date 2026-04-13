@@ -11,16 +11,22 @@ soup = BeautifulSoup(response.text, "html.parser")
 tables = soup.find_all("table")
 print(len(tables))
 
+for i, table in enumerate(tables):
+    print(f"=== Tabel {i} ===")
+    print(table.get_text()[:100])
+    print()
+
 skills = []
 
-for table in [tables[3], tables[4], tables[5]]:
+for table, rarity in zip ([tables[3], tables[4], tables[5]], ["special skill", "rare skill", "normal skill"]):
     rows = table.find_all("tr")
-for row in rows:
-    cols = row.find_all("td")
-    if len(cols) == 2:
-        nama = cols[0].get_text(strip=True)
-        effect = cols[1].get_text(strip=True)
-        skills.append({"name": nama, "effect": effect})
+
+    for row in rows:
+        cols = row.find_all("td")
+        if len(cols) == 2:
+            nama = cols[0].get_text(strip=True)
+            effect = cols[1].get_text(strip=True)
+            skills.append({"name": nama, "effect": effect, "rarity": rarity})
 
 with open("skills.json", "w") as f:
     print(len(skills))
