@@ -11,11 +11,6 @@ soup = BeautifulSoup(response.text, "html.parser")
 tables = soup.find_all("table")
 print(len(tables))
 
-for i, table in enumerate(tables):
-    print(f"=== Tabel {i} ===")
-    print(table.get_text()[:100])
-    print()
-
 skills = []
 
 for table, rarity in zip ([tables[3], tables[4], tables[5]], ["special skill", "rare skill", "normal skill"]):

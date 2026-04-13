@@ -1,3 +1,5 @@
+import json 
+
 class Uma:
     def __init__(self):
         self.name = ""
@@ -100,6 +102,14 @@ class Style:
                     break
                 else:
                     print("Track must be S/A/B/C/D/E")
+
+class Skills():
+    def __init__(self):
+        with open("skills.json", "r") as f:
+            self.skills = json.load(f)
+
+    def isi_skills(self):
+        input_skills = input("Insert the Skills that your uma have:").strip() # limiter, search filter
 
 class UmaMusume(Uma):
     def __init__(self):
