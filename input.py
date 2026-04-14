@@ -5,7 +5,7 @@ class Uma:
         self.name = ""
         self.star = 0
 
-    def isi_identitas(self): #masukkan self(global) ke parameter(local) agar fungsi mengetahui self itu apa 
+    def isi_identitas(self):
         while True:
             self.name = input(f"your Uma's Name:").strip().title()
 
@@ -107,9 +107,49 @@ class Skills():
     def __init__(self):
         with open("skills.json", "r") as f:
             self.skills = json.load(f)
+        self.selected_skills = []
 
     def isi_skills(self):
-        input_skills = input("Insert the Skills that your uma have:").strip() # limiter, search filter
+        while True:
+            keyword = input("Insert the Skills that your uma have (write done if you're done): ").strip() .lower()
+
+            if not keyword:
+                print("don't leave the input empty!")
+                continue
+
+            if keyword == "done":
+                break
+
+            result = [x for x in self.skills if keyword in x["name"].lower()]
+            if len(result) == 0:
+                print("Enter a valid skill name")
+                continue
+
+            for i, skill in enumerate(result):
+                print(i, skill["name"])
+
+            try:
+                number = int(input("Insert your option:").strip())
+            except ValueError:
+                print("Option must be integers")
+                continue
+
+            if number >= len(result) or number < 0:
+                print("Insert the number based on the options")
+                continue
+
+            selected = result[number]
+            if selected in self.selected_skills:
+                print(f"You already added {selected['name']}!")
+            else:
+                self.selected_skills.append(result[number])
+        
+        if self.selected_skills:
+            print("\nYour Uma has these skills:") 
+            for a in self.selected_skills:
+                print(f"- {a['name']}") 
+        else:
+            print("\nYour Uma has no skills yet.")
 
 class UmaMusume(Uma):
     def __init__(self):
@@ -118,6 +158,7 @@ class UmaMusume(Uma):
         self.track = Track()
         self.style = Style()
         self.stats = Stats()
+        self.skills = Skills()
 
     def setup(self):
         self.isi_identitas()
@@ -125,11 +166,11 @@ class UmaMusume(Uma):
         self.track.isi_track()
         self.style.isi_style()
         self.stats.isi_stats()
+        self.skills.isi_skills()
 
             
 my_uma = UmaMusume()
 my_uma.setup()
-
 
 
 #buat data skills
