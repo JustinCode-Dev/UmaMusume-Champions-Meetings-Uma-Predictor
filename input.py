@@ -173,5 +173,6 @@ my_uma = UmaMusume()
 my_uma.setup()
 
 
-#buat data skills
-#buat sistem input skills
+# pas ngerun dan opsi milih skills dia kalo salah kan bakal balik keatas, contoh, gw ketik 1, itu salah ketik
+# trus reflek ngetik nama skillsnya padahal lagi disuruh milih, dan bakal dikasih warning, trus baru balik awal
+# need to be solved!
