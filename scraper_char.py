@@ -31,3 +31,5 @@ with open("character.json", "w") as f:
     json.dump(character, f, indent=2)
 
 print("Done!")
+
+# Data sourced from game8 ("https://game8.co/games/Umamusume-Pretty-Derby/archives/535926")
