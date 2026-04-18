@@ -2,31 +2,87 @@ import json
 
 class Uma:
     def __init__(self):
+        with open("character.json", "r") as b:
+            self.char_data = json.load(b)
+
         self.name = ""
         self.star = 0
+        self.unique_skill = ""
+        self.level_skill = 0
 
     def isi_identitas(self):
         while True:
-            self.name = input(f"your Uma's Name:").strip().title()
+            keyword = input(f"your Uma's Name:").strip().lower()
 
-            if self.name.replace(" ", "").isalpha():    
-                break
-            else:
-                print("Name must be a string and not empty")
+            if not keyword:
+                print("don't leave the input empty!")
+                continue 
+            
+            result = [x for x in self.char_data if keyword in x["name"].lower()]
+            if len(result) == 0:
+                print("Enter a valid character name")
+                continue
+
+            for i, name in enumerate(result):
+                print(i, name["name"])
+
+            try:
+                number = int(input("Insert your option:").strip())
+            except ValueError:
+                print("Option must be integers")
+                continue
+
+            if number >= len(result) or number < 0:
+                print("Insert the number based on the options")
+                continue
+
+            selected = result[number]
+            self.name = selected["name"]
+            
+            break
 
         while True:
             try:
-                input_star = int(input(f"Limit Break star:"))
-
-                if 0<=input_star<=4:
-                    self.star = input_star
-                    break
-                else:
-                    print("Star must be between 1-4") 
+                star = int(input("Insert the Limit Break/star:"))
             except ValueError:
-                print("Star must be an integer and between 1-4")
-    
-        print(f"Halo {self.name}, Your Current Star {self.star}!")
+                print("Limit break/star must be integers")
+                continue
+            if star >= int(selected["base_star"]) and star <= 5:
+                self.star = star
+                break
+            else:
+                print("Limit break cannot be lower than the base star")
+                continue
+
+        if int(selected["base_star"]) < 3 and self.star >= 3:
+            self.unique_skill = selected["unique_skill_evolved"]
+        else:
+            self.unique_skill = selected["unique_skill"]
+
+        if int(selected["base_star"]) < 3 and star < 3:
+            max_level = star + 3
+            min_level = star
+        elif int(selected["base_star"]) < 3 and star >= 3:
+            max_level = (star - 2) + 3
+            min_level = star - 2
+        else:  
+            max_level = (star - 2) + 3
+            min_level = star - 2
+            
+        while True:
+            try:
+                level_skill = int(input("insert the level of the unique skill:"))
+            except ValueError:
+                print("level must be integers")
+                continue
+            if min_level <= level_skill <= max_level:
+                self.level_skill = level_skill
+                break
+            else:
+                print("Insert valid level")
+                continue
+            
+        print(f"\nHalo {self.name}, Your Current Star {self.star}!\n")
 
 class Stats:
     def __init__(self):
@@ -43,13 +99,14 @@ class Stats:
                 try:
                     hasil_input = int(input(f"Insert the {s} of Your Uma:" ))
                 except ValueError:
-                    print("Stats must be integers and between 0-1200")
-                    continue #continue digunakan untuk mengulang kembali ke awal loop saat terjadi error, sehingga tidak perlu menggunakan else untuk memisahkan antara input yang benar dan salah
+                    print("Stats must be integers")
+                    continue 
                 if 0<=hasil_input<=1200:
-                    setattr(self, s, hasil_input) #setattr(object, attribute, value) diusahakan ditaruh di bawah saat input sudah benar, agar tidak menyimpan nilai yang salah duluan ke dalam class Stats
+                    setattr(self, s, hasil_input) #setattr(object, attribute, value) 
                     break
                 else:
                     print("Stats must be between 0-1200")
+                    continue
                
 class Distance:
     def __init__(self):
@@ -119,7 +176,7 @@ class Skills():
 
             if keyword == "done":
                 break
-
+            
             result = [x for x in self.skills if keyword in x["name"].lower()]
             if len(result) == 0:
                 print("Enter a valid skill name")
@@ -139,7 +196,7 @@ class Skills():
                 continue
 
             selected = result[number]
-            if selected in self.selected_skills:
+            if selected["name"] in [x["name"] for x in self.selected_skills]:
                 print(f"You already added {selected['name']}!")
             else:
                 self.selected_skills.append(result[number])
@@ -162,17 +219,12 @@ class UmaMusume(Uma):
 
     def setup(self):
         self.isi_identitas()
+        self.skills.selected_skills.append({"name": self.unique_skill})
         self.distance.isi_distance()
         self.track.isi_track()
         self.style.isi_style()
         self.stats.isi_stats()
         self.skills.isi_skills()
 
-            
 my_uma = UmaMusume()
 my_uma.setup()
-
-
-# pas ngerun dan opsi milih skills dia kalo salah kan bakal balik keatas, contoh, gw ketik 1, itu salah ketik
-# trus reflek ngetik nama skillsnya padahal lagi disuruh milih, dan bakal dikasih warning, trus baru balik awal
-# need to be solved!
