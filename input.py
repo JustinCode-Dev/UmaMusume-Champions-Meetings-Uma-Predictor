@@ -226,5 +226,37 @@ class UmaMusume(Uma):
         self.stats.isi_stats()
         self.skills.isi_skills()
 
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "unique_skill": self.unique_skill,
+            "skill_level": self.level_skill,
+            "distance":{
+                "sprint": self.distance.sprint,
+                "mile": self.distance.mile,
+                "medium": self.distance.medium,
+                "long": self.distance.long
+            },
+            "track":{
+                "dirt": self.track.dirt,
+                "turf": self.track.turf
+            },
+            "style":{
+                "front_runner": self.style.front_runner,
+                "pace_chaser": self.style.pace_chaser,
+                "late_surger": self.style.late_surger,
+                "end_closer": self.style.end_closer
+            },
+            "stats": {
+                "speed": self.stats.speed,
+                "stamina": self.stats.stamina,
+                "power": self.stats.power,
+                "guts": self.stats.guts,
+                "wit": self.stats.wit
+            },
+            "skills": self.skills.selected_skills
+        }
+
 my_uma = UmaMusume()
 my_uma.setup()
+uma_stats = my_uma.to_dict()
