@@ -209,3 +209,4 @@ __marimo__/
 # Scraped data
 *.json
 *.csv
+!data/raw/*.json
