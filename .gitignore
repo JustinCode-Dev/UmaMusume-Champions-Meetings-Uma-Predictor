@@ -210,3 +210,5 @@ __marimo__/
 *.json
 *.csv
 !data/raw/*.json
+data/raw/skills.json
+data/raw/character.json
