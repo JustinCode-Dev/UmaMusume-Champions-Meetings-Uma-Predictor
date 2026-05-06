@@ -1,4 +1,3 @@
-[
 {
   "name": "Aries Cup (CM12)",
   "track": "Turf",
@@ -197,7 +196,7 @@
     ]
   },
 
-  "top_uma": {
+  "uma_tier": {
     "SS": [
       "Oguri Cap (Ashen Miracle)"
     ],
@@ -284,4 +283,3 @@
     ]
   }
 }
-]
