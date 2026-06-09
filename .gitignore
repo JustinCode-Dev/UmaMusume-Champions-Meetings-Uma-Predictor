@@ -216,3 +216,5 @@ input_*.json
 __pycache__/
 *.png
 *.jpg
+*.jpeg
+!assets/Uma_Banner.png
