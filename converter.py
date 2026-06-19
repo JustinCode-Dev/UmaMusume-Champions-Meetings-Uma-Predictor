@@ -141,7 +141,7 @@ def process_img1(img1, idx):
     # ================ Uma Name Processing ================
 
     name_text = ocr_zone(name_zone).strip()
-    #print("Name:", name_text)
+    preprocess_zone(zone).save(f"C:/uma_data/uma_name_{idx}.png")
     name_raw = name_text.strip()
     best_match = process.extractOne(name_raw, char_names)
     #print("Match:", best_match)
@@ -164,7 +164,7 @@ def process_img1(img1, idx):
 
     tracks = {}
     for track_name, (zone, thresh_val) in track_zones.items():
-        preprocess_zone(zone).save(f"{track_name}_{idx}.png")
+        preprocess_zone(zone).save(f"C:/uma_data/{track_name}_{idx}.png")
         raw_ocr_text = ocr_zone_adaptive(zone, whitelist="SABCDEFG", max_wh_ratio=1.2).strip()
         best_match = process.extractOne(raw_ocr_text, valid_ranks)
         if best_match and best_match[1] >= 60:
@@ -200,6 +200,7 @@ def process_img1(img1, idx):
     distance = {}
     for distance_name, zone in distance_zones.items():
         text = ocr_zone_adaptive(zone, whitelist="SABCDEFG", max_wh_ratio=1.2).strip()
+        preprocess_zone(zone).save(f"C:/uma_data/{distance_name}_{idx}.png")
         raw_text = text.strip().upper().replace(" ", "")
         valid_char = ""
         for char in raw_text:
@@ -227,6 +228,7 @@ def process_img1(img1, idx):
     style = {}
     for style_name, zone in style_zones.items():
         text = ocr_zone_adaptive(zone, whitelist="SABCDEFG", max_wh_ratio=1.2).strip()
+        preprocess_zone(zone).save(f"C:/uma_data/{style_name}_{idx}.png")
         best_match = process.extractOne(text, valid_ranks)
         if best_match and best_match[1] >= 60:
             style[style_name] = best_match[0]
@@ -255,6 +257,7 @@ def process_img1(img1, idx):
     stats = {}
     for stat_name, (zone, thresh_val) in stats_zones.items():
         text = ocr_zone(zone, thresh_val=thresh_val).strip()
+        preprocess_zone(zone).save(f"C:/uma_data/{stat_name}_{idx}.png")
         text = re.sub(r'[^\d]', '', text)
         stats[stat_name] = text.strip()
     #print(stats)
@@ -264,8 +267,7 @@ def process_img1(img1, idx):
     skills = {}
     for skill_name, zone in skills_zones.items():
         text = ocr_zone(zone, thresh_val=170).strip()
-        #preprocess_zone(zone).save(f"{skill_name}.png")
-        # Fuzzy Match
+        preprocess_zone(zone).save(f"C:/uma_data/{skill_name}_{idx}.png")
         best_match = process.extractOne(text, skill_names)
         if best_match and best_match[1] >= 60:
             skills[skill_name] = best_match[0]
@@ -274,11 +276,15 @@ def process_img1(img1, idx):
     skills = {k: v for k, v in skills.items() if v != "unknown"}
     #print(skills)
 
-    return {
-        "uma_name" : uma_name,
-        "track" : tracks
-    }
+    result = {}
+    result["uma_name"] = uma_name
+    result.update(tracks)      
+    result.update(distance)    
+    result.update(style)       
+    result.update(stats)       
+    result.update(skills) 
 
+    return result
 
 # =====================================================================================
 # ====================================== Image 2 ======================================
@@ -308,26 +314,22 @@ def process_img2(img2, idx):
 
     # ==================== Trainers Name, Placement/Rank, Part 1 ====================
 
-    r_tname_gray1 = {}
     r_tname_results1 = {}
     for i in range (4):
         y = 475 + (i * 120)
         zone = placing_crop.crop((250, y, 450, y + 40))
-        r_tname_gray1[f"r_tname{i+1}"] = preprocess_zone(zone)
         r_tname_results1[f"r_tname{i+1}"] = ocr_zone(zone).strip()
-        #preprocess_zone(zone).save(f"r_tname{i+1}.png")
+        preprocess_zone(zone).save(f"C:/uma_data/r_tname{i+1}_{idx}.png")
     #print(r_tname_results1)
 
     # ==================== Trainers Name, Placement/Rank, Part 2 ====================
 
-    r_tname_gray2 = {}
     r_tname_results2 = {}
     for i in range(4):
         y = 460 + (i * 120)
         zone = placing_crop.crop((230, y, 450, y + 40))
-        r_tname_gray2[f"r_tname{i+5}"] = preprocess_zone(zone)
         r_tname_results2[f"r_tname{i+5}"] = ocr_zone(zone).strip()
-        #preprocess_zone(zone).save(f"r_tname{i+5}.png")
+        preprocess_zone(zone).save(f"C:/uma_data/r_tname{i+5}_{idx}.png")
 
     # ======================== Placement/Rank ========================
 
@@ -335,38 +337,41 @@ def process_img2(img2, idx):
 
     # ==================== Uma Name, Placement/Rank, Part 1 ====================
 
-    r_uma_gray1 = {}
     r_uma_results1 = {}
     for i in range(4):
         y = 440 + (i * 120)
         zone = placing_crop.crop((250, y, 450, y + 40))
-        r_uma_gray1[f"r_uma{i+1}"] = preprocess_zone(zone)
         text = ocr_zone(zone).strip()
         best_match = process.extractOne(text, char_names)
         if best_match and best_match[1] >= 60:
             r_uma_results1[f"r_uma{i+1}"] = best_match[0]
         else:
             r_uma_results1[f"r_uma{i+1}"] = "unknown"
-        #preprocess_zone(zone).save(f"r_uma{i+1}.png")
+        preprocess_zone(zone).save(f"C:/uma_data/r_uma{i+1}_{idx}.png")
     #print(r_uma_results1)
 
     # ==================== Uma Name, Placement/Rank, Part 2 ====================
 
-    r_uma_gray2 = {}
     r_uma_results2 = {}
     for i in range(4):
         y = 430 + (i * 120)
         zone = placing_crop.crop((250, y, 465, y + 40))
-        r_uma_gray2[f"r_uma{i+5}"] = preprocess_zone(zone)
         text = ocr_zone(zone).strip()
         best_match = process.extractOne(text, char_names)
         if best_match and best_match[1] >= 60:
             r_uma_results2[f"r_uma{i+5}"] = best_match[0]
         else:
             r_uma_results2[f"r_uma{i+5}"] = "unknown"
-        #preprocess_zone(zone).save(f"r_uma{i+5}.png")
+        preprocess_zone(zone).save(f"C:/uma_data/r_uma{i+5}_{idx}.png")
 
+    result = {}
 
+    result.update(r_tname_results1)
+    result.update(r_tname_results2)
+    result.update(r_uma_results1)
+    result.update(r_uma_results2)
+
+    return result
 
 # =============================================================================================
 # ========================================== Image 3 ==========================================
@@ -427,95 +432,92 @@ def process_img3(img3, img3_2, idx):
 
     # ==================== Uma Names (Mood Screen), Part 1 ====================
 
-    m_uma_gray1 = {}
     m_uma_results1 = {}
     for i in range(6):
         y = 35 + (i * 120)
         zone = mood_crop1.crop((155, y, 350, y + 45))
-        m_uma_gray1[f"m_uma{i+1}"] = preprocess_zone(zone)
         text = ocr_zone(zone).strip()
         best_match = process.extractOne(text, char_names)
         if best_match and best_match[1] >= 60:
             m_uma_results1[f"m_uma{i+1}"] = best_match[0]
         else:
             m_uma_results1[f"m_uma{i+1}"] = "unknown"
-        #preprocess_zone(zone).save(f"m_uma{i+1}.png")
+        preprocess_zone(zone).save(f"C:/uma_data/m_uma{i+1}_{idx}.png")
     #print(m_uma_results1)
-
-    # ==================== Trainer Names (Mood Screen), Part 1 ====================
-
-    mood_tname_gray1 = {}
-    mood_tname_results1 = {}
-    for i in range(6):
-        y = 70 + (i * 120)
-        zone = mood_crop1.crop((110, y, 350, y + 30))
-        mood_tname_gray1[f"mood_tname{i+1}"] = preprocess_zone(zone)
-        mood_tname_results1[f"mood_tname{i+1}"] = ocr_zone(zone).strip()
-        #preprocess_zone(zone).save(f"mood_tname{i+1}.png")
-    #print(mood_tname_results1)
-
-    # ===================== Mood, Part 1 =====================
-
-    mood_gray1 = {}
-    mood_results1 = {}
-    for i in range(6):
-        y = 45 + (i * 120)
-        zone = mood_crop1.crop((387, y, 440, y + 17))
-        mood_gray1[f"mood{i+1}"] = preprocess_zone(zone)
-        
-        text = ocr_zone_adaptive(zone, whitelist="BADNORMLGET").strip()
-        best_match = process.extractOne(text, mood_list)
-        if best_match and best_match[1] >= 60:
-            mood_results1[f"mood{i+1}"] = best_match[0]
-        else:
-            mood_results1[f"mood{i+1}"] = "unknown"
-        #preprocess_zone(zone).save(f"mood{i+1}.png")
-
-    #print(mood_results1)
 
     # ==================== Uma Names (Mood Screen), Part 2 ====================
 
-    m_uma_gray2 = {}
     m_uma_results2 = {}
     for i in range(3):
         y = 375 + (i * 120)
         zone = mood_crop2.crop((145, y, 350, y + 30))
-        m_uma_gray2[f"m_uma{i+7}"] = preprocess_zone(zone)
         text = ocr_zone(zone).strip()
         best_match = process.extractOne(text, char_names)
         if best_match and best_match[1] >= 60:
             m_uma_results2[f"m_uma{i+7}"] = best_match[0]
         else:
             m_uma_results2[f"m_uma{i+7}"] = "unknown"
-        #preprocess_zone(zone).save(f"m_uma{i+7}.png")
+        preprocess_zone(zone).save(f"C:/uma_data/m_uma{i+7}_{idx}.png")
     #print(m_uma_results2)
+
+    # ==================== Trainer Names (Mood Screen), Part 1 ====================
+
+    mood_tname_results1 = {}
+    for i in range(6):
+        y = 70 + (i * 120)
+        zone = mood_crop1.crop((110, y, 350, y + 30))
+        mood_tname_results1[f"mood_tname{i+1}"] = ocr_zone(zone).strip()
+        preprocess_zone(zone).save(f"C:/uma_data/mood_tname{i+1}_{idx}.png")
+    #print(mood_tname_results1)
 
     # ==================== Trainer Names (Mood Screen), Part 2 ====================
 
-    mood_tname_gray2 = {}
     mood_tname_results2 = {}
     for i in range(3):
         y = 405 + (i * 120)
         zone = mood_crop2.crop((140, y, 367, y + 30))
-        mood_tname_gray2[f"mood_tname{i+7}"] = preprocess_zone(zone)
         mood_tname_results2[f"mood_tname{i+7}"] = ocr_zone(zone).strip()
-        #preprocess_zone(zone).save(f"mood_tname{i+7}.png")
+        preprocess_zone(zone).save(f"C:/uma_data/mood_tname{i+7}_{idx}.png")
     #print(mood_tname_results2)
+
+    # ===================== Mood, Part 1 =====================
+
+    mood_results1 = {}
+    for i in range(6):
+        y = 45 + (i * 120)
+        zone = mood_crop1.crop((387, y, 440, y + 17))
+        text = ocr_zone_adaptive(zone, whitelist="BADNORMLGET").strip()
+        best_match = process.extractOne(text, mood_list)
+        if best_match and best_match[1] >= 60:
+            mood_results1[f"mood{i+1}"] = best_match[0]
+        else:
+            mood_results1[f"mood{i+1}"] = "unknown"
+        preprocess_zone(zone).save(f"C:/uma_data/mood{i+1}_{idx}.png")
+
+    #print(mood_results1)
 
     # ===================== Mood, Part 2 =====================
 
-    mood_gray2 = {}
     mood_results2 = {}
     for i in range(3):
         y = 369 + (i * 120)
         zone = mood_crop2.crop((380, y, 430, y + 38))
-        mood_gray2[f"mood{i+7}"] = preprocess_zone(zone)
-        #ocr_zone_adaptives(zone).save(f"mood{i+7}.png")
         text = ocr_zone_adaptive(zone, whitelist="BADNORMLGET").strip()
         best_match = process.extractOne(text, mood_list)
         if best_match and best_match[1] >= 60:
             mood_results2[f"mood{i+7}"] = best_match[0]
         else:
             mood_results2[f"mood{i+7}"] = "unknown"
-    #preprocess_zone(zone).save(f"mood{i+7}.png")
+        preprocess_zone(zone).save(f"C:/uma_data/mood{i+7}_{idx}.png")
     #print(mood_results2)
+
+    result = {}
+
+    result.update(m_uma_results1)
+    result.update(m_uma_results2)
+    result.update(mood_tname_results1)
+    result.update(mood_tname_results2)
+    result.update(mood_results1)
+    result.update(mood_results2)
+
+    return result
