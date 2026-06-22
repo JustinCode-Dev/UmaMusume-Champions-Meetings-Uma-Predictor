@@ -6,6 +6,7 @@ from rapidfuzz import process
 import json
 import re
 import pandas as pd
+from pathlib import Path
 
 pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
@@ -18,16 +19,9 @@ with open("data/raw/skills.json", "r") as f:
 skill_names = [s["name"] for s in skills_data]
 char_names = [c["name"] for c in characters]
 
-img1 = Image.open("photo/cm14/round1/detail/race1/Screenshot 2026-06-05 173640.png") # Uma Detail
-img2 = Image.open("photo/cm14/round2/rank/Screenshot 2026-06-07 152321.png") # Ranks UI
-img3 = Image.open("photo/cm14/round2/mood/Screenshot 2026-06-07 152253.png") # Mood UI 1
-img3_2 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 175046.png") # mood UI 2 
-
-
 # ================================================================================
 # ============================ Preprocessing Function ============================
 # ================================================================================
-
 
 def ocr_zone(zone, thresh_val=120, psm=7, whitelist=None):
     zone = zone.resize((zone.width * 2, zone.height * 2))
@@ -77,14 +71,12 @@ def preprocess_zone(zone):
     return Image.fromarray(zone_gray)
 
 
-
 # =====================================================================================
 # ====================================== Image 1 ======================================
 # =====================================================================================
 
 
-
-def process_img1(img1, idx, rows):
+def process_img1(img1, prefix, rows):
 
     # ============== Image 1 pre-processing ==============
 
@@ -101,7 +93,7 @@ def process_img1(img1, idx, rows):
         x1, y1, w1, h1 = cv2.boundingRect(topmost1)
         #print(f"Header: x={x}, y={y}, w={w}, h={h}")
     if not contours1:
-        print(f"Warning: green header not found on idx {idx}")
+        print(f"Warning: green header not found on {prefix}")
         return {}
 
     ui_top1 = y1
@@ -144,7 +136,7 @@ def process_img1(img1, idx, rows):
     # ================ Uma Name Processing ================
 
     name_text = ocr_zone(name_zone).strip()
-    preprocess_zone(name_zone).save(f"C:/uma_data/images/uma_name_{idx}.png")
+    preprocess_zone(name_zone).save(f"C:/uma_data/images/uma_name_{prefix}.png")
     name_raw = name_text.strip()
     best_match = process.extractOne(name_raw, char_names)
     #print("Match:", best_match)
@@ -152,7 +144,7 @@ def process_img1(img1, idx, rows):
     matched_score = best_match[1]
 
     uma_name = matched_name if matched_score >= 70 else "unknown"
-    rows.append({"filename": f"images/uma_name_{idx}.png", "label": uma_name})
+    rows.append({"filename": f"images/uma_name_{prefix}.png", "label": uma_name})
 
     # =============== Track Processing ===============
 
@@ -168,7 +160,7 @@ def process_img1(img1, idx, rows):
 
     tracks = {}
     for track_name, (zone, thresh_val) in track_zones.items():
-        preprocess_zone(zone).save(f"C:/uma_data/images/{track_name}_{idx}.png")
+        preprocess_zone(zone).save(f"C:/uma_data/images/{track_name}_{prefix}.png")
         raw_ocr_text = ocr_zone_adaptive(zone, whitelist="SABCDEFG", max_wh_ratio=1.2).strip()
         best_match = process.extractOne(raw_ocr_text, valid_ranks)
         if best_match and best_match[1] >= 60:
@@ -177,7 +169,7 @@ def process_img1(img1, idx, rows):
             matched_rank = "unknown"
 
         tracks[track_name] = matched_rank
-        rows.append({"filename": f"images/{track_name}_{idx}.png", "label": tracks[track_name]})
+        rows.append({"filename": f"images/{track_name}_{prefix}.png", "label": tracks[track_name]})
 
     # =============== Distance Processing ===============
 
@@ -200,7 +192,7 @@ def process_img1(img1, idx, rows):
     distance = {}
     for distance_name, zone in distance_zones.items():
         text = ocr_zone_adaptive(zone, whitelist="SABCDEFG", max_wh_ratio=1.2).strip()
-        preprocess_zone(zone).save(f"C:/uma_data/images/{distance_name}_{idx}.png")
+        preprocess_zone(zone).save(f"C:/uma_data/images/{distance_name}_{prefix}.png")
         raw_text = text.strip().upper().replace(" ", "")
         valid_char = ""
         for char in raw_text:
@@ -208,7 +200,7 @@ def process_img1(img1, idx, rows):
                 valid_char = char
                 break
         distance[distance_name] = valid_char 
-        rows.append({"filename": f"images/{distance_name}_{idx}.png", "label": distance[distance_name]})
+        rows.append({"filename": f"images/{distance_name}_{prefix}.png", "label": distance[distance_name]})
 
     # =============== Style Processing ===============
 
@@ -228,13 +220,13 @@ def process_img1(img1, idx, rows):
     style = {}
     for style_name, zone in style_zones.items():
         text = ocr_zone_adaptive(zone, whitelist="SABCDEFG", max_wh_ratio=1.2).strip()
-        preprocess_zone(zone).save(f"C:/uma_data/images/{style_name}_{idx}.png")
+        preprocess_zone(zone).save(f"C:/uma_data/images/{style_name}_{prefix}.png")
         best_match = process.extractOne(text, valid_ranks)
         if best_match and best_match[1] >= 60:
             style[style_name] = best_match[0]
         else:
             style[style_name] = "unknown"
-        rows.append({"filename": f"images/{style_name}_{idx}.png", "label": style[style_name]})
+        rows.append({"filename": f"images/{style_name}_{prefix}.png", "label": style[style_name]})
     #print(style)
 
     # =============== Stats Processing ===============
@@ -258,17 +250,17 @@ def process_img1(img1, idx, rows):
     stats = {}
     for stat_name, (zone, thresh_val) in stats_zones.items():
         text = ocr_zone(zone, thresh_val=thresh_val).strip()
-        preprocess_zone(zone).save(f"C:/uma_data/images/{stat_name}_{idx}.png")
+        preprocess_zone(zone).save(f"C:/uma_data/images/{stat_name}_{prefix}.png")
         text = re.sub(r'[^\d]', '', text)
         stats[stat_name] = text.strip()
-        rows.append({"filename": f"images/{stat_name}_{idx}.png", "label": stats[stat_name]})
+        rows.append({"filename": f"images/{stat_name}_{prefix}.png", "label": stats[stat_name]})
 
     # =============== Skill Processing ===============
 
     skills = {}
     for skill_name, zone in skills_zones.items():
-        text = ocr_zone(zone, thresh_val=170).strip()
-        preprocess_zone(zone).save(f"C:/uma_data/images/{skill_name}_{idx}.png")
+        text = ocr_zone(zone, thresh_val=173).strip()
+        preprocess_zone(zone).save(f"C:/uma_data/images/{skill_name}_{prefix}.png")
         best_match = process.extractOne(text, skill_names)
         if best_match and best_match[1] >= 60:
             matched_skill = best_match[0]
@@ -277,7 +269,7 @@ def process_img1(img1, idx, rows):
             matched_skill = "unknown"
 
         skills[skill_name] = matched_skill
-        rows.append({"filename": f"images/{skill_name}_{idx}.png", "label": matched_skill})
+        rows.append({"filename": f"images/{skill_name}_{prefix}.png", "label": matched_skill})
         
     result = {}
     result["uma_name"] = uma_name
@@ -290,14 +282,12 @@ def process_img1(img1, idx, rows):
     return result
 
 
-
 # =====================================================================================
 # ====================================== Image 2 ======================================
 # =====================================================================================
 
 
-
-def process_img2(img2, idx, rows):
+def process_img2(img2, race_prefix, rows):
 
     # ======================= Image 2 pre-processing =======================
 
@@ -312,8 +302,8 @@ def process_img2(img2, idx, rows):
     if contours2:
         topmost2 = min(contours2, key=lambda c: cv2.boundingRect(c)[1])
         x2, y2, w2, h2 = cv2.boundingRect(topmost2)
-    if not contours2:
-        print(f"Warning: green header not found on idx {idx}")
+    else:
+        print(f"Warning: green header not found on {race_prefix}")
         return {}
         
     placing_top = y2
@@ -328,8 +318,8 @@ def process_img2(img2, idx, rows):
         zone = placing_crop.crop((250, y, 450, y + 40))
         text = ocr_zone(zone).strip()
         r_tname_results1[f"r_tname{i+1}"] = text
-        preprocess_zone(zone).save(f"C:/uma_data/images/r_tname{i+1}_{idx}.png")
-        rows.append({"filename": f"images/r_tname{i+1}_{idx}.png", "label": text})
+        preprocess_zone(zone).save(f"C:/uma_data/images/r_tname{i+1}_{race_prefix}.png")
+        rows.append({"filename": f"images/r_tname{i+1}_{race_prefix}.png", "label": text})
 
     # ======================== Placement/Rank ========================
 
@@ -348,8 +338,8 @@ def process_img2(img2, idx, rows):
         else:
             matched = "unknown"
         r_uma_results1[f"r_uma{i+1}"] = matched
-        preprocess_zone(zone).save(f"C:/uma_data/images/r_uma{i+1}_{idx}.png")
-        rows.append({"filename": f"images/r_uma{i+1}_{idx}.png", "label": matched})
+        preprocess_zone(zone).save(f"C:/uma_data/images/r_uma{i+1}_{race_prefix}.png")
+        rows.append({"filename": f"images/r_uma{i+1}_{race_prefix}.png", "label": matched})
     #print(r_uma_results1)
 
     result = {}
@@ -361,16 +351,14 @@ def process_img2(img2, idx, rows):
     return result
 
 
-
 # ============================================================================================
 # ====================================== Image 2, Part2 ======================================
 # ============================================================================================
 
 
+def process_img2_2(img2_2, race_prefix, rows):
 
-def process_img2_2(img2, idx, rows):
-
-    img2_np = np.array(img2)
+    img2_np = np.array(img2_2)
     hsv2 = cv2.cvtColor(img2_np, cv2.COLOR_RGB2HSV)
     lower_green2 = np.array([40, 100, 100])
     upper_green2 = np.array([80, 255, 255])
@@ -381,12 +369,12 @@ def process_img2_2(img2, idx, rows):
     if contours2:
         topmost2 = min(contours2, key=lambda c: cv2.boundingRect(c)[1])
         x2, y2, w2, h2 = cv2.boundingRect(topmost2)
-    if not contours2:
-        print(f"Warning: green header not found on idx {idx}")
+    else:
+        print(f"Warning: green header not found on {race_prefix}")
         return {}
         
     placing_top = y2
-    placing_crop = img2.crop((x2, placing_top, x2 + w2, placing_top + 925))
+    placing_crop = img2_2.crop((x2, placing_top, x2 + w2, placing_top + 925))
 
     # ==================== Trainers Name, Placement/Rank, Part 2 ====================
     
@@ -396,8 +384,8 @@ def process_img2_2(img2, idx, rows):
         zone = placing_crop.crop((230, y, 450, y + 40))
         text = ocr_zone(zone).strip()
         r_tname_results2[f"r_tname{i+5}"] = text
-        preprocess_zone(zone).save(f"C:/uma_data/images/r_tname{i+5}_{idx}.png")
-        rows.append({"filename": f"images/r_tname{i+5}_{idx}.png", "label": text})
+        preprocess_zone(zone).save(f"C:/uma_data/images/r_tname{i+5}_{race_prefix}.png")
+        rows.append({"filename": f"images/r_tname{i+5}_{race_prefix}.png", "label": text})
 
     # ==================== Uma Name, Placement/Rank, Part 2 ====================
 
@@ -412,8 +400,8 @@ def process_img2_2(img2, idx, rows):
         else:
             matched = "unknown"
         r_uma_results2[f"r_uma{i+5}"] = matched
-        preprocess_zone(zone).save(f"C:/uma_data/images/r_uma{i+5}_{idx}.png")
-        rows.append({"filename": f"images/r_uma{i+5}_{idx}.png", "label": matched})
+        preprocess_zone(zone).save(f"C:/uma_data/images/r_uma{i+5}_{race_prefix}.png")
+        rows.append({"filename": f"images/r_uma{i+5}_{race_prefix}.png", "label": matched})
         
     result = {}
     result.update(r_tname_results2)
@@ -425,13 +413,12 @@ def process_img2_2(img2, idx, rows):
 # =============================================================================================
 
 
-
-def process_img3(img3, img3_2, idx, rows):
+def process_img3(img3, race_prefix, rows):
 
     # ================================ Image 3 pre-processing ================================
 
     img3_np = np.array(img3)
-    img3_2_np = np.array(img3_2)
+    
 
     # =============================== Image 3, Part 1 ===============================
 
@@ -445,7 +432,7 @@ def process_img3(img3, img3_2, idx, rows):
         if w > 500 and h > 100:
             rectangles.append((x, y, w, h))
     if not rectangles:
-        print(f"Warning: box not found on idx {idx}")
+        print(f"Warning: box not found on {race_prefix}")
         return {}
     #print(f"rectangles found: {len(rectangles)}")
     #print(rectangles)
@@ -455,29 +442,6 @@ def process_img3(img3, img3_2, idx, rows):
 
     mood_crop1 = img3.crop((rx1, ry1, rx1 + rw1, ry1 + 717))
     #mood_crop1.save("mood_test1.png")
-
-    # =============================== Image 3, Part 2 ===============================
-
-    gray3_2 = cv2.cvtColor(img3_2_np, cv2.COLOR_RGB2GRAY)
-    edges3_2 = cv2.Canny(gray3_2, 30, 80)
-    contours3_2, _ = cv2.findContours(edges3_2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-    rectangles = []
-    for c in contours3_2:
-        x, y, w, h = cv2.boundingRect(c)
-        if w > 553 and h > 108:
-            rectangles.append((x, y, w, h))
-    if not rectangles:
-        print(f"Warning: box not found on idx {idx}")
-        return {}
-    #print(f"rectangles found: {len(rectangles)}")
-    #print(rectangles)
-
-    botmost_rect = max(rectangles, key=lambda r: r[1])
-    rx2, ry2, rw2, rh2 = botmost_rect
-    #print(f"Header: x={rx2}, y={ry2}, w={rw2}, h={rh2}")
-    mood_crop2 = img3_2.crop((rx2, ry2 - 575, rx2 + rw2, rh2 + ry2))
-    #mood_crop2.save("mood_test2.png")
 
     # ======================== Mood Validation ========================
 
@@ -496,26 +460,9 @@ def process_img3(img3, img3_2, idx, rows):
         else:
             matched = "unknown"
         m_uma_results1[f"m_uma{i+1}"] = matched
-        preprocess_zone(zone).save(f"C:/uma_data/images/m_uma{i+1}_{idx}.png")
-        rows.append({"filename": f"images/m_uma{i+1}_{idx}.png", "label": matched})
+        preprocess_zone(zone).save(f"C:/uma_data/images/m_uma{i+1}_{race_prefix}.png")
+        rows.append({"filename": f"images/m_uma{i+1}_{race_prefix}.png", "label": matched})
     #print(m_uma_results1)
-
-    # ==================== Uma Names (Mood Screen), Part 2 ====================
-
-    m_uma_results2 = {}
-    for i in range(3):
-        y = 375 + (i * 120)
-        zone = mood_crop2.crop((145, y, 350, y + 30))
-        text = ocr_zone(zone).strip()
-        best_match = process.extractOne(text, char_names)
-        if best_match and best_match[1] >= 60:
-            matched = best_match[0].split("(")[0].strip()
-        else:
-            matched = "unknown"
-        m_uma_results2[f"m_uma{i+7}"] = matched
-        preprocess_zone(zone).save(f"C:/uma_data/images/m_uma{i+7}_{idx}.png")
-        rows.append({"filename": f"images/m_uma{i+7}_{idx}.png", "label": matched})
-    #print(m_uma_results2)
 
     # ==================== Trainer Names (Mood Screen), Part 1 ====================
 
@@ -525,21 +472,9 @@ def process_img3(img3, img3_2, idx, rows):
         zone = mood_crop1.crop((110, y, 350, y + 30))
         text = ocr_zone(zone).strip()
         mood_tname_results1[f"mood_tname{i+1}"] = text
-        preprocess_zone(zone).save(f"C:/uma_data/images/mood_tname{i+1}_{idx}.png")
-        rows.append({"filename": f"images/mood_tname{i+1}_{idx}.png", "label": text})
+        preprocess_zone(zone).save(f"C:/uma_data/images/mood_tname{i+1}_{race_prefix}.png")
+        rows.append({"filename": f"images/mood_tname{i+1}_{race_prefix}.png", "label": text})
     #print(mood_tname_results1)
-
-    # ==================== Trainer Names (Mood Screen), Part 2 ====================
-
-    mood_tname_results2 = {}
-    for i in range(3):
-        y = 405 + (i * 120)
-        zone = mood_crop2.crop((140, y, 367, y + 30))
-        text = ocr_zone(zone).strip()
-        mood_tname_results2[f"mood_tname{i+7}"] = text
-        preprocess_zone(zone).save(f"C:/uma_data/images/mood_tname{i+7}_{idx}.png")
-        rows.append({"filename": f"images/mood_tname{i+7}_{idx}.png", "label": text})
-    #print(mood_tname_results2)
 
     # ===================== Mood, Part 1 =====================
 
@@ -554,10 +489,81 @@ def process_img3(img3, img3_2, idx, rows):
         else:
             matched = "unknown"
         mood_results1[f"mood{i+1}"] = matched
-        preprocess_zone(zone).save(f"C:/uma_data/images/mood{i+1}_{idx}.png")
-        rows.append({"filename": f"images/mood{i+1}_{idx}.png", "label": matched})
+        preprocess_zone(zone).save(f"C:/uma_data/images/mood{i+1}_{race_prefix}.png")
+        rows.append({"filename": f"images/mood{i+1}_{race_prefix}.png", "label": matched})
     #print(mood_results1)
 
+    result = {}
+
+    result.update(m_uma_results1)
+    result.update(mood_tname_results1)
+    result.update(mood_results1)
+
+    return result
+
+
+# ======================================================================================================
+# ========================================== Image 3, Part 2  ==========================================
+# ======================================================================================================
+
+
+def process_img3_2(img3_2, race_prefix, rows):
+    # =============================== Image 3, Part 2 ===============================
+    img3_2_np = np.array(img3_2)
+    gray3_2 = cv2.cvtColor(img3_2_np, cv2.COLOR_RGB2GRAY)
+    edges3_2 = cv2.Canny(gray3_2, 30, 80)
+    contours3_2, _ = cv2.findContours(edges3_2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    rectangles = []
+    for c in contours3_2:
+        x, y, w, h = cv2.boundingRect(c)
+        if w > 553 and h > 108:
+            rectangles.append((x, y, w, h))
+    if not rectangles:
+        print(f"Warning: box not found on {race_prefix}")
+        return {}
+    #print(f"rectangles found: {len(rectangles)}")
+    #print(rectangles)
+
+    botmost_rect = max(rectangles, key=lambda r: r[1])
+    rx2, ry2, rw2, rh2 = botmost_rect
+    #print(f"Header: x={rx2}, y={ry2}, w={rw2}, h={rh2}")
+    mood_crop2 = img3_2.crop((rx2, ry2 - 575, rx2 + rw2, rh2 + ry2))
+    #mood_crop2.save("mood_test2.png")
+    
+    # ======================== Mood Validation ========================
+
+    mood_list = ["BAD", "NORMAL", "GOOD", "GREAT"]
+
+    # ==================== Uma Names (Mood Screen), Part 2 ====================
+
+    m_uma_results2 = {}
+    for i in range(3):
+        y = 375 + (i * 120)
+        zone = mood_crop2.crop((145, y, 350, y + 30))
+        text = ocr_zone(zone).strip()
+        best_match = process.extractOne(text, char_names)
+        if best_match and best_match[1] >= 60:
+            matched = best_match[0].split("(")[0].strip()
+        else:
+            matched = "unknown"
+        m_uma_results2[f"m_uma{i+7}"] = matched
+        preprocess_zone(zone).save(f"C:/uma_data/images/m_uma{i+7}_{race_prefix}.png")
+        rows.append({"filename": f"images/m_uma{i+7}_{race_prefix}.png", "label": matched})
+    #print(m_uma_results2)
+    
+    # ==================== Trainer Names (Mood Screen), Part 2 ====================
+
+    mood_tname_results2 = {}
+    for i in range(3):
+        y = 405 + (i * 120)
+        zone = mood_crop2.crop((140, y, 367, y + 30))
+        text = ocr_zone(zone).strip()
+        mood_tname_results2[f"mood_tname{i+7}"] = text
+        preprocess_zone(zone).save(f"C:/uma_data/images/mood_tname{i+7}_{race_prefix}.png")
+        rows.append({"filename": f"images/mood_tname{i+7}_{race_prefix}.png", "label": text})
+    #print(mood_tname_results2)
+    
     # ===================== Mood, Part 2 =====================
 
     mood_results2 = {}
@@ -571,26 +577,51 @@ def process_img3(img3, img3_2, idx, rows):
         else:
             matched = "unknown"
         mood_results2[f"mood{i+7}"] = matched
-        preprocess_zone(zone).save(f"C:/uma_data/images/mood{i+7}_{idx}.png")
-        rows.append({"filename": f"images/mood{i+7}_{idx}.png", "label": matched})
+        preprocess_zone(zone).save(f"C:/uma_data/images/mood{i+7}_{race_prefix}.png")
+        rows.append({"filename": f"images/mood{i+7}_{race_prefix}.png", "label": matched})
     #print(mood_results2)
 
     result = {}
-
-    result.update(m_uma_results1)
+    
     result.update(m_uma_results2)
-    result.update(mood_tname_results1)
     result.update(mood_tname_results2)
-    result.update(mood_results1)
     result.update(mood_results2)
-
+    
     return result
 
-rows = []
-idx = 0
+# ==========================================================================================
+# ========================================== Main ==========================================
+# ==========================================================================================
 
-result1 = process_img1(img1, idx, rows)
-result2 = process_img2(img2, idx, rows)
-result3 = process_img3(img3, img3_2, idx, rows)
+rows = []
+rounds = ["round1"]
+
+for round_name in rounds:
+    race_dirs = sorted(Path(f"photo/cm14/{round_name}/detail").glob("race*"))[:1]
+    mood_photos = sorted(Path(f"photo/cm14/{round_name}/mood").glob("*.png"))
+    rank_photos = sorted(Path(f"photo/cm14/{round_name}/rank").glob("*.png"))
+
+    for race_idx, race_dir in enumerate(race_dirs):
+        race_name = race_dir.name
+        detail_photos = sorted(race_dir.glob("*.png"))
+        mood_pair = mood_photos[race_idx * 2 : race_idx * 2 + 2]
+        rank_pair = rank_photos[race_idx * 2 : race_idx * 2 + 2]
+
+        race_prefix = f"{round_name}_{race_name}"
+
+        img2 = Image.open(rank_pair[0])
+        img2_2 = Image.open(rank_pair[1])
+        img3 = Image.open(mood_pair[0])
+        img3_2 = Image.open(mood_pair[1])
+
+        result2_1 = process_img2(img2, race_prefix, rows)
+        result2_2 = process_img2_2(img2_2, race_prefix, rows)
+        result3_1 = process_img3(img3, race_prefix, rows)
+        result3_2 = process_img3_2(img3_2, race_prefix, rows)
+
+        for i, detail_path in enumerate(detail_photos):
+            prefix = f"{round_name}_{race_name}_{i}"
+            img1 = Image.open(detail_path)
+            result1 = process_img1(img1, prefix, rows)
 
 pd.DataFrame(rows).to_csv("C:/uma_data/labels_dl.csv", index=False, encoding='utf-8-sig')
