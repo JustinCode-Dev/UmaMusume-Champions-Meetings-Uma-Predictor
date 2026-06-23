@@ -76,7 +76,7 @@ def preprocess_zone(zone):
 # =====================================================================================
 
 
-def process_img1(img1, prefix, rows):
+def process_img1(img1, prefix, rows, photo_idx=0):
 
     # ============== Image 1 pre-processing ==============
 
@@ -123,11 +123,19 @@ def process_img1(img1, prefix, rows):
         name_zone = ui_crop1.crop((285, 50, 530, 100))
         skills_zone = ui_crop1.crop((0, 470, 665, 925))
 
+        if photo_idx == 0:
+            y_start = 15
+            rows_count = 7
+        else:
+            y_start = 45
+            rows_count = 6
+        
         skills_zones = {}
-        for i in range(7):
-            y = 15 + (i * 60)
-            skills_zones[f"skill_{i+1}"] = skills_zone.crop((48, y, 300, y + 55))
-            skills_zones[f"skill_{i+8}"] = skills_zone.crop((335, y, 540, y + 55))
+        for j in range(rows_count):
+        
+            y = y_start + (j * 60)
+            skills_zones[f"skill_{j+1}"] = skills_zone.crop((48, y, 300, y + 55))
+            skills_zones[f"skill_{j+8}"] = skills_zone.crop((335, y, 540, y + 55))
 
     # =============== Ranks Validation ===============
 
@@ -594,10 +602,10 @@ def process_img3_2(img3_2, race_prefix, rows):
 # ==========================================================================================
 
 rows = []
-rounds = ["round1"]
+rounds = ["round1", "round2"]
 
 for round_name in rounds:
-    race_dirs = sorted(Path(f"photo/cm14/{round_name}/detail").glob("race*"))[:1]
+    race_dirs = sorted(Path(f"photo/cm14/{round_name}/detail").glob("race*"))
     mood_photos = sorted(Path(f"photo/cm14/{round_name}/mood").glob("*.png"))
     rank_photos = sorted(Path(f"photo/cm14/{round_name}/rank").glob("*.png"))
 
@@ -622,6 +630,6 @@ for round_name in rounds:
         for i, detail_path in enumerate(detail_photos):
             prefix = f"{round_name}_{race_name}_{i}"
             img1 = Image.open(detail_path)
-            result1 = process_img1(img1, prefix, rows)
+            result1 = process_img1(img1, prefix, rows, i % 2)
 
 pd.DataFrame(rows).to_csv("C:/uma_data/labels_dl.csv", index=False, encoding='utf-8-sig')
