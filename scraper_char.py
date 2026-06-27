@@ -59,7 +59,7 @@ for j in character:
         j["unique_skill"] = unique_skill
         j["unique_skill_evolved"] = unique_skill_evolved
 
-with open("data/raw/character.json", "w") as f:
-    json.dump(character, f, indent=2)
+with open("data/raw/character.json", "w", encoding="utf-8") as f:
+    json.dump(character, f, indent=2, ensure_ascii=False)
 
 print("Done!")
