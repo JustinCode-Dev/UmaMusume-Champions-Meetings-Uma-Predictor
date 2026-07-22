@@ -218,3 +218,6 @@ __pycache__/
 *.jpg
 *.jpeg
 !assets/Uma_Banner.png
+*.pth
+*.pt
+*.onnx
