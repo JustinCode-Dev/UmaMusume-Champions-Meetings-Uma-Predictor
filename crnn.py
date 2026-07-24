@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset, DataLoader, random_split
 import torchvision.transforms as transforms
 from PIL import Image
 import pandas as pd
@@ -17,7 +17,7 @@ def preprocessing_img(image_path, target_height=32, max_width=250):
         final_w = new_w
     img = img.resize((final_w, target_height), Image.Resampling.LANCZOS)
     padded_img = Image.new('L', (max_width, target_height), color=255)
-    padded_img.paste(img, (0, 0))
+    padded_img.paste(img, (5, 0))
 
     return padded_img
 
@@ -50,14 +50,13 @@ def build_vocab(csv_file):
     return chars
 
 def build_char_maps(chars):
-    char_to_idx = {"-": 0}
-    idx_to_char = {0: "-"}
-    
+    char_to_idx = {"<BLANK>": 0}
+    idx_to_char = {0: "<BLANK>"}
+
     for idx, char in enumerate(chars):
-        if char != "-":
-            new_idx = len(char_to_idx)
-            char_to_idx[char] = new_idx
-            idx_to_char[new_idx] = char
+        new_idx = len(char_to_idx)
+        char_to_idx[char] = new_idx
+        idx_to_char[new_idx] = char
 
     return char_to_idx, idx_to_char
 
@@ -87,7 +86,8 @@ class CrnnUma(nn.Module):
             hidden_size = 256,
             num_layers = 2,
             bidirectional = True,
-            batch_first = True
+            batch_first = True,
+            dropout= 0.2
         )
 
         self.fc = nn.Linear(512, num_classes)
@@ -119,7 +119,7 @@ def encode_batch(labels, char_to_idx):
 
 
 
-def train_model(model, dataloader, char_to_idx, epochs=10, lr=0.001):
+def train_model(model, dataloader, char_to_idx, epochs=15, lr=0.001):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
@@ -153,42 +153,55 @@ def train_model(model, dataloader, char_to_idx, epochs=10, lr=0.001):
         epoch_loss = running_loss / len(dataloader)
         print(f"Epoch [{epoch+1}/{epochs}] - Loss: {epoch_loss:.4f}")
 
+def decoder_predictions(outputs, idx_to_char):
+    preds = torch.argmax(outputs, dim=2)
+
+    decoded_texts = []
+    for pred in preds:
+        pred_list = pred.tolist()
+        char_list = []
+        prev_idx = None
+
+        for idx in pred_list:
+            if idx != prev_idx and idx != 0:
+                char_list.append(idx_to_char.get(idx, ""))
+            prev_idx = idx
+
+        decoded_texts.append("".join(char_list))
+
+    return decoded_texts
+
 if __name__ == "__main__":
     chars = build_vocab("uma_data/labels_dl.csv")
     char_to_idx, idx_to_char = build_char_maps(chars)
     num_classes = len(char_to_idx)
 
-    dataset = UmaDataset(csv_file="uma_data/labels_dl.csv", img_dir="uma_data")
-    dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
+    full_dataset = UmaDataset(csv_file="uma_data/labels_dl.csv", img_dir="uma_data")
+    
+    train_size = int(0.8 * len(full_dataset))
+    val_size = len(full_dataset) - train_size
+    train_dataset, val_dataset = torch.utils.data.random_split(full_dataset, [train_size, val_size])
+
+    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False)
 
     model = CrnnUma(num_classes=num_classes)
     print("Training...")
-    train_model(model, dataloader, char_to_idx, epochs=5, lr=0.001)
+    train_model(model, train_loader, char_to_idx, epochs=15, lr=0.001)
 
-
-"""if __name__ == "__main__":
+    print("Evaluation...")
+    model.eval()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"Running on device: {device}")
 
-    dataset = UmaDataset(csv_file="uma_data/labels_dl.csv", img_dir="uma_data")
-    dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
-    images_batch, labels_batch = next(iter(dataloader))
+    with torch.no_grad():
+        images, labels = next(iter(val_loader))
+        images = images.to(device)
+        outputs = model(images)
+        predictions = decoder_predictions(outputs, idx_to_char)
 
-    images_batch = images_batch.to(device)
-    model = CrnnUma(num_classes=50).to(device)
-
-    output_full = model(images_batch)
-
-    #=========== CTCLoss ===========
-
-    log_probs = output_full.log_softmax(2).permute(1, 0, 2)
-    targets = torch.randint(1, 50, (4 * 5,), dtype=torch.long).to(device)
-    input_lengths = torch.full(size=(4,), fill_value=62, dtype=torch.long).to(device)
-    target_lengths = torch.full(size=(4,), fill_value=5, dtype=torch.long).to(device)
-
-    loss = criterion(log_probs, targets, input_lengths, target_lengths)
-    print("=== TEST CTC LOSS ===")
-    print("Nilai Eror Mentah (Loss):", loss.item())
-
-    print("=== HASIL BATCH ===")
-    print("Ukuran Tensor Output Full CRNN:", output_full.shape)"""
+        for idx in range(len(labels)):
+            print(f"Target : {labels[idx]}")
+            print(f"Prediction Result : {predictions[idx]}")
+            print("-" * 30)
+    torch.save(model.state_dict(), "crnn_uma_model_v2.pth")
+    print("Model saved")
