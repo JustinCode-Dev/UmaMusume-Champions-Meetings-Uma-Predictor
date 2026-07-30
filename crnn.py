@@ -7,12 +7,12 @@ from PIL import Image
 import pandas as pd
 import os
 
-def preprocessing_img(image_path, target_height=32, max_width=250):
+def preprocessing_img(image_path, target_height=48, max_width=460):
     img = Image.open(image_path).convert('L')
     w, h = img.size
     new_w = int(w * (target_height / h))
-    if new_w > max_width:
-        final_w = max_width
+    if new_w > max_width - 5:
+        final_w = max_width - 5
     else:
         final_w = new_w
     img = img.resize((final_w, target_height), Image.Resampling.LANCZOS)
@@ -21,11 +21,29 @@ def preprocessing_img(image_path, target_height=32, max_width=250):
 
     return padded_img
 
+train_transform = transforms.Compose([
+    transforms.ColorJitter(brightness=0.2, contrast=0.2),
+    transforms.RandomAffine(degrees=(-3, 3), fill = 255),
+    transforms.RandomApply([
+        transforms.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1.0))
+    ], p=0.3),
+    transforms.RandomApply([
+        transforms.RandomAdjustSharpness(sharpness_factor=2)
+    ], p=0.2),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.5], std=[0.5])
+])
+
+val_transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.5], std=[0.5])
+])
+
 class UmaDataset(Dataset):
-    def __init__(self, csv_file, img_dir):
+    def __init__(self, csv_file, img_dir, transform=None):
         self.df = pd.read_csv(csv_file)
         self.img_dir = img_dir
-        self.transform = transforms.ToTensor()
+        self.transform = transform if transform is not None else val_transform
 
     def __len__(self):
         return len(self.df)
@@ -82,7 +100,7 @@ class CrnnUma(nn.Module):
         )
 
         self.rnn = nn.LSTM(
-            input_size = 512,
+            input_size = 768,
             hidden_size = 256,
             num_layers = 2,
             bidirectional = True,
@@ -118,13 +136,15 @@ def encode_batch(labels, char_to_idx):
     return torch.tensor(targets, dtype=torch.long), torch.tensor(target_lengths, dtype=torch.long)
 
 
-
 def train_model(model, dataloader, char_to_idx, epochs=15, lr=0.001):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
     criterion = nn.CTCLoss(blank=0, zero_infinity=True)
     optimizer = optim.Adam(model.parameters(), lr=lr)
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer, mode='min', factor=0.5, patience=2
+    )
 
     model.train()
 
@@ -140,18 +160,22 @@ def train_model(model, dataloader, char_to_idx, epochs=15, lr=0.001):
             optimizer.zero_grad()
 
             outputs = model(images)
+            seq_len = outputs.size(1)
             log_probs = outputs.log_softmax(2).permute(1, 0, 2)
             batch_size = images.size(0)
-            input_lengths = torch.full(size=(batch_size,), fill_value=62, dtype=torch.long).to(device)
+            input_lengths = torch.full(size=(batch_size,), fill_value=seq_len, dtype=torch.long).to(device)
             loss = criterion(log_probs, targets, input_lengths, target_lengths)
 
             loss.backward()
 
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=2.0)
             optimizer.step()
             running_loss += loss.item()
         
         epoch_loss = running_loss / len(dataloader)
-        print(f"Epoch [{epoch+1}/{epochs}] - Loss: {epoch_loss:.4f}")
+        scheduler.step(epoch_loss)
+        current_lr = optimizer.param_groups[0]['lr']
+        print(f"Epoch [{epoch+1}/{epochs}] - Loss: {epoch_loss:.4f} - LR: {current_lr:.6f}")
 
 def decoder_predictions(outputs, idx_to_char):
     preds = torch.argmax(outputs, dim=2)
@@ -176,14 +200,18 @@ if __name__ == "__main__":
     char_to_idx, idx_to_char = build_char_maps(chars)
     num_classes = len(char_to_idx)
 
-    full_dataset = UmaDataset(csv_file="uma_data/labels_dl.csv", img_dir="uma_data")
-    
-    train_size = int(0.8 * len(full_dataset))
-    val_size = len(full_dataset) - train_size
-    train_dataset, val_dataset = torch.utils.data.random_split(full_dataset, [train_size, val_size])
+    train_dataset_full = UmaDataset(csv_file="uma_data/labels_dl.csv", img_dir="uma_data", transform=train_transform)
+    val_dataset_full = UmaDataset(csv_file="uma_data/labels_dl.csv", img_dir="uma_data", transform=val_transform)
 
-    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False)
+    total_len = len(train_dataset_full)
+    train_size = int(0.8 * total_len)
+    val_size = total_len - train_size
+
+    train_subset, _ = random_split(train_dataset_full, [train_size, val_size], generator=torch.Generator().manual_seed(42))
+    _, val_subset = random_split(val_dataset_full, [train_size, val_size], generator=torch.Generator().manual_seed(42))
+
+    train_loader = DataLoader(train_subset, batch_size=16, shuffle=True)
+    val_loader = DataLoader(val_subset, batch_size=16, shuffle=False)
 
     model = CrnnUma(num_classes=num_classes)
     print("Training...")
