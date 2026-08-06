@@ -19,7 +19,7 @@ def calculate_cer(reference, hypothesis):
 
     for i in range(1, len(r) + 1):
         for j in range(1, len(h) + 1):
-            if r[i-1] == h[j - 1]:
+            if r[i-1] == h[j-1]:
                 d[i][j] = d[i-1][j-1]
             else:
                 d[i][j] = min(d[i-1][j] + 1,
@@ -37,7 +37,7 @@ def evaluate_weights():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     model = CrnnUma(num_classes=len(char_to_idx)).to(device)
-    model.load_state_dict(torch.load("crnn_uma_model_v3.pth", map_location=device))
+    model.load_state_dict(torch.load("crnn_uma_model_v8.pth", map_location=device))
     model.eval()
 
     dataset = UmaDataset(csv_file=csv_path, img_dir="uma_data")
@@ -68,7 +68,9 @@ def evaluate_weights():
             if target == prediction:
                 correct_exact_match += 1
             else:
-                print(f"[Wrong] Target: {target} | Pred: {prediction} | CER: {cer:.2f}")
+                original_idx = test_dataset.indices[i]
+                filename = dataset.df.iloc[original_idx]['filename']
+                print(f"[Wrong] File: {filename} | Target: {target} | Pred: {prediction} | CER: {cer:.2f}")
 
     avg_cer = (total_cer / total_samples) * 100
     accuracy = (correct_exact_match / total_samples) * 100
