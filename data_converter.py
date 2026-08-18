@@ -5,12 +5,7 @@ from rapidfuzz import process
 import json
 import re
 
-img1 = Image.open("photo/cm14/round1/detail/race1/Screenshot 2026-06-05 173646.png") #skill_img
-
-# ============================ Gray Processing ============================
-
-def rgb2gray(zone):
-    return zone.convert('L')
+img1 = Image.open("photo/cm14/round1/detail/race1/Screenshot 2026-06-05 173640.png") #skill_img
 
 # ============================ Size Processing ============================
 
@@ -31,32 +26,33 @@ def preprocessing_img(image, target_height=48, max_width=460):
 
 # ============================ Box Detection ============================
 
-def find_boxes(zone, min_w=150, max_w=310, min_h=30, max_h=70):
+def find_boxes(zone, min_w=150, max_w=310, min_h=30, max_h=70, offset=0):
     zone_np = np.array(zone)
     zone_gray = cv2.cvtColor(zone_np, cv2.COLOR_RGB2GRAY)
     
     kernel = np.ones((3, 3), np.uint8)
     gradient = cv2.morphologyEx(zone_gray, cv2.MORPH_GRADIENT, kernel)
-    
     _, binary = cv2.threshold(gradient, 20, 255, cv2.THRESH_BINARY)
     closed = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
 
     contours, _ = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     cv2.imwrite("debug_skill_mask.png", closed)
-
+    
     boxes = []
     for c in contours: 
         x, y, w, h = cv2.boundingRect(c)
+        print(f"x={x}, y={y}, w={w}, h={h}")
         if min_w <= w <= max_w and min_h <= h <= max_h:
             boxes.append((x, y, w, h))
 
-    for i, (x, y, w, h) in enumerate(boxes):
-        crop = zone.crop((x + 35, y, x + w, y + h))
-        crop.save(f"zkill_{i}.png")
-    
-    
     boxes.sort(key=lambda b: (b[1], b[0]))
+
+    for i, (x, y, w, h) in enumerate(boxes):
+        crop = zone.crop((x + offset, y, x + w, y + h))
+        crop_gray = crop.convert('L')
+        crop_gray.save(f"zkill_{i}.png")
+    
     return boxes
 
 # ============================ Image 1 pre-processing ============================
@@ -91,13 +87,20 @@ is_opponent = np.sum(mask) > 20000
 if is_opponent:
     name_zone = name_zone = ui_crop1.crop((295, 75, 570, 120))
     skills_zone = ui_crop1.crop((0, 570, 580, 905))
-
+    stats_zone = ui_crop1.crop((10, 250, 580, 300))
+    aptitude_zone = ui_crop1.crop((133, 310, 567, 410))
+    aptitude_zone.save("zzzz.png")
+    stats_zone.save("zz.png")
 else:
     name_zone = ui_crop1.crop((285, 50, 530, 100))
     skills_zone = ui_crop1.crop((0, 470, 580, 925))
+    stats_zone = ui_crop1.crop((10, 250, 580, 300))
+    aptitude_zone = ui_crop1.crop((133, 310, 567, 410))
+    aptitude_zone.save("zzzz.png")
 
 # ================================ Debugging ================================
-boxes = find_boxes(skills_zone)
-print(len(boxes))
-print(boxes)
+#boxes = find_boxes(skills_zone)
+aptitude = find_boxes(aptitude_zone, 83, 123, 20, 40, 70)
+"""print(len(boxes))
+print(boxes)"""
 skills_zone.save("zkill_crop.png")
