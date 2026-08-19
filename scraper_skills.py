@@ -28,9 +28,9 @@ for table, rarity in zip ([tables[3], tables[4], tables[5]], ["special skill", "
             effect = cols[1].get_text(strip=True)
             skills.append({"name": nama, "effect": effect, "rarity": rarity})
 
-with open("data/raw/skills.json", "w") as f:
+with open("data/raw/skills.json", "w", encoding="utf-8") as f:
+    json.dump(skills, f, indent=2, ensure_ascii=False)
     print(len(skills))
-    json.dump(skills, f, indent=2)
 
 print("Done!")
 
