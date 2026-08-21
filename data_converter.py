@@ -5,7 +5,7 @@ from rapidfuzz import process
 import json
 import re
 
-img1 = Image.open("photo/cm14/round1/detail/race1/Screenshot 2026-06-05 173733.png") # uma detail img
+img1 = Image.open("photo/cm14/round1/detail/race1/Screenshot 2026-06-05 173654.png") # uma detail img
 img2_1 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 173504.png") # mood img (not scrolled)
 img2_2 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 173513.png") # mood img (scrolled)
 img3_1 = Image.open("photo/cm14/round1/rank/Screenshot 2026-06-05 173620.png") # rank img (not scrolled)
@@ -31,9 +31,10 @@ def find_boxes(zone, min_w=150, max_w=310, min_h=30, max_h=70):
     boxes = []
     for c in contours: 
         x, y, w, h = cv2.boundingRect(c)
-        #print(f"x={x}, y={y}, w={w}, h={h}")
+        
         if min_w <= w <= max_w and min_h <= h <= max_h:
             boxes.append((x, y, w, h))
+            print(f"x={x}, y={y}, w={w}, h={h}")
 
     boxes.sort(key=lambda b: (b[1], b[0]))
     
@@ -59,7 +60,7 @@ def padding_img(image, target_height=48, max_width=460):
 
 
 # ============================ Image 1 pre-processing ============================
-def preprocessing_img(img1):
+#def preprocessing_img(img1):
     img1_np = np.array(img1)
     hsv1 = cv2.cvtColor(img1_np, cv2.COLOR_RGB2HSV)
     lower_green1 = np.array([40, 100, 100])
@@ -86,11 +87,11 @@ def preprocessing_img(img1):
     is_opponent = np.sum(mask) > 20000
 
     if is_opponent:
-        name_zone = name_zone = ui_crop1.crop((295, 75, 570, 120))
+        name_zone = name_zone = ui_crop1.crop((295, 75, 570, 115))
         skills_zone = ui_crop1.crop((0, 570, 580, 905))
         stats_zone = ui_crop1.crop((10, 250, 580, 300))
         aptitude_zone = ui_crop1.crop((133, 310, 567, 410))
-
+        
         # ==================== Stats ====================
         for k in range(5):
                     h = 115 + (k * 115)
@@ -111,16 +112,10 @@ def preprocessing_img(img1):
             crop_aptitude.save(f"aptitude_{j + 1}.png")
 
     else:
-        name_zone = ui_crop1.crop((285, 50, 530, 100))
+        name_zone = ui_crop1.crop((285, 50, 525, 100))
         skills_zone = ui_crop1.crop((0, 470, 580, 925))
         stats_zone = ui_crop1.crop((10, 250, 580, 300))
         aptitude_zone = ui_crop1.crop((133, 310, 567, 410))
-        stats_zone.save("zstats.png")
-        #speed = stats_zone.crop((40, 0, 115, 100))
-        #stam = stats_zone.crop((155, 0, 230, 100))
-        #power = stats_zone.crop((270, 0, 345, 100))
-        #guts = stats_zone.crop((385, 0, 460, 100))
-        #wit = stats_zone.crop((500, 0, 575, 100))
 
         # ==================== Stats ====================
         for k in range(5):
@@ -173,17 +168,21 @@ def process_mood1(img2_1):
     for i in range(6):
         y = 0 + (i * 120)
         rows = mood_crop1.crop((0, y, 561, y + 105))
-        boxes = find_boxes(rows, 45, 103, 25, 45)
+        boxes = find_boxes(rows, 45, 110, 25, 45)
         rows.save(f"zmood_{i+1}.png")
-
+        
         for box_idx, (x, y2, w, h) in enumerate(boxes):
             crop = rows.crop((x, y2, x + w, y2 + h))
-            crop.save(f"mood_1_{i+1}.png")
+            #crop.save(f"mood_1_{i + 1}.png")
+            names = rows.crop((x - 200, y2, x + w - 125, y2 + h))
+            names.save(f"name_{i + 1}.png")
+
+    return mood_crop1
 
 
 # =================================== Mood, Part 2 ===================================
 
-def process_mood2(img2_2):
+#def process_mood2(img2_2):
     img3_2_np = np.array(img2_2)
     gray3_2 = cv2.cvtColor(img3_2_np, cv2.COLOR_RGB2GRAY)
     edges3_2 = cv2.Canny(gray3_2, 30, 80)
@@ -211,7 +210,7 @@ def process_mood2(img2_2):
         5 : (0, 460, 561, 560),
         6 : (0, 580, 561, 680)
     }
-
+        
     for row_num, coords in mood_coords.items():
         rows = mood_crop2.crop(coords)
         boxes = find_boxes(rows, 45, 103, 25, 45)
@@ -219,13 +218,15 @@ def process_mood2(img2_2):
         for x, y, w, h in boxes:
             mood_crop = rows.crop((x, y, x + w, y + h))
             mood_crop.save(f"mood_2_{row_num}.png")
+            name_crop = name.crop((x - 200, y, x + w - 125, y + h))
+            name_crop.save(f"name_{row_num}.png")
 
-    return mood_crop
+    return mood_crop2
 
 
 # =================================== Rank Image ===================================
 
-def process_img3(img3_2):
+#def process_img3(img3_2):
 
     # ======================= Image 3 pre-processing =======================
 
@@ -258,5 +259,5 @@ def process_img3(img3_2):
 
 # ================================ Debugging ================================
 
-rank_zone = process_img3(img3_2)
-preprocessing_img(img1)
+mood = process_mood1(img2_1)
+find_boxes(mood)
