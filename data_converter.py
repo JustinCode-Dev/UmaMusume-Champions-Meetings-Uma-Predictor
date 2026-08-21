@@ -91,11 +91,20 @@ def preprocessing_img(img1):
         stats_zone = ui_crop1.crop((10, 250, 580, 300))
         aptitude_zone = ui_crop1.crop((133, 310, 567, 410))
 
+        # ==================== Stats ====================
+        for k in range(5):
+                    h = 115 + (k * 115)
+                    offset = k * 115
+                    stats = stats_zone.crop((40 + offset, 0, h, 100))
+                    stats.save(f"stats_{k + 1}.png")
+
+        # ==================== Skills ====================
         skills = find_boxes(skills_zone)
         for i, (x, y, w, h) in enumerate(skills):
             crop_skill = skills_zone.crop((x + 35, y, x + w, y + h))
             crop_skill.save(f"skill_{i + 1}.png")
 
+        # ==================== Aptitude ====================
         aptitude = find_boxes(aptitude_zone, 83, 123, 20, 40)
         for j, (x, y, w, h) in enumerate(aptitude):
             crop_aptitude = aptitude_zone.crop((x + 70, y, x + w, y + h))
@@ -106,12 +115,27 @@ def preprocessing_img(img1):
         skills_zone = ui_crop1.crop((0, 470, 580, 925))
         stats_zone = ui_crop1.crop((10, 250, 580, 300))
         aptitude_zone = ui_crop1.crop((133, 310, 567, 410))
+        stats_zone.save("zstats.png")
+        #speed = stats_zone.crop((40, 0, 115, 100))
+        #stam = stats_zone.crop((155, 0, 230, 100))
+        #power = stats_zone.crop((270, 0, 345, 100))
+        #guts = stats_zone.crop((385, 0, 460, 100))
+        #wit = stats_zone.crop((500, 0, 575, 100))
 
+        # ==================== Stats ====================
+        for k in range(5):
+            h = 115 + (k * 115)
+            offset = k * 115
+            stats = stats_zone.crop((40 + offset, 0, h, 100))
+            stats.save(f"stats_{k + 1}.png")
+
+        # ==================== Skills ====================
         skills = find_boxes(skills_zone)
         for i, (x, y, w, h) in enumerate(skills):
             crop_skill = skills_zone.crop((x + 35, y, x + w, y + h))
             crop_skill.save(f"skill_{i + 1}.png")
-
+#
+        # ==================== Aptitude ====================
         aptitude = find_boxes(aptitude_zone, 83, 123, 20, 40)
         for j, (x, y, w, h) in enumerate(aptitude):
                     crop_aptitude = aptitude_zone.crop((x + 70, y, x + w, y + h))
