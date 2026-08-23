@@ -4,6 +4,10 @@ import numpy as np
 from rapidfuzz import process
 import json
 import re
+import torch
+from crnn import CrnnUma, decoder_predictions, build_vocab, build_char_maps, val_transform
+import torch
+import torchvision.transforms as transforms
 
 img1 = Image.open("photo/cm14/round1/detail/race1/Screenshot 2026-06-05 173654.png") # uma detail img
 img2_1 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 173504.png") # mood img (not scrolled)
@@ -116,6 +120,7 @@ def preprocessing_img(img1):
     for i, (x, y, w, h) in enumerate(skills):
         skill = skills_zone.crop((x + 35, y, x + w, y + h))
         result["skills"].append(skill)
+        skill.save(f"skill_{i + 1}.png")
 
     # ==================== Aptitude ====================
     aptitude = find_boxes(aptitude_zone, 83, 123, 20, 40)
@@ -219,7 +224,7 @@ def process_mood2(img2_2):
                 "mood" : moods
             })
             
-    return mood_crop2
+    return result
 
 
 # =================================== Rank Image ===================================
@@ -261,9 +266,31 @@ def process_img3(img3_2):
 
     return result
 
-# ================================ Debugging ================================
-#images = preprocessing_img(img1)
-#padding_img(images["aptitude"][0])
+# =================================== CRNN Model ===================================
 
-images = process_img3(img3_2)
-padding_img(images["uma"][0])
+chars = build_vocab("uma_data/labels_dl.csv")
+char_to_idx, idx_to_char = build_char_maps(chars)
+num_classes = len(char_to_idx)
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = CrnnUma(num_classes=num_classes)
+model.load_state_dict(torch.load("model/crnn_uma_model_v9.pth", map_location=device))
+model.to(device)
+model.eval()
+
+def ocr_predict(pil_image, model, val_transform, idx_to_char, device):
+    padded = padding_img(pil_image)
+    tensor = val_transform(padded).unsqueeze(0).to(device)
+
+    with torch.no_grad():
+        output = model(tensor)
+        prediction = decoder_predictions(output, idx_to_char)
+
+    return prediction[0]
+
+# ================================ Debugging ================================
+images = preprocessing_img(img1)
+
+for skills_img in images["skills"]:
+    text = ocr_predict(skills_img, model, val_transform, idx_to_char, device)
+    print(text)
