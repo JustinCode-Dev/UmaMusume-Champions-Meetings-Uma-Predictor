@@ -25,8 +25,6 @@ def find_boxes(zone, min_w=150, max_w=310, min_h=30, max_h=70):
     closed = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
 
     contours, _ = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-    cv2.imwrite("debug_skill_mask.png", closed)
     
     boxes = []
     for c in contours: 
@@ -34,7 +32,6 @@ def find_boxes(zone, min_w=150, max_w=310, min_h=30, max_h=70):
         
         if min_w <= w <= max_w and min_h <= h <= max_h:
             boxes.append((x, y, w, h))
-            print(f"x={x}, y={y}, w={w}, h={h}")
 
     boxes.sort(key=lambda b: (b[1], b[0]))
     
@@ -55,12 +52,13 @@ def padding_img(image, target_height=48, max_width=460):
     img = img.resize((final_w, target_height), Image.Resampling.LANCZOS)
     padded_img = Image.new('L', (max_width, target_height), color=255)
     padded_img.paste(img, (5, 0))
+    padded_img.save("padding_test.png")
 
     return padded_img
 
 
 # ============================ Image 1 pre-processing ============================
-#def preprocessing_img(img1):
+def preprocessing_img(img1):
     img1_np = np.array(img1)
     hsv1 = cv2.cvtColor(img1_np, cv2.COLOR_RGB2HSV)
     lower_green1 = np.array([40, 100, 100])
@@ -71,12 +69,11 @@ def padding_img(image, target_height=48, max_width=460):
     if contours1:
         topmost1 = min(contours1, key=lambda c: cv2.boundingRect(c)[1])
         x1, y1, w1, h1 = cv2.boundingRect(topmost1)
-        #print(f"Header: x={x}, y={y}, w={w}, h={h}")
     if not contours1:
         print(f"Warning")
     ui_top1 = y1
     ui_crop1 = img1.crop((x1, ui_top1, x1 + w1, ui_top1 + 925))
-    ui_crop1.save("z_test.png")
+    #ui_crop1.save("z_test.png")
 
     # ================================ Uma Detail / UI Button ================================
 
@@ -86,30 +83,18 @@ def padding_img(image, target_height=48, max_width=460):
     mask = cv2.inRange(hsv, lower_green1, upper_green1)
     is_opponent = np.sum(mask) > 20000
 
+    result = {
+        "name" : None,
+        "aptitude" : [],
+        "stats" : [],
+        "skills" : []
+    }
+
     if is_opponent:
-        name_zone = name_zone = ui_crop1.crop((295, 75, 570, 115))
+        name_zone = ui_crop1.crop((295, 75, 570, 115))
         skills_zone = ui_crop1.crop((0, 570, 580, 905))
         stats_zone = ui_crop1.crop((10, 250, 580, 300))
         aptitude_zone = ui_crop1.crop((133, 310, 567, 410))
-        
-        # ==================== Stats ====================
-        for k in range(5):
-                    h = 115 + (k * 115)
-                    offset = k * 115
-                    stats = stats_zone.crop((40 + offset, 0, h, 100))
-                    stats.save(f"stats_{k + 1}.png")
-
-        # ==================== Skills ====================
-        skills = find_boxes(skills_zone)
-        for i, (x, y, w, h) in enumerate(skills):
-            crop_skill = skills_zone.crop((x + 35, y, x + w, y + h))
-            crop_skill.save(f"skill_{i + 1}.png")
-
-        # ==================== Aptitude ====================
-        aptitude = find_boxes(aptitude_zone, 83, 123, 20, 40)
-        for j, (x, y, w, h) in enumerate(aptitude):
-            crop_aptitude = aptitude_zone.crop((x + 70, y, x + w, y + h))
-            crop_aptitude.save(f"aptitude_{j + 1}.png")
 
     else:
         name_zone = ui_crop1.crop((285, 50, 525, 100))
@@ -117,26 +102,29 @@ def padding_img(image, target_height=48, max_width=460):
         stats_zone = ui_crop1.crop((10, 250, 580, 300))
         aptitude_zone = ui_crop1.crop((133, 310, 567, 410))
 
-        # ==================== Stats ====================
-        for k in range(5):
-            h = 115 + (k * 115)
-            offset = k * 115
-            stats = stats_zone.crop((40 + offset, 0, h, 100))
-            stats.save(f"stats_{k + 1}.png")
+    result["name"] = name_zone
 
-        # ==================== Skills ====================
-        skills = find_boxes(skills_zone)
-        for i, (x, y, w, h) in enumerate(skills):
-            crop_skill = skills_zone.crop((x + 35, y, x + w, y + h))
-            crop_skill.save(f"skill_{i + 1}.png")
-#
-        # ==================== Aptitude ====================
-        aptitude = find_boxes(aptitude_zone, 83, 123, 20, 40)
-        for j, (x, y, w, h) in enumerate(aptitude):
-                    crop_aptitude = aptitude_zone.crop((x + 70, y, x + w, y + h))
-                    crop_aptitude.save(f"aptitude_{j + 1}.png")
+    # ==================== Stats ====================
+    for k in range(5):
+        h = 115 + (k * 115)
+        offset = k * 115
+        stats = stats_zone.crop((40 + offset, 0, h, 100))
+        result["stats"].append(stats)
 
-    return ui_crop1
+    # ==================== Skills ====================
+    skills = find_boxes(skills_zone)
+    for i, (x, y, w, h) in enumerate(skills):
+        skill = skills_zone.crop((x + 35, y, x + w, y + h))
+        result["skills"].append(skill)
+
+    # ==================== Aptitude ====================
+    aptitude = find_boxes(aptitude_zone, 83, 123, 20, 40)
+    for j, (x, y, w, h) in enumerate(aptitude):
+         aptitude_crop = aptitude_zone.crop((x + 70, y, x + w, y + h))
+         #aptitude_crop.save(f"aptitude_{j + 1}.png")
+         result["aptitude"].append(aptitude_crop)
+
+    return result
 
 
 # ================================ Mood pre-processing ================================
@@ -163,26 +151,31 @@ def process_mood1(img2_1):
     rx1, ry1, rw1, rh1 = topmost_rect
     print(rw1)
     mood_crop1 = img2_1.crop((rx1 + 5, ry1, rx1 + rw1 + 5, ry1 + 717))
-    mood_crop1.save("mood_test1.png")
+    #mood_crop1.save("mood_test1.png")
+
+    result = []
 
     for i in range(6):
         y = 0 + (i * 120)
         rows = mood_crop1.crop((0, y, 561, y + 105))
         boxes = find_boxes(rows, 45, 110, 25, 45)
-        rows.save(f"zmood_{i+1}.png")
+        #rows.save(f"zmood_{i+1}.png")
         
         for box_idx, (x, y2, w, h) in enumerate(boxes):
-            crop = rows.crop((x, y2, x + w, y2 + h))
-            #crop.save(f"mood_1_{i + 1}.png")
+            moods = rows.crop((x, y2, x + w, y2 + h))
             names = rows.crop((x - 200, y2, x + w - 125, y2 + h))
-            names.save(f"name_{i + 1}.png")
+            
+            result.append({
+                "name" : names,
+                "mood" : moods
+            })
 
-    return mood_crop1
+    return result
 
 
 # =================================== Mood, Part 2 ===================================
 
-#def process_mood2(img2_2):
+def process_mood2(img2_2):
     img3_2_np = np.array(img2_2)
     gray3_2 = cv2.cvtColor(img3_2_np, cv2.COLOR_RGB2GRAY)
     edges3_2 = cv2.Canny(gray3_2, 30, 80)
@@ -200,7 +193,9 @@ def process_mood1(img2_1):
     botmost_rect = max(rectangles, key=lambda r: r[1])
     rx2, ry2, rw2, rh2 = botmost_rect
     mood_crop2 = img2_2.crop((rx2, ry2 - 575, rx2 + rw2, rh2 + ry2 - 30))
-    mood_crop2.save("mood_test2.png")
+    #mood_crop2.save("mood_test2.png")
+
+    result = []
 
     mood_coords = {
         1 : (0, 0, 561, 90),
@@ -216,17 +211,20 @@ def process_mood1(img2_1):
         boxes = find_boxes(rows, 45, 103, 25, 45)
 
         for x, y, w, h in boxes:
-            mood_crop = rows.crop((x, y, x + w, y + h))
-            mood_crop.save(f"mood_2_{row_num}.png")
-            name_crop = name.crop((x - 200, y, x + w - 125, y + h))
-            name_crop.save(f"name_{row_num}.png")
+            moods = rows.crop((x, y, x + w, y + h))
+            names = rows.crop((x - 200, y, x + w - 125, y + h))
 
+            result.append({
+                "name" : names,
+                "mood" : moods
+            })
+            
     return mood_crop2
 
 
 # =================================== Rank Image ===================================
 
-#def process_img3(img3_2):
+def process_img3(img3_2):
 
     # ======================= Image 3 pre-processing =======================
 
@@ -247,17 +245,25 @@ def process_mood1(img2_1):
         
     rank_top = y2
     rank_crop = img3_2.crop((x2, rank_top, x2 + w2 - 15, rank_top + 925))
-    rank_crop.save("rank.png")
+    #rank_crop.save("rank.png")
+
+    result ={
+        "uma" : []
+    }
 
     boxes = find_boxes(rank_crop, 160, 200, 45, 65)
 
     for i, (x, y, w, h) in enumerate(boxes):
         crop = rank_crop.crop((x, y + 25, x + w, y + h))
-        crop.save(f"rank_{i+1}.png")
+        result["uma"].append(crop)
 
-    return rank_crop
+        #crop.save(f"rank_{i+1}.png")
+
+    return result
 
 # ================================ Debugging ================================
+#images = preprocessing_img(img1)
+#padding_img(images["aptitude"][0])
 
-mood = process_mood1(img2_1)
-find_boxes(mood)
+images = process_img3(img3_2)
+padding_img(images["uma"][0])
