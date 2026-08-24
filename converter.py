@@ -10,14 +10,40 @@ from pathlib import Path
 
 pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-with open("data/raw/character.json", "r") as f:
+with open("data/raw/character.json", "r", encoding="utf-8") as f:
     characters = json.load(f)
 
-with open("data/raw/skills.json", "r") as f:
+with open("data/raw/skills.json", "r", encoding="utf-8") as f:
     skills_data = json.load(f)
 
 skill_names = [s["name"] for s in skills_data]
 char_names = [c["name"] for c in characters]
+
+# ================================================================================
+# ================================ Box Detection =================================
+# ================================================================================
+
+def find_boxes(zone, min_w=150, max_w=310, min_h=30, max_h=70):
+    zone_np = np.array(zone)
+    zone_gray = cv2.cvtColor(zone_np, cv2.COLOR_RGB2GRAY)
+    
+    kernel = np.ones((3, 3), np.uint8)
+    gradient = cv2.morphologyEx(zone_gray, cv2.MORPH_GRADIENT, kernel)
+    _, binary = cv2.threshold(gradient, 20, 255, cv2.THRESH_BINARY)
+    closed = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
+
+    contours, _ = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+    boxes = []
+    for c in contours: 
+        x, y, w, h = cv2.boundingRect(c)
+        
+        if min_w <= w <= max_w and min_h <= h <= max_h:
+            boxes.append((x, y, w, h))
+
+    boxes.sort(key=lambda b: (b[1], b[0]))
+    
+    return boxes
 
 # ================================================================================
 # ============================ Preprocessing Function ============================
@@ -151,7 +177,7 @@ def process_img1(img1, prefix, rows, photo_idx=0):
     matched_name = best_match[0]
     matched_score = best_match[1]
 
-    uma_name = matched_name if matched_score >= 70 else "unknown"
+    uma_name = matched_name if matched_score >= 75 else "unknown"
     rows.append({"filename": f"images/uma_name_{prefix}.png", "label": uma_name})
 
     # =============== Track Processing ===============
@@ -427,7 +453,6 @@ def process_img3(img3, race_prefix, rows):
 
     img3_np = np.array(img3)
     
-
     # =============================== Image 3, Part 1 ===============================
 
     gray3 = cv2.cvtColor(img3_np, cv2.COLOR_RGB2GRAY)
