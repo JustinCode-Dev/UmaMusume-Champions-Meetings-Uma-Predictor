@@ -349,57 +349,25 @@ def process_img3(img3, race_prefix, rows):
 
     # ==================== Uma Names (Mood Screen), Part 1 ====================
 
-    m_uma_results1 = {}
+    result = []
+
     for i in range(6):
-        y = 35 + (i * 120)
-        zone = mood_crop1.crop((155, y, 350, y + 45))
-        text = ocr_zone(zone).strip()
-        best_match = process.extractOne(text, char_names)
-        if best_match and best_match[1] >= 60:
-            matched = best_match[0].split("(")[0].strip()
-        else:
-            matched = "unknown"
-        m_uma_results1[f"m_uma{i+1}"] = matched
-        preprocess_zone(zone).save(f"C:/uma_data/images/m_uma{i+1}_{race_prefix}.png")
-        rows.append({"filename": f"images/m_uma{i+1}_{race_prefix}.png", "label": matched})
-    #print(m_uma_results1)
-
-    # ==================== Trainer Names (Mood Screen), Part 1 ====================
-
-    mood_tname_results1 = {}
-    for i in range(6):
-        y = 70 + (i * 120)
-        zone = mood_crop1.crop((110, y, 350, y + 30))
-        text = ocr_zone(zone).strip()
-        mood_tname_results1[f"mood_tname{i+1}"] = text
-        preprocess_zone(zone).save(f"C:/uma_data/images/mood_tname{i+1}_{race_prefix}.png")
-        rows.append({"filename": f"images/mood_tname{i+1}_{race_prefix}.png", "label": text})
-    #print(mood_tname_results1)
-
-    # ===================== Mood, Part 1 =====================
-
-    mood_results1 = {}
-    for i in range(6):
-        y = 45 + (i * 120)
-        zone = mood_crop1.crop((387, y, 440, y + 17))
-        text = ocr_zone_adaptive(zone, whitelist="BADNORMLGET").strip()
-        best_match = process.extractOne(text, mood_list)
-        if best_match and best_match[1] >= 60:
-            matched = best_match[0]
-        else:
-            matched = "unknown"
-        mood_results1[f"mood{i+1}"] = matched
-        preprocess_zone(zone).save(f"C:/uma_data/images/mood{i+1}_{race_prefix}.png")
-        rows.append({"filename": f"images/mood{i+1}_{race_prefix}.png", "label": matched})
-    #print(mood_results1)
-
-    result = {}
-
-    result.update(m_uma_results1)
-    result.update(mood_tname_results1)
-    result.update(mood_results1)
+        y = 0 + (i * 120)
+        rows = mood_crop1.crop((0, y, 561, y + 105))
+        boxes = find_boxes(rows, 45, 110, 25, 45)
+        #rows.save(f"zmood_{i+1}.png")
+        
+        for box_idx, (x, y2, w, h) in enumerate(boxes):
+            moods = rows.crop((x, y2, x + w, y2 + h))
+            names = rows.crop((x - 200, y2, x + w - 125, y2 + h))
+            
+            result.append({
+                "name" : names,
+                "mood" : moods
+            })
 
     return result
+
 
 
 # ======================================================================================================
@@ -437,56 +405,30 @@ def process_img3_2(img3_2, race_prefix, rows):
 
     # ==================== Uma Names (Mood Screen), Part 2 ====================
 
-    m_uma_results2 = {}
-    for i in range(3):
-        y = 375 + (i * 120)
-        zone = mood_crop2.crop((145, y, 350, y + 30))
-        text = ocr_zone(zone).strip()
-        best_match = process.extractOne(text, char_names)
-        if best_match and best_match[1] >= 60:
-            matched = best_match[0].split("(")[0].strip()
-        else:
-            matched = "unknown"
-        m_uma_results2[f"m_uma{i+7}"] = matched
-        preprocess_zone(zone).save(f"C:/uma_data/images/m_uma{i+7}_{race_prefix}.png")
-        rows.append({"filename": f"images/m_uma{i+7}_{race_prefix}.png", "label": matched})
-    #print(m_uma_results2)
+    result = []
     
-    # ==================== Trainer Names (Mood Screen), Part 2 ====================
+    mood_coords = {
+            1 : (0, 0, 561, 90),
+            2 : (0, 100, 561, 200),
+            3 : (0, 220, 561, 320),
+            4 : (0, 340, 561, 440),
+            5 : (0, 460, 561, 560),
+            6 : (0, 580, 561, 680)
+        }
+            
+    for row_num, coords in mood_coords.items():
+        rows = mood_crop2.crop(coords)
+        boxes = find_boxes(rows, 45, 103, 25, 45)
 
-    mood_tname_results2 = {}
-    for i in range(3):
-        y = 405 + (i * 120)
-        zone = mood_crop2.crop((140, y, 367, y + 30))
-        text = ocr_zone(zone).strip()
-        mood_tname_results2[f"mood_tname{i+7}"] = text
-        preprocess_zone(zone).save(f"C:/uma_data/images/mood_tname{i+7}_{race_prefix}.png")
-        rows.append({"filename": f"images/mood_tname{i+7}_{race_prefix}.png", "label": text})
-    #print(mood_tname_results2)
-    
-    # ===================== Mood, Part 2 =====================
+        for x, y, w, h in boxes:
+            moods = rows.crop((x, y, x + w, y + h))
+            names = rows.crop((x - 200, y, x + w - 125, y + h))
 
-    mood_results2 = {}
-    for i in range(3):
-        y = 369 + (i * 120)
-        zone = mood_crop2.crop((380, y, 430, y + 38))
-        text = ocr_zone_adaptive(zone, whitelist="BADNORMLGET").strip()
-        best_match = process.extractOne(text, mood_list)
-        if best_match and best_match[1] >= 60:
-            matched = best_match[0]
-        else:
-            matched = "unknown"
-        mood_results2[f"mood{i+7}"] = matched
-        preprocess_zone(zone).save(f"C:/uma_data/images/mood{i+7}_{race_prefix}.png")
-        rows.append({"filename": f"images/mood{i+7}_{race_prefix}.png", "label": matched})
-    #print(mood_results2)
-
-    result = {}
-    
-    result.update(m_uma_results2)
-    result.update(mood_tname_results2)
-    result.update(mood_results2)
-    
+            result.append({
+                "name" : names,
+                "mood" : moods
+            })
+                
     return result
 
 # ==========================================================================================
