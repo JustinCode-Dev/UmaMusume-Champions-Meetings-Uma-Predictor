@@ -135,183 +135,50 @@ def process_img1(img1, prefix, rows, photo_idx=0):
     #print("Green pixels:", np.sum(mask))
     is_opponent = np.sum(mask) > 20000
 
-    if is_opponent:
-        name_zone = ui_crop1.crop((295, 75, 570, 120))
-        skills_zone = ui_crop1.crop((0, 570, 665, 905))
+    result = {
+        "name" : None,
+        "aptitude" : [],
+        "stats" : [],
+        "skills" : []
+    }
 
-        skills_zones = {}
-        for i in range(5):
-            y = 25 + (i * 60)
-            skills_zones[f"skill_{i+1}"] = skills_zone.crop((55, y, 300, y + 45))
-            skills_zones[f"skill_{i+6}"] = skills_zone.crop((338, y, 540, y + 49))
+    stats_zone = ui_crop1.crop((10, 250, 580, 300))
+    aptitude_zone = ui_crop1.crop((133, 310, 567, 410))
+
+    if is_opponent:
+        name_zone = ui_crop1.crop((295, 75, 570, 115))
+        skills_zone = ui_crop1.crop((0, 570, 580, 905))
 
     else:
-        name_zone = ui_crop1.crop((285, 50, 530, 100))
-        skills_zone = ui_crop1.crop((0, 470, 665, 925))
+        name_zone = ui_crop1.crop((285, 50, 525, 100))
+        skills_zone = ui_crop1.crop((0, 470, 580, 925))
 
-        if photo_idx == 0:
-            y_start = 15
-            rows_count = 7
-        else:
-            y_start = 45
-            rows_count = 6
-        
-        skills_zones = {}
-        for j in range(rows_count):
-        
-            y = y_start + (j * 60)
-            skills_zones[f"skill_{j+1}"] = skills_zone.crop((48, y, 300, y + 55))
-            skills_zones[f"skill_{j+8}"] = skills_zone.crop((335, y, 540, y + 55))
+    result["name"] = name_zone
+
+    # ==================== Stats ====================
+    for k in range(5):
+        h = 115 + (k * 115)
+        offset = k * 115
+        stats = stats_zone.crop((40 + offset, 0, h, 100))
+        result["stats"].append(stats)
+
+    # ==================== Skills ====================
+    skills = find_boxes(skills_zone)
+    for i, (x, y, w, h) in enumerate(skills):
+        skill = skills_zone.crop((x + 35, y, x + w, y + h))
+        result["skills"].append(skill)
+        skill.save(f"skill_{i + 1}.png")
+
+    # ==================== Aptitude ====================
+    aptitude = find_boxes(aptitude_zone, 83, 123, 20, 40)
+    for j, (x, y, w, h) in enumerate(aptitude):
+         aptitude_crop = aptitude_zone.crop((x + 70, y, x + w, y + h))
+         #aptitude_crop.save(f"aptitude_{j + 1}.png")
+         result["aptitude"].append(aptitude_crop)
 
     # =============== Ranks Validation ===============
 
-    valid_ranks = ["S", "A", "B", "C", "D", "E", "F", "G"]
-
-    # ================ Uma Name Processing ================
-
-    name_text = ocr_zone(name_zone).strip()
-    preprocess_zone(name_zone).save(f"C:/uma_data/images/uma_name_{prefix}.png")
-    name_raw = name_text.strip()
-    best_match = process.extractOne(name_raw, char_names)
-    #print("Match:", best_match)
-    matched_name = best_match[0]
-    matched_score = best_match[1]
-
-    uma_name = matched_name if matched_score >= 75 else "unknown"
-    rows.append({"filename": f"images/uma_name_{prefix}.png", "label": uma_name})
-
-    # =============== Track Processing ===============
-
-    turf_zone = ui_crop1.crop((198, 313, 250, 340))  
-    dirt_zone = ui_crop1.crop((300, 313, 360, 340))
-    #turf_zone.save("turf.png")
-    #dirt_zone.save("dirt.png")
-
-    track_zones = {
-        "turf" : (turf_zone, 185),
-        "dirt" : (dirt_zone, 185)
-    }
-
-    tracks = {}
-    for track_name, (zone, thresh_val) in track_zones.items():
-        preprocess_zone(zone).save(f"C:/uma_data/images/{track_name}_{prefix}.png")
-        raw_ocr_text = ocr_zone_adaptive(zone, whitelist="SABCDEFG", max_wh_ratio=1.2).strip()
-        best_match = process.extractOne(raw_ocr_text, valid_ranks)
-        if best_match and best_match[1] >= 60:
-            matched_rank = best_match[0]
-        else:
-            matched_rank = "unknown"
-
-        tracks[track_name] = matched_rank
-        rows.append({"filename": f"images/{track_name}_{prefix}.png", "label": tracks[track_name]})
-
-    # =============== Distance Processing ===============
-
-    distance_zone = ui_crop1.crop((125, 340, 570, 378))
-    sprint_zone = distance_zone.crop ((85, 7, 110, 31))
-    mile_zone = distance_zone.crop ((193, 7, 215, 31))
-    medium_zone = distance_zone.crop ((299, 8, 325, 31))
-    long_zone = distance_zone.crop ((401, 7, 435, 31))
-    #sprint_zone.save("sprint.png") 
-    #mile_zone.save("mile.png")
-    #medium_zone.save("medium.png")
-
-    distance_zones = {
-        "sprint" : sprint_zone,
-        "mile" : mile_zone,
-        "medium" : medium_zone,
-        "long" : long_zone
-    }
-
-    distance = {}
-    for distance_name, zone in distance_zones.items():
-        text = ocr_zone_adaptive(zone, whitelist="SABCDEFG", max_wh_ratio=1.2).strip()
-        preprocess_zone(zone).save(f"C:/uma_data/images/{distance_name}_{prefix}.png")
-        raw_text = text.strip().upper().replace(" ", "")
-        valid_char = ""
-        for char in raw_text:
-            if char in valid_ranks:  
-                valid_char = char
-                break
-        distance[distance_name] = valid_char 
-        rows.append({"filename": f"images/{distance_name}_{prefix}.png", "label": distance[distance_name]})
-
-    # =============== Style Processing ===============
-
-    style_zone = ui_crop1.crop((125, 370, 570, 410))
-    front_zone = style_zone.crop((84, 11, 110, 32))
-    pace_zone = style_zone.crop((186, 12, 220, 33))
-    late_zone = style_zone.crop((285, 11, 325, 33))
-    end_zone = style_zone.crop((400, 12, 435, 32))
-
-    style_zones = {
-        "front_runner" : front_zone,
-        "pace_chaser" : pace_zone,
-        "late_surger" : late_zone,
-        "end_closer" : end_zone
-    }
-
-    style = {}
-    for style_name, zone in style_zones.items():
-        text = ocr_zone_adaptive(zone, whitelist="SABCDEFG", max_wh_ratio=1.2).strip()
-        preprocess_zone(zone).save(f"C:/uma_data/images/{style_name}_{prefix}.png")
-        best_match = process.extractOne(text, valid_ranks)
-        if best_match and best_match[1] >= 60:
-            style[style_name] = best_match[0]
-        else:
-            style[style_name] = "unknown"
-        rows.append({"filename": f"images/{style_name}_{prefix}.png", "label": style[style_name]})
-    #print(style)
-
-    # =============== Stats Processing ===============
-
-    stats_zone = ui_crop1.crop((0, 255, 665, 330))
-
-    speed_zone = stats_zone.crop((53, 0, 127, 50))
-    stamina_zone = stats_zone.crop((165, 0, 240, 50))
-    power_zone = stats_zone.crop((276, 0, 350, 40))
-    guts_zone = stats_zone.crop((388, 0, 472, 55))
-    wit_zone = stats_zone.crop((505, 0, 597, 50))
-
-    stats_zones = {
-        "speed": (speed_zone, 160),
-        "stamina": (stamina_zone, 172),
-        "power": (power_zone, 178),
-        "guts": (guts_zone, 134),
-        "wit": (wit_zone, 170)
-    }
-
-    stats = {}
-    for stat_name, (zone, thresh_val) in stats_zones.items():
-        text = ocr_zone(zone, thresh_val=thresh_val).strip()
-        preprocess_zone(zone).save(f"C:/uma_data/images/{stat_name}_{prefix}.png")
-        text = re.sub(r'[^\d]', '', text)
-        stats[stat_name] = text.strip()
-        rows.append({"filename": f"images/{stat_name}_{prefix}.png", "label": stats[stat_name]})
-
-    # =============== Skill Processing ===============
-
-    skills = {}
-    for skill_name, zone in skills_zones.items():
-        text = ocr_zone(zone, thresh_val=173).strip()
-        preprocess_zone(zone).save(f"C:/uma_data/images/{skill_name}_{prefix}.png")
-        best_match = process.extractOne(text, skill_names)
-        if best_match and best_match[1] >= 60:
-            matched_skill = best_match[0]
-            
-        else:
-            matched_skill = "unknown"
-
-        skills[skill_name] = matched_skill
-        rows.append({"filename": f"images/{skill_name}_{prefix}.png", "label": matched_skill})
-        
-    result = {}
-    result["uma_name"] = uma_name
-    result.update(tracks)      
-    result.update(distance)    
-    result.update(style)       
-    result.update(stats)       
-    result.update(skills) 
+    #valid_ranks = ["S", "A", "B", "C", "D", "E", "F", "G"]
 
     return result
 
@@ -626,35 +493,35 @@ def process_img3_2(img3_2, race_prefix, rows):
 # ========================================== Main ==========================================
 # ==========================================================================================
 
-rows = []
-rounds = ["round1", "round2"]
+#rows = []
+#rounds = ["round1", "round2"]
 
-for round_name in rounds:
-    race_dirs = sorted(Path(f"photo/cm14/{round_name}/detail").glob("race*"))
-    mood_photos = sorted(Path(f"photo/cm14/{round_name}/mood").glob("*.png"))
-    rank_photos = sorted(Path(f"photo/cm14/{round_name}/rank").glob("*.png"))
-
-    for race_idx, race_dir in enumerate(race_dirs):
-        race_name = race_dir.name
-        detail_photos = sorted(race_dir.glob("*.png"))
-        mood_pair = mood_photos[race_idx * 2 : race_idx * 2 + 2]
-        rank_pair = rank_photos[race_idx * 2 : race_idx * 2 + 2]
-
-        race_prefix = f"{round_name}_{race_name}"
-
-        img2 = Image.open(rank_pair[0])
-        img2_2 = Image.open(rank_pair[1])
-        img3 = Image.open(mood_pair[0])
-        img3_2 = Image.open(mood_pair[1])
-
-        result2_1 = process_img2(img2, race_prefix, rows)
-        result2_2 = process_img2_2(img2_2, race_prefix, rows)
-        result3_1 = process_img3(img3, race_prefix, rows)
-        result3_2 = process_img3_2(img3_2, race_prefix, rows)
-
-        for i, detail_path in enumerate(detail_photos):
-            prefix = f"{round_name}_{race_name}_{i}"
-            img1 = Image.open(detail_path)
-            result1 = process_img1(img1, prefix, rows, i % 2)
-
-pd.DataFrame(rows).to_csv("C:/uma_data/labels_dl.csv", index=False, encoding='utf-8-sig')
+#for round_name in rounds:
+#    race_dirs = sorted(Path(f"photo/cm14/{round_name}/detail").glob("race*"))
+#    mood_photos = sorted(Path(f"photo/cm14/{round_name}/mood").glob("*.png"))
+#    rank_photos = sorted(Path(f"photo/cm14/{round_name}/rank").glob("*.png"))
+#
+#    for race_idx, race_dir in enumerate(race_dirs):
+#        race_name = race_dir.name
+#        detail_photos = sorted(race_dir.glob("*.png"))
+#        mood_pair = mood_photos[race_idx * 2 : race_idx * 2 + 2]
+#        rank_pair = rank_photos[race_idx * 2 : race_idx * 2 + 2]
+#
+#        race_prefix = f"{round_name}_{race_name}"
+#
+#        img2 = Image.open(rank_pair[0])
+#        img2_2 = Image.open(rank_pair[1])
+#        img3 = Image.open(mood_pair[0])
+#        img3_2 = Image.open(mood_pair[1])
+#
+#        result2_1 = process_img2(img2, race_prefix, rows)
+#        result2_2 = process_img2_2(img2_2, race_prefix, rows)
+#        result3_1 = process_img3(img3, race_prefix, rows)
+#        result3_2 = process_img3_2(img3_2, race_prefix, rows)
+#
+#        for i, detail_path in enumerate(detail_photos):
+#            prefix = f"{round_name}_{race_name}_{i}"
+#            img1 = Image.open(detail_path)
+#            result1 = process_img1(img1, prefix, rows, i % 2)
+#
+#pd.DataFrame(rows).to_csv("C:/uma_data/labels_dl.csv", index=False, encoding='utf-8-sig')
