@@ -204,109 +204,26 @@ def process_img2(img2, race_prefix, rows):
         topmost2 = min(contours2, key=lambda c: cv2.boundingRect(c)[1])
         x2, y2, w2, h2 = cv2.boundingRect(topmost2)
     else:
-        print(f"Warning: green header not found on {race_prefix}")
+        print(f"Warning: green header not found")
         return {}
         
-    placing_top = y2
-    placing_crop = img2.crop((x2, placing_top, x2 + w2, placing_top + 925))
-    #placing_crop.save("RankUI.png")
+    rank_top = y2
+    rank_crop = img2.crop((x2, rank_top, x2 + w2 - 15, rank_top + 925))
+    #rank_crop.save("rank.png")
 
-    # ==================== Trainers Name, Placement/Rank, Part 1 ====================
+    result ={
+        "uma" : []
+    }
 
-    r_tname_results1 = {}
-    for i in range (4):
-        y = 475 + (i * 120)
-        zone = placing_crop.crop((250, y, 450, y + 40))
-        text = ocr_zone(zone).strip()
-        r_tname_results1[f"r_tname{i+1}"] = text
-        preprocess_zone(zone).save(f"C:/uma_data/images/r_tname{i+1}_{race_prefix}.png")
-        rows.append({"filename": f"images/r_tname{i+1}_{race_prefix}.png", "label": text})
+    boxes = find_boxes(rank_crop, 160, 200, 45, 65)
 
-    # ======================== Placement/Rank ========================
+    for i, (x, y, w, h) in enumerate(boxes):
+        crop = rank_crop.crop((x, y + 25, x + w, y + h))
+        result["uma"].append(crop)
 
-    rank = {f"rank_{i+1}": i+1 for i in range(9)}
+        #crop.save(f"rank_{i+1}.png")
 
-    # ==================== Uma Name, Placement/Rank, Part 1 ====================
-
-    r_uma_results1 = {}
-    for i in range(4):
-        y = 440 + (i * 120)
-        zone = placing_crop.crop((250, y, 450, y + 40))
-        text = ocr_zone(zone).strip()
-        best_match = process.extractOne(text, char_names)
-        if best_match and best_match[1] >= 60:
-            matched = best_match[0].split("(")[0].strip()
-        else:
-            matched = "unknown"
-        r_uma_results1[f"r_uma{i+1}"] = matched
-        preprocess_zone(zone).save(f"C:/uma_data/images/r_uma{i+1}_{race_prefix}.png")
-        rows.append({"filename": f"images/r_uma{i+1}_{race_prefix}.png", "label": matched})
-    #print(r_uma_results1)
-
-    result = {}
-
-    result.update(rank)
-    result.update(r_tname_results1)
-    result.update(r_uma_results1)
-    
     return result
-
-
-# ============================================================================================
-# ====================================== Image 2, Part2 ======================================
-# ============================================================================================
-
-
-def process_img2_2(img2_2, race_prefix, rows):
-
-    img2_np = np.array(img2_2)
-    hsv2 = cv2.cvtColor(img2_np, cv2.COLOR_RGB2HSV)
-    lower_green2 = np.array([40, 100, 100])
-    upper_green2 = np.array([80, 255, 255])
-
-    mask2 = cv2.inRange(hsv2, lower_green2, upper_green2)
-    contours2, _ = cv2.findContours(mask2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-    if contours2:
-        topmost2 = min(contours2, key=lambda c: cv2.boundingRect(c)[1])
-        x2, y2, w2, h2 = cv2.boundingRect(topmost2)
-    else:
-        print(f"Warning: green header not found on {race_prefix}")
-        return {}
-        
-    placing_top = y2
-    placing_crop = img2_2.crop((x2, placing_top, x2 + w2, placing_top + 925))
-
-    # ==================== Trainers Name, Placement/Rank, Part 2 ====================
-    
-    r_tname_results2 = {}
-    for i in range(4):
-        y = 460 + (i * 120)
-        zone = placing_crop.crop((230, y, 450, y + 40))
-        text = ocr_zone(zone).strip()
-        r_tname_results2[f"r_tname{i+5}"] = text
-        preprocess_zone(zone).save(f"C:/uma_data/images/r_tname{i+5}_{race_prefix}.png")
-        rows.append({"filename": f"images/r_tname{i+5}_{race_prefix}.png", "label": text})
-
-    # ==================== Uma Name, Placement/Rank, Part 2 ====================
-
-    r_uma_results2 = {}
-    for i in range(4):
-        y = 430 + (i * 120)
-        zone = placing_crop.crop((250, y, 465, y + 40))
-        text = ocr_zone(zone).strip()
-        best_match = process.extractOne(text, char_names)
-        if best_match and best_match[1] >= 60:
-            matched = best_match[0].split("(")[0].strip()
-        else:
-            matched = "unknown"
-        r_uma_results2[f"r_uma{i+5}"] = matched
-        preprocess_zone(zone).save(f"C:/uma_data/images/r_uma{i+5}_{race_prefix}.png")
-        rows.append({"filename": f"images/r_uma{i+5}_{race_prefix}.png", "label": matched})
-        
-    result = {}
-    result.update(r_tname_results2)
-    result.update(r_uma_results2)
         
 
 # =============================================================================================
