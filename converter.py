@@ -8,6 +8,11 @@ import re
 import pandas as pd
 from pathlib import Path
 
+import torch
+from crnn import CrnnUma, decoder_predictions, build_vocab, build_char_maps, val_transform
+import torch
+import torchvision.transforms as transforms
+
 pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 with open("data/raw/character.json", "r", encoding="utf-8") as f:
@@ -18,6 +23,14 @@ with open("data/raw/skills.json", "r", encoding="utf-8") as f:
 
 skill_names = [s["name"] for s in skills_data]
 char_names = [c["name"] for c in characters]
+
+# ================================ Image Debugging ================================
+
+img1 = Image.open("photo/cm14/round1/detail/race1/Screenshot 2026-06-05 173654.png") # uma detail img
+img2_1 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 173504.png") # mood img (not scrolled)
+img2_2 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 173513.png") # mood img (scrolled)
+img3_1 = Image.open("photo/cm14/round1/rank/Screenshot 2026-06-05 173620.png") # rank img (not scrolled)
+img3_2 = Image.open("photo/cm14/round1/rank/Screenshot 2026-06-05 173635.png") # rank img (scrolled)
 
 # ================================================================================
 # ================================ Box Detection =================================
@@ -49,7 +62,7 @@ def find_boxes(zone, min_w=150, max_w=310, min_h=30, max_h=70):
 # ============================ Preprocessing Function ============================
 # ================================================================================
 
-def ocr_zone(zone, thresh_val=120, psm=7, whitelist=None):
+#def ocr_zone(zone, thresh_val=120, psm=7, whitelist=None):
     zone = zone.resize((zone.width * 2, zone.height * 2))
     zone_np = np.array(zone)
     zone_gray = cv2.cvtColor(zone_np, cv2.COLOR_RGB2GRAY)
@@ -62,7 +75,7 @@ def ocr_zone(zone, thresh_val=120, psm=7, whitelist=None):
 
     return pytesseract.image_to_string(zone_processed, config=config)
 
-def ocr_zone_adaptive(zone, psm=10, whitelist=None, max_wh_ratio=None):
+#def ocr_zone_adaptive(zone, psm=10, whitelist=None, max_wh_ratio=None):
     zone = zone.resize((zone.width * 3, zone.height * 3))
     zone_np = np.array(zone)
     zone_gray = cv2.cvtColor(zone_np, cv2.COLOR_RGB2GRAY)
@@ -89,7 +102,7 @@ def ocr_zone_adaptive(zone, psm=10, whitelist=None, max_wh_ratio=None):
 
     return pytesseract.image_to_string(zone_processed, config=config)
 
-def preprocess_zone(zone):
+#def preprocess_zone(zone):
     zone = zone.resize((zone.width * 2, zone.height * 2))
     zone_np = np.array(zone)
     zone_gray = cv2.cvtColor(zone_np, cv2.COLOR_RGB2GRAY)
@@ -102,7 +115,7 @@ def preprocess_zone(zone):
 # =====================================================================================
 
 
-def process_img1(img1, prefix, rows, photo_idx=0):
+def process_img1(img1):
 
     # ============== Image 1 pre-processing ==============
 
@@ -119,7 +132,7 @@ def process_img1(img1, prefix, rows, photo_idx=0):
         x1, y1, w1, h1 = cv2.boundingRect(topmost1)
         #print(f"Header: x={x}, y={y}, w={w}, h={h}")
     if not contours1:
-        print(f"Warning: green header not found on {prefix}")
+        print(f"Warning: green header not found on")
         return {}
 
     ui_top1 = y1
@@ -132,7 +145,6 @@ def process_img1(img1, prefix, rows, photo_idx=0):
     button_np = np.array(button_zone)
     hsv = cv2.cvtColor(button_np, cv2.COLOR_RGB2HSV)
     mask = cv2.inRange(hsv, lower_green1, upper_green1)
-    #print("Green pixels:", np.sum(mask))
     is_opponent = np.sum(mask) > 20000
 
     result = {
@@ -154,13 +166,15 @@ def process_img1(img1, prefix, rows, photo_idx=0):
         skills_zone = ui_crop1.crop((0, 470, 580, 925))
 
     result["name"] = name_zone
+    #name_zone.save("name.png")
 
     # ==================== Stats ====================
     for k in range(5):
         h = 115 + (k * 115)
         offset = k * 115
-        stats = stats_zone.crop((40 + offset, 0, h, 100))
-        result["stats"].append(stats)
+        stat = stats_zone.crop((40 + offset, 0, h, 40))
+        result["stats"].append(stat)
+        #stat.save(f"stats{k + 1}.png")
 
     # ==================== Skills ====================
     skills = find_boxes(skills_zone)
@@ -172,10 +186,10 @@ def process_img1(img1, prefix, rows, photo_idx=0):
     # ==================== Aptitude ====================
     aptitude = find_boxes(aptitude_zone, 83, 123, 20, 40)
     for j, (x, y, w, h) in enumerate(aptitude):
-         aptitude_crop = aptitude_zone.crop((x + 70, y, x + w, y + h))
-         #aptitude_crop.save(f"aptitude_{j + 1}.png")
-         result["aptitude"].append(aptitude_crop)
-
+        aptitude_crop = aptitude_zone.crop((x + 70, y, x + w, y + h))
+        result["aptitude"].append(aptitude_crop)
+        #aptitude_crop.save(f"aptitude_{j + 1}.png")
+        
     # =============== Ranks Validation ===============
 
     #valid_ranks = ["S", "A", "B", "C", "D", "E", "F", "G"]
@@ -183,61 +197,14 @@ def process_img1(img1, prefix, rows, photo_idx=0):
     return result
 
 
-# =====================================================================================
-# ====================================== Image 2 ======================================
-# =====================================================================================
+# ====================================================================================================
+# ========================================== Image 2, part 1==========================================
+# ====================================================================================================
 
 
-def process_img2(img2, race_prefix, rows):
+def process_img3(img2_1, race_prefix, rows):
 
-    # ======================= Image 2 pre-processing =======================
-
-    img2_np = np.array(img2)
-    hsv2 = cv2.cvtColor(img2_np, cv2.COLOR_RGB2HSV)
-    lower_green2 = np.array([40, 100, 100])
-    upper_green2 = np.array([80, 255, 255])
-
-    mask2 = cv2.inRange(hsv2, lower_green2, upper_green2)
-    contours2, _ = cv2.findContours(mask2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-    if contours2:
-        topmost2 = min(contours2, key=lambda c: cv2.boundingRect(c)[1])
-        x2, y2, w2, h2 = cv2.boundingRect(topmost2)
-    else:
-        print(f"Warning: green header not found")
-        return {}
-        
-    rank_top = y2
-    rank_crop = img2.crop((x2, rank_top, x2 + w2 - 15, rank_top + 925))
-    #rank_crop.save("rank.png")
-
-    result ={
-        "uma" : []
-    }
-
-    boxes = find_boxes(rank_crop, 160, 200, 45, 65)
-
-    for i, (x, y, w, h) in enumerate(boxes):
-        crop = rank_crop.crop((x, y + 25, x + w, y + h))
-        result["uma"].append(crop)
-
-        #crop.save(f"rank_{i+1}.png")
-
-    return result
-        
-
-# =============================================================================================
-# ========================================== Image 3 ==========================================
-# =============================================================================================
-
-
-def process_img3(img3, race_prefix, rows):
-
-    # ================================ Image 3 pre-processing ================================
-
-    img3_np = np.array(img3)
-    
-    # =============================== Image 3, Part 1 ===============================
+    img3_np = np.array(img2_1)
 
     gray3 = cv2.cvtColor(img3_np, cv2.COLOR_RGB2GRAY)
     edges3 = cv2.Canny(gray3, 30, 80)
@@ -257,7 +224,7 @@ def process_img3(img3, race_prefix, rows):
     topmost_rect = min(rectangles, key=lambda r: r[1])
     rx1, ry1, rw1, rh1 = topmost_rect
 
-    mood_crop1 = img3.crop((rx1, ry1, rx1 + rw1, ry1 + 717))
+    mood_crop1 = img2_1.crop((rx1, ry1, rx1 + rw1, ry1 + 717))
     #mood_crop1.save("mood_test1.png")
 
     # ======================== Mood Validation ========================
@@ -288,11 +255,11 @@ def process_img3(img3, race_prefix, rows):
 
 
 # ======================================================================================================
-# ========================================== Image 3, Part 2  ==========================================
+# ========================================== Image 2, Part 2  ==========================================
 # ======================================================================================================
 
 
-def process_img3_2(img3_2, race_prefix, rows):
+def process_img3_2(img2_2, race_prefix, rows):
     # =============================== Image 3, Part 2 ===============================
     img3_2_np = np.array(img3_2)
     gray3_2 = cv2.cvtColor(img3_2_np, cv2.COLOR_RGB2GRAY)
@@ -313,7 +280,7 @@ def process_img3_2(img3_2, race_prefix, rows):
     botmost_rect = max(rectangles, key=lambda r: r[1])
     rx2, ry2, rw2, rh2 = botmost_rect
     #print(f"Header: x={rx2}, y={ry2}, w={rw2}, h={rh2}")
-    mood_crop2 = img3_2.crop((rx2, ry2 - 575, rx2 + rw2, rh2 + ry2))
+    mood_crop2 = img2_2.crop((rx2, ry2 - 575, rx2 + rw2, rh2 + ry2))
     #mood_crop2.save("mood_test2.png")
     
     # ======================== Mood Validation ========================
@@ -347,6 +314,50 @@ def process_img3_2(img3_2, race_prefix, rows):
             })
                 
     return result
+
+
+# =====================================================================================
+# ====================================== Image 3 ======================================
+# =====================================================================================
+
+
+def process_img2(img3_1, race_prefix, rows):
+
+    # ======================= Image 2 pre-processing =======================
+
+    img2_np = np.array(img3_1)
+    hsv2 = cv2.cvtColor(img2_np, cv2.COLOR_RGB2HSV)
+    lower_green2 = np.array([40, 100, 100])
+    upper_green2 = np.array([80, 255, 255])
+
+    mask2 = cv2.inRange(hsv2, lower_green2, upper_green2)
+    contours2, _ = cv2.findContours(mask2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    if contours2:
+        topmost2 = min(contours2, key=lambda c: cv2.boundingRect(c)[1])
+        x2, y2, w2, h2 = cv2.boundingRect(topmost2)
+    else:
+        print(f"Warning: green header not found")
+        return {}
+        
+    rank_top = y2
+    rank_crop = img3_1.crop((x2, rank_top, x2 + w2 - 15, rank_top + 925))
+    #rank_crop.save("rank.png")
+
+    result ={
+        "uma" : []
+    }
+
+    boxes = find_boxes(rank_crop, 160, 200, 45, 65)
+
+    for i, (x, y, w, h) in enumerate(boxes):
+        crop = rank_crop.crop((x, y + 25, x + w, y + h))
+        result["uma"].append(crop)
+
+        #crop.save(f"rank_{i+1}.png")
+
+    return result
+
 
 # ==========================================================================================
 # ========================================== Main ==========================================
@@ -384,3 +395,58 @@ def process_img3_2(img3_2, race_prefix, rows):
 #            result1 = process_img1(img1, prefix, rows, i % 2)
 #
 #pd.DataFrame(rows).to_csv("C:/uma_data/labels_dl.csv", index=False, encoding='utf-8-sig')
+
+# =============================== Size/Padding Processing ===============================
+
+def padding_img(image, target_height=48, max_width=460):
+    img = image.convert('L')
+
+    w, h = img.size
+    new_w = int(w * (target_height / h))
+    if new_w > max_width - 5:
+        final_w = max_width - 5
+    else:
+        final_w = new_w
+    img = img.resize((final_w, target_height), Image.Resampling.LANCZOS)
+    padded_img = Image.new('L', (max_width, target_height), color=255)
+    padded_img.paste(img, (5, 0))
+    padded_img.save("padding_test.png")
+
+    return padded_img
+
+# =================================== Debugging/Testing ===================================
+
+chars = build_vocab("uma_data/labels_dl.csv")
+char_to_idx, idx_to_char = build_char_maps(chars)
+num_classes = len(char_to_idx)
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = CrnnUma(num_classes=num_classes)
+model.load_state_dict(torch.load("umaocr/model/crnn_uma_model_v9.pth", map_location=device))
+model.to(device)
+model.eval()
+
+def ocr_predict(pil_image, model, val_transform, idx_to_char, device):
+    padded = padding_img(pil_image)
+    tensor = val_transform(padded).unsqueeze(0).to(device)
+
+    with torch.no_grad():
+        output = model(tensor)
+        prediction = decoder_predictions(output, idx_to_char)
+
+    return prediction[0]
+
+def ocr_with_fuzzy(pil_image, model, val_transform, idx_to_char, device, choices, threshold=85):
+    raw_text = ocr_predict(pil_image, model, val_transform, idx_to_char, device)
+    match, score, _ = process.extractOne(raw_text, choices)
+
+    if score >= threshold:
+        return match
+    else:
+        return raw_text
+
+image1 = process_img1(img1)
+
+for skills in image1["skills"]:
+    text = ocr_with_fuzzy(skills, model, val_transform, idx_to_char, device, skill_names)
+    print(text)
