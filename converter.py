@@ -323,8 +323,6 @@ def process_img3_2(img2_2, race_prefix, rows):
 
 def process_img2(img3_1, race_prefix, rows):
 
-    # ======================= Image 2 pre-processing =======================
-
     img2_np = np.array(img3_1)
     hsv2 = cv2.cvtColor(img2_np, cv2.COLOR_RGB2HSV)
     lower_green2 = np.array([40, 100, 100])
@@ -444,6 +442,29 @@ def ocr_with_fuzzy(pil_image, model, val_transform, idx_to_char, device, choices
         return match
     else:
         return raw_text
+
+# ================================ After Fuzzy Matching for Skill ================================
+
+Ambiguous_Skills = {
+    "Late Surger Straightaways": ("Late Surger Straightaways ◯", "Late Surger Straightaways ◎"),
+    "Pace Chaser Straightaways": ("Pace Chaser Straightaways ◯", "Pace Chaser Straightaways ◎"),
+    "Front Runner Straightaways": ("Front Runner Straightaways ◯", "Front Runner Straightaways ◎"),
+    "End Closer Straightaways": ("End Closer Straightaways ◯", "End Closer Straightaways ◎"),
+}
+
+def resolve_symbol_ambiguity(match, pil_img, model, val_transform, idx_to_char, device):
+    base_name = match.rstrip(" ◯◎")
+
+    if base_name in Ambiguous_Skills:
+        point = pil_img.crop((0, 22, 241, 48))
+        point_text = ocr_predict(point, model, val_transform, idx_to_char, device)
+
+        if "◎" in point_text:
+            return Ambiguous_Skills[base_name][1]
+        elif "◯" in point_text:
+            return Ambiguous_Skills[base_name][0]
+        
+    return match
 
 image1 = process_img1(img1)
 
