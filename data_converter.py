@@ -42,7 +42,7 @@ def find_boxes(zone, min_w=150, max_w=310, min_h=30, max_h=70):
     return boxes
 
 
-# =============================== Size Processing ===============================
+# =============================== Size/Padding Processing ===============================
 
 def padding_img(image, target_height=48, max_width=460):
     img = image.convert('L')
@@ -62,6 +62,7 @@ def padding_img(image, target_height=48, max_width=460):
 
 
 # ============================ Image 1 pre-processing ============================
+
 def preprocessing_img(img1):
     img1_np = np.array(img1)
     hsv1 = cv2.cvtColor(img1_np, cv2.COLOR_RGB2HSV)
@@ -94,17 +95,16 @@ def preprocessing_img(img1):
         "skills" : []
     }
 
+    stats_zone = ui_crop1.crop((10, 250, 580, 300))
+    aptitude_zone = ui_crop1.crop((133, 310, 567, 410))
+
     if is_opponent:
         name_zone = ui_crop1.crop((295, 75, 570, 115))
         skills_zone = ui_crop1.crop((0, 570, 580, 905))
-        stats_zone = ui_crop1.crop((10, 250, 580, 300))
-        aptitude_zone = ui_crop1.crop((133, 310, 567, 410))
 
     else:
         name_zone = ui_crop1.crop((285, 50, 525, 100))
         skills_zone = ui_crop1.crop((0, 470, 580, 925))
-        stats_zone = ui_crop1.crop((10, 250, 580, 300))
-        aptitude_zone = ui_crop1.crop((133, 310, 567, 410))
 
     result["name"] = name_zone
 
@@ -112,7 +112,7 @@ def preprocessing_img(img1):
     for k in range(5):
         h = 115 + (k * 115)
         offset = k * 115
-        stats = stats_zone.crop((40 + offset, 0, h, 100))
+        stats = stats_zone.crop((40 + offset, 0, h, 40))
         result["stats"].append(stats)
 
     # ==================== Skills ====================
@@ -274,7 +274,7 @@ num_classes = len(char_to_idx)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = CrnnUma(num_classes=num_classes)
-model.load_state_dict(torch.load("model/crnn_uma_model_v9.pth", map_location=device))
+model.load_state_dict(torch.load("umaocr/model/crnn_uma_model_v9.pth", map_location=device))
 model.to(device)
 model.eval()
 
