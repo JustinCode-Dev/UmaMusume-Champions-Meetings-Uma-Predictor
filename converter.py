@@ -22,7 +22,12 @@ with open("data/raw/skills.json", "r", encoding="utf-8") as f:
     skills_data = json.load(f)
 
 skill_names = [s["name"] for s in skills_data]
-char_names = [c["name"] for c in characters]
+char_names_outer = [c["name"].split("(")[0].strip() for c in characters]
+char_names = []
+for c in characters:
+    match = re.search(r"\((.*?)\)", c["name"])
+    if match:
+        char_names.append(match.group(1))
 
 # ================================ Image Debugging ================================
 
@@ -165,8 +170,9 @@ def process_img1(img1):
         name_zone = ui_crop1.crop((285, 50, 525, 100))
         skills_zone = ui_crop1.crop((0, 470, 580, 925))
 
-    result["name"] = name_zone
-    #name_zone.save("name.png")
+    name = ocr_with_fuzzy(name_zone, model, val_transform, idx_to_char, device, char_names)
+    name_final = (f"[{name}]")
+    print(name_final)
 
     # ==================== Stats ====================
     for k in range(5):
@@ -258,7 +264,6 @@ def process_img2_1(img2_1):
 
 
 def process_img2_2(img2_2):
-    # =============================== Image 3, Part 2 ===============================
     img3_2_np = np.array(img3_2)
     gray3_2 = cv2.cvtColor(img3_2_np, cv2.COLOR_RGB2GRAY)
     edges3_2 = cv2.Canny(gray3_2, 30, 80)
@@ -314,6 +319,7 @@ def process_img2_2(img2_2):
             print(text_name)
             moods.save(f"mood_{row_num}.png")
             names.save(f"name_{row_num}.png")
+
             result.append({
                 "name" : names,
                 "mood" : moods
@@ -327,7 +333,7 @@ def process_img2_2(img2_2):
 # =====================================================================================
 
 
-def process_img3(img3_1, race_prefix, rows):
+def process_img3(img3_1):
 
     img2_np = np.array(img3_1)
     hsv2 = cv2.cvtColor(img2_np, cv2.COLOR_RGB2HSV)
@@ -355,10 +361,11 @@ def process_img3(img3_1, race_prefix, rows):
     boxes = find_boxes(rank_crop, 160, 200, 45, 65)
 
     for i, (x, y, w, h) in enumerate(boxes):
-        crop = rank_crop.crop((x, y + 25, x + w, y + h))
-        result["uma"].append(crop)
+        rank = rank_crop.crop((x - 5, y + 25, x + w, y + h + 5))
+        text = ocr_with_fuzzy(rank, model, val_transform, idx_to_char, device, char_names_outer)
+        print(text)
 
-        #crop.save(f"rank_{i+1}.png")
+        rank.save(f"rank_{i+1}.png")
 
     return result
 
@@ -405,6 +412,5 @@ def process_img3(img3_1, race_prefix, rows):
 #
 #pd.DataFrame(rows).to_csv("C:/uma_data/labels_dl.csv", index=False, encoding='utf-8-sig')
 
-
-image1 = process_img1(img1)
-process_img2_2(img2_2)
+process_img1(img1)
+process_img3(img3_1)
