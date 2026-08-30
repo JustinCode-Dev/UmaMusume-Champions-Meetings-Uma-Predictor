@@ -26,7 +26,7 @@ char_names = [c["name"] for c in characters]
 
 # ================================ Image Debugging ================================
 
-img1 = Image.open("photo/cm14/round1/detail/race1/Screenshot 2026-06-05 173654.png") # uma detail img
+img1 = Image.open("photo/cm14/round1/detail/race6/Screenshot 2026-06-05 175748.png") # uma detail img
 img2_1 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 173504.png") # mood img (not scrolled)
 img2_2 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 173513.png") # mood img (scrolled)
 img3_1 = Image.open("photo/cm14/round1/rank/Screenshot 2026-06-05 173620.png") # rank img (not scrolled)
@@ -58,56 +58,56 @@ def find_boxes(zone, min_w=150, max_w=310, min_h=30, max_h=70):
     
     return boxes
 
-# ================================================================================
-# ============================ Preprocessing Function ============================
-# ================================================================================
+# =============================== Size/Padding Processing ===============================
 
-#def ocr_zone(zone, thresh_val=120, psm=7, whitelist=None):
-    zone = zone.resize((zone.width * 2, zone.height * 2))
-    zone_np = np.array(zone)
-    zone_gray = cv2.cvtColor(zone_np, cv2.COLOR_RGB2GRAY)
-    _, zone_thresh = cv2.threshold(zone_gray, thresh_val, 255, cv2.THRESH_BINARY)
-    zone_processed = Image.fromarray(zone_thresh)
-    
-    config = f'--psm {psm}'
-    if whitelist:
-        config += f' -c tessedit_char_whitelist={whitelist}'
+def padding_img(image, target_height=48, max_width=460):
+    img = image.convert('L')
 
-    return pytesseract.image_to_string(zone_processed, config=config)
+    w, h = img.size
+    new_w = int(w * (target_height / h))
+    if new_w > max_width - 5:
+        final_w = max_width - 5
+    else:
+        final_w = new_w
+    img = img.resize((final_w, target_height), Image.Resampling.LANCZOS)
+    padded_img = Image.new('L', (max_width, target_height), color=255)
+    padded_img.paste(img, (5, 0))
+    padded_img.save("padding_test.png")
 
-#def ocr_zone_adaptive(zone, psm=10, whitelist=None, max_wh_ratio=None):
-    zone = zone.resize((zone.width * 3, zone.height * 3))
-    zone_np = np.array(zone)
-    zone_gray = cv2.cvtColor(zone_np, cv2.COLOR_RGB2GRAY)
-    zone_processed_np = cv2.adaptiveThreshold(
-    zone_gray, 
-    255, 
-    cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
-    cv2.THRESH_BINARY, 
-    11,
-    1
-    )
-    padded_np = cv2.copyMakeBorder(
-        zone_processed_np, 10, 10, 10, 10, 
-        cv2.BORDER_CONSTANT, 
-        value=[255, 255, 255]
-    )
-    zone_processed = Image.fromarray(padded_np)
-    
-    config = f'--psm {psm}'
-    if whitelist:
-        config += f' -c tessedit_char_whitelist={whitelist}'
-    if max_wh_ratio:
-        config += f' -c tessedit_max_char_wh_ratio={max_wh_ratio}'
+    return padded_img
 
-    return pytesseract.image_to_string(zone_processed, config=config)
+# =================================== OCR ===================================
 
-#def preprocess_zone(zone):
-    zone = zone.resize((zone.width * 2, zone.height * 2))
-    zone_np = np.array(zone)
-    zone_gray = cv2.cvtColor(zone_np, cv2.COLOR_RGB2GRAY)
+chars = build_vocab("uma_data/labels_dl.csv")
+char_to_idx, idx_to_char = build_char_maps(chars)
+num_classes = len(char_to_idx)
 
-    return Image.fromarray(zone_gray)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = CrnnUma(num_classes=num_classes)
+model.load_state_dict(torch.load("umaocr/model/crnn_uma_model_v9.pth", map_location=device))
+model.to(device)
+model.eval()
+
+def ocr_predict(pil_image, model, val_transform, idx_to_char, device):
+    padded = padding_img(pil_image)
+    tensor = val_transform(padded).unsqueeze(0).to(device)
+
+    with torch.no_grad():
+        output = model(tensor)
+        prediction = decoder_predictions(output, idx_to_char)
+
+    return prediction[0]
+
+def ocr_with_fuzzy(pil_image, model, val_transform, idx_to_char, device, choices, threshold=85):
+    raw_text = ocr_predict(pil_image, model, val_transform, idx_to_char, device)
+    match, score, _ = process.extractOne(raw_text, choices)
+    #print("\nraw text")
+    #print(raw_text)
+
+    if score >= threshold:
+        return match
+    else:
+        return raw_text
 
 
 # =====================================================================================
@@ -173,36 +173,32 @@ def process_img1(img1):
         h = 115 + (k * 115)
         offset = k * 115
         stat = stats_zone.crop((40 + offset, 0, h, 40))
-        result["stats"].append(stat)
+        text = ocr_predict(stat, model, val_transform, idx_to_char, device)
         #stat.save(f"stats{k + 1}.png")
 
     # ==================== Skills ====================
     skills = find_boxes(skills_zone)
     for i, (x, y, w, h) in enumerate(skills):
         skill = skills_zone.crop((x + 35, y, x + w, y + h))
-        result["skills"].append(skill)
+        text = ocr_with_fuzzy(skill, model, val_transform, idx_to_char, device, skill_names)
         skill.save(f"skill_{i + 1}.png")
 
     # ==================== Aptitude ====================
     aptitude = find_boxes(aptitude_zone, 83, 123, 20, 40)
     for j, (x, y, w, h) in enumerate(aptitude):
         aptitude_crop = aptitude_zone.crop((x + 70, y, x + w, y + h))
-        result["aptitude"].append(aptitude_crop)
+        text = ocr_predict(aptitude_crop, model, val_transform, idx_to_char, device)
         #aptitude_crop.save(f"aptitude_{j + 1}.png")
-        
-    # =============== Ranks Validation ===============
-
-    #valid_ranks = ["S", "A", "B", "C", "D", "E", "F", "G"]
 
     return result
 
 
-# ====================================================================================================
-# ========================================== Image 2, part 1==========================================
-# ====================================================================================================
+# =====================================================================================================
+# ========================================== Image 2, part 1 ==========================================
+# =====================================================================================================
 
 
-def process_img3(img2_1, race_prefix, rows):
+def process_img2_1(img2_1):
 
     img3_np = np.array(img2_1)
 
@@ -216,7 +212,7 @@ def process_img3(img2_1, race_prefix, rows):
         if w > 500 and h > 100:
             rectangles.append((x, y, w, h))
     if not rectangles:
-        print(f"Warning: box not found on {race_prefix}")
+        print(f"Warning: box not found on")
         return {}
     #print(f"rectangles found: {len(rectangles)}")
     #print(rectangles)
@@ -237,13 +233,16 @@ def process_img3(img2_1, race_prefix, rows):
 
     for i in range(6):
         y = 0 + (i * 120)
-        rows = mood_crop1.crop((0, y, 561, y + 105))
-        boxes = find_boxes(rows, 45, 110, 25, 45)
-        #rows.save(f"zmood_{i+1}.png")
+        row = mood_crop1.crop((0, y, 561, y + 105))
+        boxes = find_boxes(row, 40, 110, 25, 45)
+        boxes = boxes[:1]
+        row.save(f"zmood_{i+1}.png")
         
         for box_idx, (x, y2, w, h) in enumerate(boxes):
-            moods = rows.crop((x, y2, x + w, y2 + h))
-            names = rows.crop((x - 200, y2, x + w - 125, y2 + h))
+            moods = row.crop((x + 33, y2, x + w, y2 + h - 5))
+            names = row.crop((x - 200, y2, x + w - 125, y2 + h))
+            text_mood = ocr_with_fuzzy(moods, model, val_transform, idx_to_char, device, mood_list, 80)
+            text_name = ocr_with_fuzzy(names, model, val_transform, idx_to_char, device, mood_list, 80)
             
             result.append({
                 "name" : names,
@@ -253,13 +252,12 @@ def process_img3(img2_1, race_prefix, rows):
     return result
 
 
+# =====================================================================================================
+# ========================================== Image 2, Part 2 ==========================================
+# =====================================================================================================
 
-# ======================================================================================================
-# ========================================== Image 2, Part 2  ==========================================
-# ======================================================================================================
 
-
-def process_img3_2(img2_2, race_prefix, rows):
+def process_img2_2(img2_2):
     # =============================== Image 3, Part 2 ===============================
     img3_2_np = np.array(img3_2)
     gray3_2 = cv2.cvtColor(img3_2_np, cv2.COLOR_RGB2GRAY)
@@ -272,7 +270,7 @@ def process_img3_2(img2_2, race_prefix, rows):
         if w > 553 and h > 108:
             rectangles.append((x, y, w, h))
     if not rectangles:
-        print(f"Warning: box not found on {race_prefix}")
+        print(f"Warning: box not found on")
         return {}
     #print(f"rectangles found: {len(rectangles)}")
     #print(rectangles)
@@ -301,13 +299,21 @@ def process_img3_2(img2_2, race_prefix, rows):
         }
             
     for row_num, coords in mood_coords.items():
-        rows = mood_crop2.crop(coords)
-        boxes = find_boxes(rows, 45, 103, 25, 45)
+        row = mood_crop2.crop(coords)
+        boxes = find_boxes(row, 45, 103, 25, 45)
+        print("------ check -------")
 
         for x, y, w, h in boxes:
-            moods = rows.crop((x, y, x + w, y + h))
-            names = rows.crop((x - 200, y, x + w - 125, y + h))
-
+            moods = row.crop((x + 33, y, x + w, y + h - 5))
+            names = row.crop((x - 200, y, x + w - 125, y + h))
+            text_mood = ocr_with_fuzzy(moods, model, val_transform, idx_to_char, device, mood_list, 80)
+            text_name = ocr_with_fuzzy(names, model, val_transform, idx_to_char, device, mood_list, 80)
+            print("\n==mood==")
+            print(text_mood)
+            print("\n==name==")
+            print(text_name)
+            moods.save(f"mood_{row_num}.png")
+            names.save(f"name_{row_num}.png")
             result.append({
                 "name" : names,
                 "mood" : moods
@@ -321,7 +327,7 @@ def process_img3_2(img2_2, race_prefix, rows):
 # =====================================================================================
 
 
-def process_img2(img3_1, race_prefix, rows):
+def process_img3(img3_1, race_prefix, rows):
 
     img2_np = np.array(img3_1)
     hsv2 = cv2.cvtColor(img2_np, cv2.COLOR_RGB2HSV)
@@ -362,112 +368,43 @@ def process_img2(img3_1, race_prefix, rows):
 # ==========================================================================================
 
 #rows = []
-#rounds = ["round1", "round2"]
-
-#for round_name in rounds:
-#    race_dirs = sorted(Path(f"photo/cm14/{round_name}/detail").glob("race*"))
-#    mood_photos = sorted(Path(f"photo/cm14/{round_name}/mood").glob("*.png"))
-#    rank_photos = sorted(Path(f"photo/cm14/{round_name}/rank").glob("*.png"))
+#cm_rounds = {
+#    "cm16" : ["round1", "round2"],
+#    "cm17" : ["round2"]
+#}
 #
-#    for race_idx, race_dir in enumerate(race_dirs):
-#        race_name = race_dir.name
-#        detail_photos = sorted(race_dir.glob("*.png"))
-#        mood_pair = mood_photos[race_idx * 2 : race_idx * 2 + 2]
-#        rank_pair = rank_photos[race_idx * 2 : race_idx * 2 + 2]
+#for cm, rounds in cm_rounds.items():
+#    for round_name in rounds:
+#       race_dirs = sorted(Path(f"photo/{cm}/{round_name}/detail").glob("race*"))
+#       mood_photos = sorted(Path(f"photo/{cm}/{round_name}/mood").glob("*.png"))
+#       rank_photos = sorted(Path(f"photo/{cm}/{round_name}/rank").glob("*.png"))
 #
-#        race_prefix = f"{round_name}_{race_name}"
+#       for race_idx, race_dir in enumerate(race_dirs):
+#           race_name = race_dir.name
+#           detail_photos = sorted(race_dir.glob("*.png"))
+#           mood_pair = mood_photos[race_idx * 2 : race_idx * 2 + 2]
+#           rank_pair = rank_photos[race_idx * 2 : race_idx * 2 + 2]
+#   
+#           race_prefix = f"{cm}_{round_name}_{race_name}"
 #
-#        img2 = Image.open(rank_pair[0])
-#        img2_2 = Image.open(rank_pair[1])
-#        img3 = Image.open(mood_pair[0])
-#        img3_2 = Image.open(mood_pair[1])
-#
-#        result2_1 = process_img2(img2, race_prefix, rows)
-#        result2_2 = process_img2_2(img2_2, race_prefix, rows)
-#        result3_1 = process_img3(img3, race_prefix, rows)
-#        result3_2 = process_img3_2(img3_2, race_prefix, rows)
-#
-#        for i, detail_path in enumerate(detail_photos):
-#            prefix = f"{round_name}_{race_name}_{i}"
-#            img1 = Image.open(detail_path)
-#            result1 = process_img1(img1, prefix, rows, i % 2)
+#           img2_1 = Image.open(mood_pair[0])
+#           img2_2 = Image.open(mood_pair[1])
+#           img3_1 = Image.open(rank_pair[0])
+#           img3_2 = Image.open(rank_pair[1])
+#           
+#   
+#           result2_1 = process_img2_1(img2_1, race_prefix, rows)
+#           result2_2 = process_img2_2(img2_2, race_prefix, rows)
+#           result3_1 = process_img3(img3_1, race_prefix, rows)
+#           result3_2 = process_img3(img3_2, race_prefix, rows)
+#   
+#           for i, detail_path in enumerate(detail_photos):
+#               prefix = f"{cm}_{round_name}_{race_name}_{i}"
+#               img1 = Image.open(detail_path)
+#               result1 = process_img1(img1, prefix, rows, i % 2)
 #
 #pd.DataFrame(rows).to_csv("C:/uma_data/labels_dl.csv", index=False, encoding='utf-8-sig')
 
-# =============================== Size/Padding Processing ===============================
-
-def padding_img(image, target_height=48, max_width=460):
-    img = image.convert('L')
-
-    w, h = img.size
-    new_w = int(w * (target_height / h))
-    if new_w > max_width - 5:
-        final_w = max_width - 5
-    else:
-        final_w = new_w
-    img = img.resize((final_w, target_height), Image.Resampling.LANCZOS)
-    padded_img = Image.new('L', (max_width, target_height), color=255)
-    padded_img.paste(img, (5, 0))
-    padded_img.save("padding_test.png")
-
-    return padded_img
-
-# =================================== Debugging/Testing ===================================
-
-chars = build_vocab("uma_data/labels_dl.csv")
-char_to_idx, idx_to_char = build_char_maps(chars)
-num_classes = len(char_to_idx)
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = CrnnUma(num_classes=num_classes)
-model.load_state_dict(torch.load("umaocr/model/crnn_uma_model_v9.pth", map_location=device))
-model.to(device)
-model.eval()
-
-def ocr_predict(pil_image, model, val_transform, idx_to_char, device):
-    padded = padding_img(pil_image)
-    tensor = val_transform(padded).unsqueeze(0).to(device)
-
-    with torch.no_grad():
-        output = model(tensor)
-        prediction = decoder_predictions(output, idx_to_char)
-
-    return prediction[0]
-
-def ocr_with_fuzzy(pil_image, model, val_transform, idx_to_char, device, choices, threshold=85):
-    raw_text = ocr_predict(pil_image, model, val_transform, idx_to_char, device)
-    match, score, _ = process.extractOne(raw_text, choices)
-
-    if score >= threshold:
-        return match
-    else:
-        return raw_text
-
-# ================================ After Fuzzy Matching for Skill ================================
-
-Ambiguous_Skills = {
-    "Late Surger Straightaways": ("Late Surger Straightaways ◯", "Late Surger Straightaways ◎"),
-    "Pace Chaser Straightaways": ("Pace Chaser Straightaways ◯", "Pace Chaser Straightaways ◎"),
-    "Front Runner Straightaways": ("Front Runner Straightaways ◯", "Front Runner Straightaways ◎"),
-    "End Closer Straightaways": ("End Closer Straightaways ◯", "End Closer Straightaways ◎"),
-}
-
-def resolve_symbol_ambiguity(match, pil_img, model, val_transform, idx_to_char, device):
-    base_name = match.rstrip(" ◯◎")
-
-    if base_name in Ambiguous_Skills:
-        point = pil_img.crop((0, 22, 241, 48))
-        point_text = ocr_predict(point, model, val_transform, idx_to_char, device)
-
-        if "◎" in point_text:
-            return Ambiguous_Skills[base_name][1]
-        elif "◯" in point_text:
-            return Ambiguous_Skills[base_name][0]
-        
-    return match
 
 image1 = process_img1(img1)
-
-for skills in image1["skills"]:
-    text = ocr_with_fuzzy(skills, model, val_transform, idx_to_char, device, skill_names)
-    print(text)
+process_img2_2(img2_2)
