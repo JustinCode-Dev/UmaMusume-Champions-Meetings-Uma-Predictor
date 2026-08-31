@@ -112,7 +112,7 @@ def ocr_with_fuzzy(pil_image, model, val_transform, idx_to_char, device, choices
     if score >= threshold:
         return match
     else:
-        return raw_text
+        return f"{raw_text} (unsure)"
 
 
 # =====================================================================================
@@ -120,7 +120,7 @@ def ocr_with_fuzzy(pil_image, model, val_transform, idx_to_char, device, choices
 # =====================================================================================
 
 
-def process_img1(img1):
+def process_img1(img1, prefix, rows):
 
     # ============== Image 1 pre-processing ==============
 
@@ -138,7 +138,7 @@ def process_img1(img1):
         #print(f"Header: x={x}, y={y}, w={w}, h={h}")
     if not contours1:
         print(f"Warning: green header not found on")
-        return {}
+        return
 
     ui_top1 = y1
     ui_crop1 = img1.crop((x1, ui_top1, x1 + w1, ui_top1 + 925))
@@ -152,13 +152,6 @@ def process_img1(img1):
     mask = cv2.inRange(hsv, lower_green1, upper_green1)
     is_opponent = np.sum(mask) > 20000
 
-    result = {
-        "name" : None,
-        "aptitude" : [],
-        "stats" : [],
-        "skills" : []
-    }
-
     stats_zone = ui_crop1.crop((10, 250, 580, 300))
     aptitude_zone = ui_crop1.crop((133, 310, 567, 410))
 
@@ -171,14 +164,19 @@ def process_img1(img1):
         skills_zone = ui_crop1.crop((0, 470, 580, 925))
 
     name = ocr_with_fuzzy(name_zone, model, val_transform, idx_to_char, device, char_names)
-    name_final = (f"[{name}]")
-    print(name_final)
+    text = (f"[{name}]")
+    filename = f"uma_data/images/uma_name_{prefix}.png"
+    name_zone.convert('L').save(filename)
+    
 
     # ==================== Stats ====================
+    stat_labels = ["speed", "stamina", "power", "guts", "wit"]
     for k in range(5):
         h = 115 + (k * 115)
         offset = k * 115
         stat = stats_zone.crop((40 + offset, 0, h, 40))
+        filename = f"uma_data/images/{stat_labels[k]}_{prefix}.png"
+        stat.convert('L').save(filename)
         text = ocr_predict(stat, model, val_transform, idx_to_char, device)
         #stat.save(f"stats{k + 1}.png")
 
@@ -186,17 +184,19 @@ def process_img1(img1):
     skills = find_boxes(skills_zone)
     for i, (x, y, w, h) in enumerate(skills):
         skill = skills_zone.crop((x + 35, y, x + w, y + h))
+        filename = f"uma_data/images/skill_{i+1}_{prefix}.png"
+        skill.convert('L').save(filename)
         text = ocr_with_fuzzy(skill, model, val_transform, idx_to_char, device, skill_names)
-        skill.save(f"skill_{i + 1}.png")
+        #skill.save(f"skill_{i + 1}.png")
 
     # ==================== Aptitude ====================
+    aptitude_labels = ["turf", "dirt", "sprint", "mile", "medium", "long", "front_runner", "pace_chaser", "late_surger", "end_closer"]
     aptitude = find_boxes(aptitude_zone, 83, 123, 20, 40)
     for j, (x, y, w, h) in enumerate(aptitude):
         aptitude_crop = aptitude_zone.crop((x + 70, y, x + w, y + h))
         text = ocr_predict(aptitude_crop, model, val_transform, idx_to_char, device)
-        #aptitude_crop.save(f"aptitude_{j + 1}.png")
-
-    return result
+        filename = f"uma_data/images/{aptitude_labels[j]}_{prefix}.png"
+        #aptitude_crop.save(f"aptitude_{j+1}.png")
 
 
 # =====================================================================================================
@@ -204,7 +204,7 @@ def process_img1(img1):
 # =====================================================================================================
 
 
-def process_img2_1(img2_1):
+def process_img2_1(img2_1, race_prefix, rows):
 
     img3_np = np.array(img2_1)
 
@@ -219,10 +219,8 @@ def process_img2_1(img2_1):
             rectangles.append((x, y, w, h))
     if not rectangles:
         print(f"Warning: box not found on")
-        return {}
-    #print(f"rectangles found: {len(rectangles)}")
-    #print(rectangles)
-
+        return 
+    
     topmost_rect = min(rectangles, key=lambda r: r[1])
     rx1, ry1, rw1, rh1 = topmost_rect
 
@@ -235,8 +233,6 @@ def process_img2_1(img2_1):
 
     # ==================== Uma Names (Mood Screen), Part 1 ====================
 
-    result = []
-
     for i in range(6):
         y = 0 + (i * 120)
         row = mood_crop1.crop((0, y, 561, y + 105))
@@ -246,16 +242,14 @@ def process_img2_1(img2_1):
         
         for box_idx, (x, y2, w, h) in enumerate(boxes):
             moods = row.crop((x + 33, y2, x + w, y2 + h - 5))
-            names = row.crop((x - 200, y2, x + w - 125, y2 + h))
+            filename = f"uma_data/images/mood{i+1}_{race_prefix}.png"
+            moods.convert('L').save(filename)
             text_mood = ocr_with_fuzzy(moods, model, val_transform, idx_to_char, device, mood_list, 80)
-            text_name = ocr_with_fuzzy(names, model, val_transform, idx_to_char, device, mood_list, 80)
-            
-            result.append({
-                "name" : names,
-                "mood" : moods
-            })
 
-    return result
+            names = row.crop((x - 200, y2, x + w - 125, y2 + h))
+            filename = f"uma_data/images/uma_name{i+1}_{race_prefix}.png"
+            names.convert('L').save(filename)
+            text_name = ocr_with_fuzzy(names, model, val_transform, idx_to_char, device, char_names_outer, 80)
 
 
 # =====================================================================================================
@@ -263,7 +257,7 @@ def process_img2_1(img2_1):
 # =====================================================================================================
 
 
-def process_img2_2(img2_2):
+def process_img2_2(img2_2, race_prefix, rows):
     img3_2_np = np.array(img3_2)
     gray3_2 = cv2.cvtColor(img3_2_np, cv2.COLOR_RGB2GRAY)
     edges3_2 = cv2.Canny(gray3_2, 30, 80)
@@ -276,9 +270,7 @@ def process_img2_2(img2_2):
             rectangles.append((x, y, w, h))
     if not rectangles:
         print(f"Warning: box not found on")
-        return {}
-    #print(f"rectangles found: {len(rectangles)}")
-    #print(rectangles)
+        return
 
     botmost_rect = max(rectangles, key=lambda r: r[1])
     rx2, ry2, rw2, rh2 = botmost_rect
@@ -291,41 +283,27 @@ def process_img2_2(img2_2):
     mood_list = ["BAD", "NORMAL", "GOOD", "GREAT"]
 
     # ==================== Uma Names (Mood Screen), Part 2 ====================
-
-    result = []
     
     mood_coords = {
-            1 : (0, 0, 561, 90),
-            2 : (0, 100, 561, 200),
-            3 : (0, 220, 561, 320),
-            4 : (0, 340, 561, 440),
-            5 : (0, 460, 561, 560),
-            6 : (0, 580, 561, 680)
+            7 : (0, 340, 561, 440),
+            8 : (0, 460, 561, 560),
+            9 : (0, 580, 561, 680)
         }
             
     for row_num, coords in mood_coords.items():
         row = mood_crop2.crop(coords)
         boxes = find_boxes(row, 45, 103, 25, 45)
-        print("------ check -------")
 
         for x, y, w, h in boxes:
             moods = row.crop((x + 33, y, x + w, y + h - 5))
-            names = row.crop((x - 200, y, x + w - 125, y + h))
+            filename = f"uma_data/images/mood{row_num}_{race_prefix}.png"
+            moods.convert('L').save(filename)
             text_mood = ocr_with_fuzzy(moods, model, val_transform, idx_to_char, device, mood_list, 80)
-            text_name = ocr_with_fuzzy(names, model, val_transform, idx_to_char, device, mood_list, 80)
-            print("\n==mood==")
-            print(text_mood)
-            print("\n==name==")
-            print(text_name)
-            moods.save(f"mood_{row_num}.png")
-            names.save(f"name_{row_num}.png")
 
-            result.append({
-                "name" : names,
-                "mood" : moods
-            })
-                
-    return result
+            names = row.crop((x - 200, y, x + w - 125, y + h))
+            filename = f"uma_data/images/uma_name{row_num}_{race_prefix}.png"
+            names.convert('L').save(filename)
+            text_name = ocr_with_fuzzy(names, model, val_transform, idx_to_char, device, char_names_outer, 80)
 
 
 # =====================================================================================
@@ -333,7 +311,7 @@ def process_img2_2(img2_2):
 # =====================================================================================
 
 
-def process_img3(img3_1):
+def process_img3(img3_1, race_prefix, rows, start_num=1):
 
     img2_np = np.array(img3_1)
     hsv2 = cv2.cvtColor(img2_np, cv2.COLOR_RGB2HSV)
@@ -348,26 +326,22 @@ def process_img3(img3_1):
         x2, y2, w2, h2 = cv2.boundingRect(topmost2)
     else:
         print(f"Warning: green header not found")
-        return {}
+        return 
         
     rank_top = y2
     rank_crop = img3_1.crop((x2, rank_top, x2 + w2 - 15, rank_top + 925))
     #rank_crop.save("rank.png")
 
-    result ={
-        "uma" : []
-    }
-
     boxes = find_boxes(rank_crop, 160, 200, 45, 65)
 
     for i, (x, y, w, h) in enumerate(boxes):
         rank = rank_crop.crop((x - 5, y + 25, x + w, y + h + 5))
+        rank_num = start_num + i
+        filename = f"uma_data/images/r_uma{rank_num}_{race_prefix}.png"
+        rank.convert('L').save(filename)
         text = ocr_with_fuzzy(rank, model, val_transform, idx_to_char, device, char_names_outer)
-        print(text)
 
-        rank.save(f"rank_{i+1}.png")
-
-    return result
+        #rank.save(f"rank_{i+1}.png")
 
 
 # ==========================================================================================
@@ -402,8 +376,8 @@ def process_img3(img3_1):
 #   
 #           result2_1 = process_img2_1(img2_1, race_prefix, rows)
 #           result2_2 = process_img2_2(img2_2, race_prefix, rows)
-#           result3_1 = process_img3(img3_1, race_prefix, rows)
-#           result3_2 = process_img3(img3_2, race_prefix, rows)
+#           result3_1 = process_img3(img3_1, race_prefix, rows, start_num=1)
+#           result3_2 = process_img3(img3_2, race_prefix, rows, start_num=5)
 #   
 #           for i, detail_path in enumerate(detail_photos):
 #               prefix = f"{cm}_{round_name}_{race_name}_{i}"
