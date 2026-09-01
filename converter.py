@@ -29,14 +29,6 @@ for c in characters:
     if match:
         char_names.append(match.group(1))
 
-# ================================ Image Debugging ================================
-
-img1 = Image.open("photo/cm14/round1/detail/race6/Screenshot 2026-06-05 175748.png") # uma detail img
-img2_1 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 173504.png") # mood img (not scrolled)
-img2_2 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 173513.png") # mood img (scrolled)
-img3_1 = Image.open("photo/cm14/round1/rank/Screenshot 2026-06-05 173620.png") # rank img (not scrolled)
-img3_2 = Image.open("photo/cm14/round1/rank/Screenshot 2026-06-05 173635.png") # rank img (scrolled)
-
 # ================================================================================
 # ================================ Box Detection =================================
 # ================================================================================
@@ -210,14 +202,14 @@ def process_img1(img1, prefix, rows):
 
 def process_img2_1(img2_1, race_prefix, rows):
 
-    img3_np = np.array(img2_1)
+    img2_np = np.array(img2_1)
 
-    gray3 = cv2.cvtColor(img3_np, cv2.COLOR_RGB2GRAY)
-    edges3 = cv2.Canny(gray3, 30, 80)
-    contours3, _ = cv2.findContours(edges3, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    gray2 = cv2.cvtColor(img2_np, cv2.COLOR_RGB2GRAY)
+    edges3 = cv2.Canny(gray2, 30, 80)
+    contours2, _ = cv2.findContours(edges3, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     rectangles = []
-    for c in contours3:
+    for c in contours2:
         x, y, w, h = cv2.boundingRect(c)
         if w > 500 and h > 100:
             rectangles.append((x, y, w, h))
@@ -320,12 +312,12 @@ def process_img2_2(img2_2, race_prefix, rows):
 
 def process_img3(img3_1, race_prefix, rows, start_num=1):
 
-    img2_np = np.array(img3_1)
-    hsv2 = cv2.cvtColor(img2_np, cv2.COLOR_RGB2HSV)
+    img3_np = np.array(img3_1)
+    hsv3 = cv2.cvtColor(img3_np, cv2.COLOR_RGB2HSV)
     lower_green2 = np.array([40, 100, 100])
     upper_green2 = np.array([80, 255, 255])
 
-    mask2 = cv2.inRange(hsv2, lower_green2, upper_green2)
+    mask2 = cv2.inRange(hsv3, lower_green2, upper_green2)
     contours2, _ = cv2.findContours(mask2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     if contours2:
