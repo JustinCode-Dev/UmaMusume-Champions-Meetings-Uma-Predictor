@@ -9,7 +9,11 @@ from crnn import CrnnUma, decoder_predictions, build_vocab, build_char_maps, val
 import torch
 import torchvision.transforms as transforms
 
-img1 = Image.open("photo/cm14/round1/detail/race1/Screenshot 2026-06-05 173654.png") # uma detail img
+# ==========================================================================================
+# ============================= THIS FILE IS FOR IMG2JSON ==================================
+# ==========================================================================================
+
+img1 = Image.open("photo/cm14/round1/detail/race1/Screenshot 2026-06-05 173640.png") # uma detail img
 img2_1 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 173504.png") # mood img (not scrolled)
 img2_2 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 173513.png") # mood img (scrolled)
 img3_1 = Image.open("photo/cm14/round1/rank/Screenshot 2026-06-05 173620.png") # rank img (not scrolled)
@@ -27,9 +31,9 @@ def find_boxes(zone, min_w=150, max_w=310, min_h=30, max_h=70):
     gradient = cv2.morphologyEx(zone_gray, cv2.MORPH_GRADIENT, kernel)
     _, binary = cv2.threshold(gradient, 20, 255, cv2.THRESH_BINARY)
     closed = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
-
-    contours, _ = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
+    contours, _ = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cv2.imwrite("test.png", closed)
     boxes = []
     for c in contours: 
         x, y, w, h = cv2.boundingRect(c)
@@ -63,7 +67,7 @@ def padding_img(image, target_height=48, max_width=460):
 
 # ============================ Image 1 pre-processing ============================
 
-def preprocessing_img(img1):
+def process_detail(img1):
     img1_np = np.array(img1)
     hsv1 = cv2.cvtColor(img1_np, cv2.COLOR_RGB2HSV)
     lower_green1 = np.array([40, 100, 100])
@@ -92,7 +96,9 @@ def preprocessing_img(img1):
         "name" : None,
         "aptitude" : [],
         "stats" : [],
-        "skills" : []
+        "skills" : [],
+        "level" : None,
+        "unique_skill" : None
     }
 
     stats_zone = ui_crop1.crop((10, 250, 580, 300))
@@ -109,6 +115,7 @@ def preprocessing_img(img1):
     result["name"] = name_zone
 
     # ==================== Stats ====================
+    stat_labels = ["speed", "stamina", "power", "guts", "wit"]
     for k in range(5):
         h = 115 + (k * 115)
         offset = k * 115
@@ -120,14 +127,23 @@ def preprocessing_img(img1):
     for i, (x, y, w, h) in enumerate(skills):
         skill = skills_zone.crop((x + 35, y, x + w, y + h))
         result["skills"].append(skill)
-        skill.save(f"skill_{i + 1}.png")
+        #skill.save(f"skill_{i + 1}.png")
 
+    # ===================== Level =====================
+    unique_skill = skills[0]
+    x, y, w, h = unique_skill
+    uni_skill = skills_zone.crop((x + 35, y, x + w - 48, y + h))
+    level = skills_zone.crop((x + 220, y, x + w, y + h))
+    level.save("level.png")
+    uni_skill.save("unique_skill.png")
+    
     # ==================== Aptitude ====================
+    aptitude_labels = ["turf", "dirt", "sprint", "mile", "medium", "long", "front_runner", "pace_chaser", "late_surger", "end_closer"]
     aptitude = find_boxes(aptitude_zone, 83, 123, 20, 40)
-    for j, (x, y, w, h) in enumerate(aptitude):
-         aptitude_crop = aptitude_zone.crop((x + 70, y, x + w, y + h))
-         #aptitude_crop.save(f"aptitude_{j + 1}.png")
-         result["aptitude"].append(aptitude_crop)
+    for label, (x, y, w, h) in zip(aptitude_labels, aptitude):
+        aptitude_crop = aptitude_zone.crop((x + 70, y, x + w, y + h))
+        #aptitude_crop.save(f"aptitude_{j + 1}.png")
+        result["aptitude"].append(aptitude_crop)
 
     return result
 
@@ -164,17 +180,20 @@ def process_mood1(img2_1):
         y = 0 + (i * 120)
         rows = mood_crop1.crop((0, y, 561, y + 105))
         boxes = find_boxes(rows, 45, 110, 25, 45)
+        boxes = boxes[:1]
         #rows.save(f"zmood_{i+1}.png")
         
         for box_idx, (x, y2, w, h) in enumerate(boxes):
             moods = rows.crop((x, y2, x + w, y2 + h))
+            number = rows.crop((x + 105, y2, x + w + 100, y2 + h))
             names = rows.crop((x - 200, y2, x + w - 125, y2 + h))
             
             result.append({
                 "name" : names,
-                "mood" : moods
+                "mood" : moods,
+                "number" : number
             })
-
+#
     return result
 
 
@@ -197,18 +216,15 @@ def process_mood2(img2_2):
 
     botmost_rect = max(rectangles, key=lambda r: r[1])
     rx2, ry2, rw2, rh2 = botmost_rect
-    mood_crop2 = img2_2.crop((rx2, ry2 - 575, rx2 + rw2, rh2 + ry2 - 30))
-    #mood_crop2.save("mood_test2.png")
+    mood_crop2 = img2_2.crop((rx2, ry2 - 575, rx2 + rw2, rh2 + ry2))
+    mood_crop2.save("mood_test2.png")
 
     result = []
 
     mood_coords = {
-        1 : (0, 0, 561, 90),
-        2 : (0, 100, 561, 200),
-        3 : (0, 220, 561, 320),
-        4 : (0, 340, 561, 440),
-        5 : (0, 460, 561, 560),
-        6 : (0, 580, 561, 680)
+        7 : (0, 340, 561, 440),
+        8 : (0, 460, 561, 560),
+        9 : (0, 580, 561, 680)
     }
         
     for row_num, coords in mood_coords.items():
@@ -216,12 +232,15 @@ def process_mood2(img2_2):
         boxes = find_boxes(rows, 45, 103, 25, 45)
 
         for x, y, w, h in boxes:
-            moods = rows.crop((x, y, x + w, y + h))
+            moods = rows.crop((x + 33, y, x + w, y + h - 5))
+            number = rows.crop((x + 110, y + 5, x + w + 105, y + h - 5))
             names = rows.crop((x - 200, y, x + w - 125, y + h))
+            #number.save(f"number{row_num}.png")
 
             result.append({
                 "name" : names,
-                "mood" : moods
+                "mood" : moods,
+                "number" : number
             })
             
     return result
@@ -253,16 +272,19 @@ def process_img3(img3_2):
     #rank_crop.save("rank.png")
 
     result ={
-        "uma" : []
+        "uma" : [],
+        "number" : []
     }
+    result = []
 
     boxes = find_boxes(rank_crop, 160, 200, 45, 65)
 
     for i, (x, y, w, h) in enumerate(boxes):
-        crop = rank_crop.crop((x, y + 25, x + w, y + h))
-        result["uma"].append(crop)
-
-        #crop.save(f"rank_{i+1}.png")
+        numbers = rank_crop.crop((x + 215, y + 55, x + w + 120, y + h + 34))
+        r_uma = rank_crop.crop((x, y + 25, x + w, y + h))
+        result["uma"].append(r_uma)
+        result["number"].append(numbers)
+        #numbers.save(f"znum{i+1}.png")
 
     return result
 
@@ -274,7 +296,7 @@ num_classes = len(char_to_idx)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = CrnnUma(num_classes=num_classes)
-model.load_state_dict(torch.load("umaocr/model/crnn_uma_model_v9.pth", map_location=device))
+model.load_state_dict(torch.load("umaocr/model/crnn_uma_model_v12.pth", map_location=device))
 model.to(device)
 model.eval()
 
@@ -289,8 +311,8 @@ def ocr_predict(pil_image, model, val_transform, idx_to_char, device):
     return prediction[0]
 
 # ================================ Debugging ================================
-images = preprocessing_img(img1)
+ep = process_img3(img3_1)
 
-for skills_img in images["skills"]:
-    text = ocr_predict(skills_img, model, val_transform, idx_to_char, device)
+for test in ep:
+    text = ocr_predict(test, model, val_transform, idx_to_char, device)
     print(text)
