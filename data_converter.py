@@ -33,7 +33,6 @@ def find_boxes(zone, min_w=150, max_w=310, min_h=30, max_h=70):
     closed = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
     
     contours, _ = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    cv2.imwrite("test.png", closed)
     boxes = []
     for c in contours: 
         x, y, w, h = cv2.boundingRect(c)
@@ -185,8 +184,10 @@ def process_mood1(img2_1):
         
         for box_idx, (x, y2, w, h) in enumerate(boxes):
             moods = rows.crop((x, y2, x + w, y2 + h))
+            t_name = rows.crop((x - 200, y2 + 35, x + w - 170, y2 + h + 30))
             number = rows.crop((x + 105, y2, x + w + 100, y2 + h))
             names = rows.crop((x - 200, y2, x + w - 125, y2 + h))
+            t_name.save(f"test{i+1}.png")
             
             result.append({
                 "name" : names,
@@ -233,9 +234,11 @@ def process_mood2(img2_2):
 
         for x, y, w, h in boxes:
             moods = rows.crop((x + 33, y, x + w, y + h - 5))
+            t_name = rows.crop((x - 200, y + 35, x + w - 170, y + h + 30))
             number = rows.crop((x + 110, y + 5, x + w + 105, y + h - 5))
             names = rows.crop((x - 200, y, x + w - 125, y + h))
             #number.save(f"number{row_num}.png")
+            #t_name.save(f"test{row_num}.png")
 
             result.append({
                 "name" : names,
@@ -275,15 +278,16 @@ def process_img3(img3_2):
         "uma" : [],
         "number" : []
     }
-    result = []
 
     boxes = find_boxes(rank_crop, 160, 200, 45, 65)
 
     for i, (x, y, w, h) in enumerate(boxes):
         numbers = rank_crop.crop((x + 215, y + 55, x + w + 120, y + h + 34))
         r_uma = rank_crop.crop((x, y + 25, x + w, y + h))
+        t_name = rank_crop.crop((x, y + 60, x + w - 80, y + h + 35))
         result["uma"].append(r_uma)
         result["number"].append(numbers)
+        #t_name.save(f"test{i+1}.png")
         #numbers.save(f"znum{i+1}.png")
 
     return result
@@ -311,8 +315,7 @@ def ocr_predict(pil_image, model, val_transform, idx_to_char, device):
     return prediction[0]
 
 # ================================ Debugging ================================
-ep = process_img3(img3_1)
 
-for test in ep:
-    text = ocr_predict(test, model, val_transform, idx_to_char, device)
-    print(text)
+#for test in ep:
+#    text = ocr_predict(test, model, val_transform, idx_to_char, device)
+#    print(text)
