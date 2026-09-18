@@ -5,7 +5,7 @@ from rapidfuzz import process
 import json
 import re
 import torch
-from crnn import CrnnUma, decoder_predictions, build_vocab, build_char_maps, val_transform
+from converter import ocr_predict, ocr_with_fuzzy, model, val_transform, idx_to_char, device, skill_names, char_names_outer, char_names, characters, mood_list
 import torch
 import torchvision.transforms as transforms
 
@@ -44,7 +44,6 @@ def find_boxes(zone, min_w=150, max_w=310, min_h=30, max_h=70):
     
     return boxes
 
-
 # =============================== Size/Padding Processing ===============================
 
 def padding_img(image, target_height=48, max_width=460):
@@ -63,6 +62,13 @@ def padding_img(image, target_height=48, max_width=460):
 
     return padded_img
 
+# ================================ Regex/Number Extractor ================================
+
+def extract_number(text):
+    match = re.search(r"/d+", text)
+    if match:
+        return int(match.group())
+    return None
 
 # ============================ Image 1 pre-processing ============================
 
@@ -91,13 +97,17 @@ def process_detail(img1):
     mask = cv2.inRange(hsv, lower_green1, upper_green1)
     is_opponent = np.sum(mask) > 20000
 
-    result = {
-        "name" : None,
-        "aptitude" : [],
-        "stats" : [],
-        "skills" : [],
-        "level" : None,
-        "unique_skill" : None
+    result_detail = {
+        "name": None,
+        "distance": {},
+        "track": {},
+        "style": {},
+        "stats": {},
+        "skills": [],
+        "mood": None,
+        "skill_level": None,
+        "unique_skill": None,
+        "trainer": None
     }
 
     stats_zone = ui_crop1.crop((10, 250, 580, 300))
@@ -106,26 +116,31 @@ def process_detail(img1):
     if is_opponent:
         name_zone = ui_crop1.crop((295, 75, 570, 115))
         skills_zone = ui_crop1.crop((0, 570, 580, 905))
+        result_detail["trainer"] = "opponent"
 
     else:
         name_zone = ui_crop1.crop((285, 50, 525, 100))
         skills_zone = ui_crop1.crop((0, 470, 580, 925))
+        result_detail["trainer"] = "Ellen Joe"
 
-    result["name"] = name_zone
+    name = ocr_with_fuzzy(name_zone, model, val_transform, idx_to_char, device, characters)
+    result_detail["name"] = name
 
     # ==================== Stats ====================
     stat_labels = ["speed", "stamina", "power", "guts", "wit"]
-    for k in range(5):
+    for k, label in enumerate(stat_labels):
         h = 115 + (k * 115)
         offset = k * 115
-        stats = stats_zone.crop((40 + offset, 0, h, 40))
-        result["stats"].append(stats)
+        stat = stats_zone.crop((40 + offset, 0, h, 40))
+        stats_text = ocr_predict(stat, model, val_transform, idx_to_char, device)
+        result_detail["stats"][label] = stats_text
 
     # ==================== Skills ====================
     skills = find_boxes(skills_zone)
     for i, (x, y, w, h) in enumerate(skills):
         skill = skills_zone.crop((x + 35, y, x + w, y + h))
-        result["skills"].append(skill)
+        skill_text = ocr_with_fuzzy(skill, model, val_transform, idx_to_char, device, skill_names)
+        result_detail["skills"].append({"name": skill_text})
         #skill.save(f"skill_{i + 1}.png")
 
     # ===================== Level =====================
@@ -133,22 +148,30 @@ def process_detail(img1):
     x, y, w, h = unique_skill
     uni_skill = skills_zone.crop((x + 35, y, x + w - 48, y + h))
     level = skills_zone.crop((x + 220, y, x + w, y + h))
-    level.save("level.png")
-    uni_skill.save("unique_skill.png")
+    level_text = ocr_predict(level, model, val_transform, idx_to_char, device)
+    level_num = extract_number(level_text)
+    result_detail["skill_level"] = level_num
     
     # ==================== Aptitude ====================
     aptitude_labels = ["turf", "dirt", "sprint", "mile", "medium", "long", "front_runner", "pace_chaser", "late_surger", "end_closer"]
+
+    aptitude_map = {
+        "sprint": "distance", "mile": "distance", "medium": "distance", "long": "distance",
+        "turf": "track", "dirt": "track",
+        "front_runner": "style", "pace_chaser": "style", "late_surger": "style", "end_closer": "style"
+    }
+
     aptitude = find_boxes(aptitude_zone, 83, 123, 20, 40)
     for label, (x, y, w, h) in zip(aptitude_labels, aptitude):
+        category = aptitude_map[label]
         aptitude_crop = aptitude_zone.crop((x + 70, y, x + w, y + h))
         #aptitude_crop.save(f"aptitude_{j + 1}.png")
-        result["aptitude"].append(aptitude_crop)
+        aptitude_text = ocr_predict(aptitude_crop, model, val_transform, idx_to_char, device)
+        result_detail[category][label] = aptitude_text
 
-    return result
-
+    return result_detail
 
 # ================================ Mood pre-processing ================================
-
 
 # =================================== Mood, Part 1 ===================================
 
@@ -173,7 +196,7 @@ def process_mood1(img2_1):
     mood_crop1 = img2_1.crop((rx1 + 5, ry1, rx1 + rw1 + 5, ry1 + 717))
     #mood_crop1.save("mood_test1.png")
 
-    result = []
+    result_mood1 = []
 
     for i in range(6):
         y = 0 + (i * 120)
@@ -183,20 +206,27 @@ def process_mood1(img2_1):
         #rows.save(f"zmood_{i+1}.png")
         
         for box_idx, (x, y2, w, h) in enumerate(boxes):
-            moods = rows.crop((x, y2, x + w, y2 + h))
-            t_name = rows.crop((x - 200, y2 + 35, x + w - 170, y2 + h + 30))
-            number = rows.crop((x + 105, y2, x + w + 100, y2 + h))
-            names = rows.crop((x - 200, y2, x + w - 125, y2 + h))
-            t_name.save(f"test{i+1}.png")
-            
-            result.append({
-                "name" : names,
-                "mood" : moods,
-                "number" : number
-            })
-#
-    return result
+            mood = rows.crop((x, y2, x + w, y2 + h))
+            mood_text = ocr_with_fuzzy(mood, model, val_transform, idx_to_char, device, mood_list)
 
+            t_name_img = rows.crop((x - 200, y2 + 35, x + w - 170, y2 + h + 30))
+            t_name_text = ocr_predict(t_name_img, model, val_transform, idx_to_char, device)
+
+            number_img = rows.crop((x + 105, y2, x + w + 100, y2 + h))
+            number_text = ocr_predict(number_img, model, val_transform, idx_to_char, device)
+            number = extract_number(number_text)
+
+            name = rows.crop((x - 200, y2, x + w - 125, y2 + h))
+            name_text = ocr_with_fuzzy(name, model, val_transform, idx_to_char, device, char_names_outer)
+            
+            result_mood1.append({
+                "name" : name_text,
+                "mood" : mood_text,
+                "number" : number,
+                "trainer" : t_name_text
+            })
+
+    return result_mood1
 
 # =================================== Mood, Part 2 ===================================
 
@@ -220,7 +250,7 @@ def process_mood2(img2_2):
     mood_crop2 = img2_2.crop((rx2, ry2 - 575, rx2 + rw2, rh2 + ry2))
     mood_crop2.save("mood_test2.png")
 
-    result = []
+    result_mood2 = []
 
     mood_coords = {
         7 : (0, 340, 561, 440),
@@ -233,27 +263,31 @@ def process_mood2(img2_2):
         boxes = find_boxes(rows, 45, 103, 25, 45)
 
         for x, y, w, h in boxes:
-            moods = rows.crop((x + 33, y, x + w, y + h - 5))
-            t_name = rows.crop((x - 200, y + 35, x + w - 170, y + h + 30))
-            number = rows.crop((x + 110, y + 5, x + w + 105, y + h - 5))
-            names = rows.crop((x - 200, y, x + w - 125, y + h))
-            #number.save(f"number{row_num}.png")
-            #t_name.save(f"test{row_num}.png")
+            mood = rows.crop((x + 33, y, x + w, y + h - 5))
+            mood_text = ocr_with_fuzzy(mood, model, val_transform, idx_to_char, device, mood_list)
 
-            result.append({
-                "name" : names,
-                "mood" : moods,
-                "number" : number
+            t_name = rows.crop((x - 200, y + 35, x + w - 170, y + h + 30))
+            t_name_text = ocr_predict(t_name, model, val_transform, idx_to_char, device)
+
+            number_img = rows.crop((x + 110, y + 5, x + w + 105, y + h - 5))
+            number_text = ocr_predict(number_img, model, val_transform, idx_to_char, device)
+            number = extract_number(number_text)
+
+            name = rows.crop((x - 200, y, x + w - 125, y + h))
+            name_text = ocr_with_fuzzy(name, model, val_transform, idx_to_char, device, char_names_outer)
+
+            result_mood2.append({
+                "name" : name_text,
+                "mood" : mood_text,
+                "number" : number,
+                "trainer" : t_name_text
             })
             
-    return result
-
+    return result_mood2
 
 # =================================== Rank Image ===================================
 
-def process_img3(img3_2):
-
-    # ======================= Image 3 pre-processing =======================
+def process_img3(img3_2, start_num=1):
 
     img2_np = np.array(img3_2)
     hsv2 = cv2.cvtColor(img2_np, cv2.COLOR_RGB2HSV)
@@ -274,48 +308,132 @@ def process_img3(img3_2):
     rank_crop = img3_2.crop((x2, rank_top, x2 + w2 - 15, rank_top + 925))
     #rank_crop.save("rank.png")
 
-    result ={
-        "uma" : [],
-        "number" : []
-    }
+    result_rank = []
 
     boxes = find_boxes(rank_crop, 160, 200, 45, 65)
 
     for i, (x, y, w, h) in enumerate(boxes):
-        numbers = rank_crop.crop((x + 215, y + 55, x + w + 120, y + h + 34))
+        rank_num = start_num + i
+
+        number_img = rank_crop.crop((x + 215, y + 55, x + w + 120, y + h + 34))
+        number_text = ocr_predict(number_img, model, val_transform, idx_to_char, device)
+        number = extract_number(number_text)
+
         r_uma = rank_crop.crop((x, y + 25, x + w, y + h))
+        r_uma_text = ocr_with_fuzzy(r_uma, model, val_transform, idx_to_char, device, char_names_outer)
+
         t_name = rank_crop.crop((x, y + 60, x + w - 80, y + h + 35))
-        result["uma"].append(r_uma)
-        result["number"].append(numbers)
-        #t_name.save(f"test{i+1}.png")
-        #numbers.save(f"znum{i+1}.png")
+        t_name_text = ocr_predict(t_name, model, val_transform, idx_to_char, device)
+        
+        result_rank.append({
+            "name" : r_uma_text,
+            "trainer" : t_name_text,
+            "number" : number,
+            "rank" : rank_num
+        })
+        
+    return result_rank
 
-    return result
+# ===================================== Matching Data (detail) =====================================
+def matching_detail(all_detail_result):
+    uma_detail = []
+    processed = set()
 
-# =================================== CRNN Model ===================================
+    for i in range(len(all_detail_result)):
+        if i in processed:
+            continue
 
-chars = build_vocab("uma_data/labels_dl.csv")
-char_to_idx, idx_to_char = build_char_maps(chars)
-num_classes = len(char_to_idx)
+        current = all_detail_result[i]
+        for j in range(i + 1, len(all_detail_result)):
+            if j in processed:
+                continue
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = CrnnUma(num_classes=num_classes)
-model.load_state_dict(torch.load("umaocr/model/crnn_uma_model_v12.pth", map_location=device))
-model.to(device)
-model.eval()
+            new = all_detail_result[j]
+            if (current["name"] == new["name"]
+                and current["stats"]["speed"] == new["stats"]["speed"]
+                and current["stats"]["stamina"] == new["stats"]["stamina"]):
 
-def ocr_predict(pil_image, model, val_transform, idx_to_char, device):
-    padded = padding_img(pil_image)
-    tensor = val_transform(padded).unsqueeze(0).to(device)
+                current_skill = {s["name"] for s in current["skills"]}
 
-    with torch.no_grad():
-        output = model(tensor)
-        prediction = decoder_predictions(output, idx_to_char)
+                for skill in new["skills"]:
+                    if skill["name"] not in current_skill:
+                        current_skill.add(skill["name"])
+                        current["skills"].append(skill)
 
-    return prediction[0]
+                processed.add(j)
+
+        uma_detail.append(current)
+        processed.add(i)
+
+    return uma_detail
+
+# =================================== Matching Data (Rank & Mood) ===================================
+
+def matching_r_m(result_ranks, result_moods):
+    r_m_result = []
+    mood_processed = set()
+
+    for r in result_ranks:
+        match = next((m for m in result_moods if m["number"] == r["number"]), None)
+        r["mood"] = match["mood"] if match else None
+        if match:
+            mood_processed.add(match["number"])
+        r_m_result.append(r)
+
+    for m in result_moods:
+        if m["number"] not in mood_processed:
+            rank_9 = {
+                "name" : m["name"],
+                "trainer" : m["trainer"],
+                "number" : m["number"],
+                "rank" : 9,
+                "mood" : m["mood"]
+            }
+            r_m_result.append(rank_9)
+
+    return r_m_result
+
+# ================================== Matching Data (detail, Mood & Rank) ==================================
+
+def matching_d_r_m(uma_detail, r_m_result):
+    final_match = []
+    
+    for detail in uma_detail:
+        trainer_detail = detail["trainer"]
+
+        if trainer_detail == "Ellen Joe":
+            match = next((rm for rm in r_m_result if rm["trainer"] == detail["trainer"] and rm["name"] == detail["name"]), None)
+
+        else:
+            candidate = [rm for rm in r_m_result if rm["name"] == detail["name"]]
+            match = candidate[0] if candidate else None
+
+        if match:
+            detail["rank"] = match["rank"]
+            detail["mood"] = match["mood"]
+            r_m_result.remove(match)
+
+        final_match.append(detail)
+
+    return final_match
 
 # ================================ Debugging ================================
 
+# ================================ Load All Uma Detail ================================
+
+all_detail_result = []
+for detail_path in detail_photos:  # detail_photos = all images in race folder, variable name can be change
+    img = Image.open(detail_path)
+    result = process_detail(img)
+    all_detail_result.append(result)
+
+process_detail(img1)
 #for test in ep:
 #    text = ocr_predict(test, model, val_transform, idx_to_char, device)
 #    print(text)
+
+#merger mood1 and mood2
+result_moods = process_mood1(img2_1) + process_mood2(img2_2)
+
+#merger rank
+result_ranks = process_img3(img3_1, start_num=1) + process_img3(img3_2, start_num=5)
