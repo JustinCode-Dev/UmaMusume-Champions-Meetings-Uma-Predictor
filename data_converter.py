@@ -1,23 +1,15 @@
 from PIL import Image
 import cv2
 import numpy as np
-from rapidfuzz import process
 import json
 import re
-import torch
-from converter import ocr_predict, ocr_with_fuzzy, model, val_transform, idx_to_char, device, skill_names, char_names_outer, char_names, characters, mood_list
-import torch
-import torchvision.transforms as transforms
+from converter import ocr_predict, ocr_with_fuzzy, model, val_transform, idx_to_char, device, skill_names, char_names_outer, char_names_full, mood_list
+from pathlib import Path
+import os
 
 # ==========================================================================================
 # ============================= THIS FILE IS FOR IMG2JSON ==================================
 # ==========================================================================================
-
-img1 = Image.open("photo/cm14/round1/detail/race1/Screenshot 2026-06-05 173640.png") # uma detail img
-img2_1 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 173504.png") # mood img (not scrolled)
-img2_2 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 173513.png") # mood img (scrolled)
-img3_1 = Image.open("photo/cm14/round1/rank/Screenshot 2026-06-05 173620.png") # rank img (not scrolled)
-img3_2 = Image.open("photo/cm14/round1/rank/Screenshot 2026-06-05 173635.png") # rank img (scrolled)
 
 # ============================== Images Pre-processing =============================
 
@@ -58,14 +50,13 @@ def padding_img(image, target_height=48, max_width=460):
     img = img.resize((final_w, target_height), Image.Resampling.LANCZOS)
     padded_img = Image.new('L', (max_width, target_height), color=255)
     padded_img.paste(img, (5, 0))
-    padded_img.save("padding_test.png")
 
     return padded_img
 
 # ================================ Regex/Number Extractor ================================
 
 def extract_number(text):
-    match = re.search(r"/d+", text)
+    match = re.search(r"\d+", text)
     if match:
         return int(match.group())
     return None
@@ -87,7 +78,6 @@ def process_detail(img1):
         print(f"Warning")
     ui_top1 = y1
     ui_crop1 = img1.crop((x1, ui_top1, x1 + w1, ui_top1 + 925))
-    #ui_crop1.save("z_test.png")
 
     # ================================ Uma Detail / UI Button ================================
 
@@ -123,8 +113,9 @@ def process_detail(img1):
         skills_zone = ui_crop1.crop((0, 470, 580, 925))
         result_detail["trainer"] = "Ellen Joe"
 
-    name = ocr_with_fuzzy(name_zone, model, val_transform, idx_to_char, device, characters)
-    result_detail["name"] = name
+    name = ocr_with_fuzzy(name_zone, model, val_transform, idx_to_char, device, char_names_full, threshold=75)
+    name_normalized = name.replace("[", "").replace("]", "")
+    result_detail["name"] = name_normalized
 
     # ==================== Stats ====================
     stat_labels = ["speed", "stamina", "power", "guts", "wit"]
@@ -141,18 +132,23 @@ def process_detail(img1):
         skill = skills_zone.crop((x + 35, y, x + w, y + h))
         skill_text = ocr_with_fuzzy(skill, model, val_transform, idx_to_char, device, skill_names)
         result_detail["skills"].append({"name": skill_text})
-        #skill.save(f"skill_{i + 1}.png")
 
     # ===================== Level =====================
     unique_skill = skills[0]
     x, y, w, h = unique_skill
-    uni_skill = skills_zone.crop((x + 35, y, x + w - 48, y + h))
     level = skills_zone.crop((x + 220, y, x + w, y + h))
     level_text = ocr_predict(level, model, val_transform, idx_to_char, device)
     level_num = extract_number(level_text)
-    result_detail["skill_level"] = level_num
-    
+
+    if level_num is not None:
+        result_detail["skill_level"] = level_num
+        result_detail["unique_skill"] = result_detail["skills"][0]["name"]
+    else:
+        result_detail["skill_level"] = None
+        result_detail["unique_skill"] = None
+
     # ==================== Aptitude ====================
+
     aptitude_labels = ["turf", "dirt", "sprint", "mile", "medium", "long", "front_runner", "pace_chaser", "late_surger", "end_closer"]
 
     aptitude_map = {
@@ -165,15 +161,12 @@ def process_detail(img1):
     for label, (x, y, w, h) in zip(aptitude_labels, aptitude):
         category = aptitude_map[label]
         aptitude_crop = aptitude_zone.crop((x + 70, y, x + w, y + h))
-        #aptitude_crop.save(f"aptitude_{j + 1}.png")
         aptitude_text = ocr_predict(aptitude_crop, model, val_transform, idx_to_char, device)
         result_detail[category][label] = aptitude_text
 
     return result_detail
 
-# ================================ Mood pre-processing ================================
-
-# =================================== Mood, Part 1 ===================================
+# ===================================== Mood, Part 1 =====================================
 
 def process_mood1(img2_1):
     img3_np = np.array(img2_1)
@@ -192,9 +185,7 @@ def process_mood1(img2_1):
 
     topmost_rect = min(rectangles, key=lambda r: r[1])
     rx1, ry1, rw1, rh1 = topmost_rect
-    print(rw1)
     mood_crop1 = img2_1.crop((rx1 + 5, ry1, rx1 + rw1 + 5, ry1 + 717))
-    #mood_crop1.save("mood_test1.png")
 
     result_mood1 = []
 
@@ -203,7 +194,6 @@ def process_mood1(img2_1):
         rows = mood_crop1.crop((0, y, 561, y + 105))
         boxes = find_boxes(rows, 45, 110, 25, 45)
         boxes = boxes[:1]
-        #rows.save(f"zmood_{i+1}.png")
         
         for box_idx, (x, y2, w, h) in enumerate(boxes):
             mood = rows.crop((x, y2, x + w, y2 + h))
@@ -248,7 +238,6 @@ def process_mood2(img2_2):
     botmost_rect = max(rectangles, key=lambda r: r[1])
     rx2, ry2, rw2, rh2 = botmost_rect
     mood_crop2 = img2_2.crop((rx2, ry2 - 575, rx2 + rw2, rh2 + ry2))
-    mood_crop2.save("mood_test2.png")
 
     result_mood2 = []
 
@@ -285,12 +274,12 @@ def process_mood2(img2_2):
             
     return result_mood2
 
-# =================================== Rank Image ===================================
+# ===================================== Rank Image =====================================
 
-def process_img3(img3_2, start_num=1):
+def process_rank(img3_1, start_num=1):
 
-    img2_np = np.array(img3_2)
-    hsv2 = cv2.cvtColor(img2_np, cv2.COLOR_RGB2HSV)
+    img3_np = np.array(img3_1)
+    hsv2 = cv2.cvtColor(img3_np, cv2.COLOR_RGB2HSV)
     lower_green2 = np.array([40, 100, 100])
     upper_green2 = np.array([80, 255, 255])
 
@@ -305,8 +294,7 @@ def process_img3(img3_2, start_num=1):
         return {}
         
     rank_top = y2
-    rank_crop = img3_2.crop((x2, rank_top, x2 + w2 - 15, rank_top + 925))
-    #rank_crop.save("rank.png")
+    rank_crop = img3_1.crop((x2, rank_top, x2 + w2 - 15, rank_top + 925))
 
     result_rank = []
 
@@ -335,6 +323,7 @@ def process_img3(img3_2, start_num=1):
     return result_rank
 
 # ===================================== Matching Data (detail) =====================================
+
 def matching_detail(all_detail_result):
     uma_detail = []
     processed = set()
@@ -348,17 +337,23 @@ def matching_detail(all_detail_result):
             if j in processed:
                 continue
 
-            new = all_detail_result[j]
-            if (current["name"] == new["name"]
-                and current["stats"]["speed"] == new["stats"]["speed"]
-                and current["stats"]["stamina"] == new["stats"]["stamina"]):
+            candidate = all_detail_result[j]
+            if (current["name"] == candidate["name"]
+                and current["stats"]["speed"] == candidate["stats"]["speed"]
+                and current["stats"]["stamina"] == candidate["stats"]["stamina"]):
 
                 current_skill = {s["name"] for s in current["skills"]}
 
-                for skill in new["skills"]:
+                for skill in candidate["skills"]:
                     if skill["name"] not in current_skill:
                         current_skill.add(skill["name"])
                         current["skills"].append(skill)
+
+                if current["skill_level"] is None and candidate["skill_level"] is not None:
+                    current["skill_level"] = candidate["skill_level"]
+
+                if current["unique_skill"] is None and candidate["unique_skill"] is not None:
+                    current["unique_skill"] = candidate["unique_skill"]
 
                 processed.add(j)
 
@@ -393,19 +388,27 @@ def matching_r_m(result_ranks, result_moods):
 
     return r_m_result
 
+# ======================================== Shorting name ========================================
+
+# Example : Mayano Top Gun (Scramble☆Zone) --> Mayano Top Gun
+
+def shorting_name(full_name):
+    return full_name.split("(")[0].strip()
+
 # ================================== Matching Data (detail, Mood & Rank) ==================================
 
 def matching_d_r_m(uma_detail, r_m_result):
     final_match = []
     
     for detail in uma_detail:
+        short_name = shorting_name(detail["name"])
         trainer_detail = detail["trainer"]
 
         if trainer_detail == "Ellen Joe":
-            match = next((rm for rm in r_m_result if rm["trainer"] == detail["trainer"] and rm["name"] == detail["name"]), None)
+            match = next((rm for rm in r_m_result if rm["trainer"] == detail["trainer"] and rm["name"] == short_name), None)
 
         else:
-            candidate = [rm for rm in r_m_result if rm["name"] == detail["name"]]
+            candidate = [rm for rm in r_m_result if rm["name"] == short_name]
             match = candidate[0] if candidate else None
 
         if match:
@@ -417,23 +420,60 @@ def matching_d_r_m(uma_detail, r_m_result):
 
     return final_match
 
-# ================================ Debugging ================================
+# ===============================================================================================
+# ============================================= Main ============================================
+# ===============================================================================================
 
-# ================================ Load All Uma Detail ================================
+cm_rounds = {
+    "cm14" : ["round1", "round2"],
+    "cm16" : ["round1", "round2"],
+    "cm17" : ["round2"]
+}
 
-all_detail_result = []
-for detail_path in detail_photos:  # detail_photos = all images in race folder, variable name can be change
-    img = Image.open(detail_path)
-    result = process_detail(img)
-    all_detail_result.append(result)
+for cm, rounds in cm_rounds.items():
+    for round_name in rounds:
+        print(f"\n=== Processing {cm} {round_name} ===")
+        race_dirs = sorted(Path(f"photo/{cm}/{round_name}/detail").glob("race*"))
+        mood_photos = sorted(Path(f"photo/{cm}/{round_name}/mood").glob("*.png"))
+        rank_photos = sorted(Path(f"photo/{cm}/{round_name}/rank").glob("*.png"))
 
-process_detail(img1)
-#for test in ep:
-#    text = ocr_predict(test, model, val_transform, idx_to_char, device)
-#    print(text)
+        for race_idx, race_dir in enumerate(race_dirs):
+            race_name = race_dir.name
+            race_prefix = f"{cm}_{round_name}_{race_name}"
+            print(f"--- race {race_idx+1}/{len(race_dirs)}: {race_name} ---")
+            detail_photos = sorted(race_dir.glob("*.png"))
+            mood_pair = mood_photos[race_idx * 2 : race_idx * 2 + 2]
+            rank_pair = rank_photos[race_idx * 2 : race_idx * 2 + 2]
 
-#merger mood1 and mood2
-result_moods = process_mood1(img2_1) + process_mood2(img2_2)
+            img2_1 = Image.open(mood_pair[0])
+            img2_2 = Image.open(mood_pair[1])
+            img3_1 = Image.open(rank_pair[0])
+            img3_2 = Image.open(rank_pair[1])
 
-#merger rank
-result_ranks = process_img3(img3_1, start_num=1) + process_img3(img3_2, start_num=5)
+            result_moods = process_mood1(img2_1) + process_mood2(img2_2)
+            result_ranks = process_rank(img3_1, start_num=1) + process_rank(img3_2, start_num=5)
+            r_m_result = matching_r_m(result_ranks, result_moods)
+
+            all_detail_result = []
+            for i, detail_path in enumerate(detail_photos):
+                img1 = Image.open(detail_path)
+                result1 = process_detail(img1)
+                all_detail_result.append(result1)
+
+            uma_detail = matching_detail(all_detail_result)
+            final_match = matching_d_r_m(uma_detail, r_m_result)
+
+# ================================== List to JSON ==================================
+
+            folder_output = f"data/raw/input/{cm}_input"
+            os.makedirs(folder_output, exist_ok=True)
+
+            for idx, uma in enumerate(final_match):
+                uma.pop("number", None)
+                uma.pop("trainer", None)
+
+                name_uma_file = uma["name"].split("(")[0].strip()
+                file_name = f"{folder_output}/{name_uma_file}_{race_prefix}_{idx}.json"
+
+                with open(file_name, "w", encoding="utf-8") as f:
+                    json.dump(uma, f, indent=2, ensure_ascii=False)
