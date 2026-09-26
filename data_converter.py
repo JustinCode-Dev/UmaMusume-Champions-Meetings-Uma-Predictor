@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import json
 import re
-from converter import ocr_predict, ocr_with_fuzzy, model, val_transform, idx_to_char, device, skill_names, char_names_outer, char_names_full, mood_list
+from converter import ocr_predict, ocr_with_fuzzy, model, val_transform, idx_to_char, device, skill_names, char_names_outer, char_names_full, mood_list, style_list
 from pathlib import Path
 import os
 
@@ -206,6 +206,9 @@ def process_mood1(img2_1):
             number_text = ocr_predict(number_img, model, val_transform, idx_to_char, device)
             number = extract_number(number_text)
 
+            style = rows.crop((x + 108, y2 + 35, x + w + 100, y2 + h + 23))
+            style_text = ocr_with_fuzzy(style, model, val_transform, idx_to_char, device, style_list)
+
             name = rows.crop((x - 200, y2, x + w - 125, y2 + h))
             name_text = ocr_with_fuzzy(name, model, val_transform, idx_to_char, device, char_names_outer)
             
@@ -213,7 +216,8 @@ def process_mood1(img2_1):
                 "name" : name_text,
                 "mood" : mood_text,
                 "number" : number,
-                "trainer" : t_name_text
+                "trainer" : t_name_text,
+                "style" : style_text
             })
 
     return result_mood1
@@ -262,6 +266,9 @@ def process_mood2(img2_2):
             number_text = ocr_predict(number_img, model, val_transform, idx_to_char, device)
             number = extract_number(number_text)
 
+            style = rows.crop((x + 110, y + 37, x + w + 105, y + h + 24))
+            style_text = ocr_with_fuzzy(style, model, val_transform, idx_to_char, device, style_list)
+
             name = rows.crop((x - 200, y, x + w - 125, y + h))
             name_text = ocr_with_fuzzy(name, model, val_transform, idx_to_char, device, char_names_outer)
 
@@ -269,7 +276,8 @@ def process_mood2(img2_2):
                 "name" : name_text,
                 "mood" : mood_text,
                 "number" : number,
-                "trainer" : t_name_text
+                "trainer" : t_name_text,
+                "style" : style_text
             })
             
     return result_mood2
@@ -382,7 +390,8 @@ def matching_r_m(result_ranks, result_moods):
                 "trainer" : m["trainer"],
                 "number" : m["number"],
                 "rank" : 9,
-                "mood" : m["mood"]
+                "mood" : m["mood"],
+                "style" : m["style"]
             }
             r_m_result.append(rank_9)
 
