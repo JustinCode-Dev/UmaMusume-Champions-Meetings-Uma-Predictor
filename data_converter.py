@@ -217,7 +217,7 @@ def process_mood1(img2_1):
                 "mood" : mood_text,
                 "number" : number,
                 "trainer" : t_name_text,
-                "style" : style_text
+                "main_style" : style_text
             })
 
     return result_mood1
@@ -277,7 +277,7 @@ def process_mood2(img2_2):
                 "mood" : mood_text,
                 "number" : number,
                 "trainer" : t_name_text,
-                "style" : style_text
+                "main_style" : style_text
             })
             
     return result_mood2
