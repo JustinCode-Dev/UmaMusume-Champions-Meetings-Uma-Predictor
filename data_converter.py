@@ -208,6 +208,7 @@ def process_mood1(img2_1):
 
             style = rows.crop((x + 108, y2 + 35, x + w + 100, y2 + h + 23))
             style_text = ocr_with_fuzzy(style, model, val_transform, idx_to_char, device, style_list)
+            style_normal = normalize_style_name(style_text)
 
             name = rows.crop((x - 200, y2, x + w - 125, y2 + h))
             name_text = ocr_with_fuzzy(name, model, val_transform, idx_to_char, device, char_names_outer)
@@ -217,7 +218,7 @@ def process_mood1(img2_1):
                 "mood" : mood_text,
                 "number" : number,
                 "trainer" : t_name_text,
-                "main_style" : style_text
+                "main_style" : style_normal
             })
 
     return result_mood1
@@ -268,6 +269,7 @@ def process_mood2(img2_2):
 
             style = rows.crop((x + 110, y + 37, x + w + 105, y + h + 24))
             style_text = ocr_with_fuzzy(style, model, val_transform, idx_to_char, device, style_list)
+            style_normal = normalize_style_name(style_text)
 
             name = rows.crop((x - 200, y, x + w - 125, y + h))
             name_text = ocr_with_fuzzy(name, model, val_transform, idx_to_char, device, char_names_outer)
@@ -277,7 +279,7 @@ def process_mood2(img2_2):
                 "mood" : mood_text,
                 "number" : number,
                 "trainer" : t_name_text,
-                "main_style" : style_text
+                "main_style" : style_normal
             })
             
     return result_mood2
@@ -329,6 +331,17 @@ def process_rank(img3_1, start_num=1):
         })
         
     return result_rank
+
+# ===================================== Style Name Normalization =====================================
+
+def normalize_style_name(style_text):
+    style_map = {
+        "Front" : "front_runner",
+        "Pace" : "pace_chaser",
+        "Late" : "late_surger",
+        "End" : "end_closer"
+    }
+    return style_map.get(style_text, "unknown")
 
 # ===================================== Matching Data (detail) =====================================
 
