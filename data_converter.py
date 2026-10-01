@@ -60,6 +60,9 @@ def extract_number(text):
     if match:
         return int(match.group())
     return None
+# ================================ Trainer Name Validation ================================
+
+my_trainer = ["Ellen Joe"]
 
 # ============================ Image 1 pre-processing ============================
 
@@ -200,7 +203,7 @@ def process_mood1(img2_1):
             mood_text = ocr_with_fuzzy(mood, model, val_transform, idx_to_char, device, mood_list)
 
             t_name_img = rows.crop((x - 200, y2 + 35, x + w - 170, y2 + h + 30))
-            t_name_text = ocr_predict(t_name_img, model, val_transform, idx_to_char, device)
+            t_name_text = ocr_with_fuzzy(t_name_img, model, val_transform, idx_to_char, device, my_trainer)
 
             number_img = rows.crop((x + 105, y2, x + w + 100, y2 + h))
             number_text = ocr_predict(number_img, model, val_transform, idx_to_char, device)
@@ -261,7 +264,7 @@ def process_mood2(img2_2):
             mood_text = ocr_with_fuzzy(mood, model, val_transform, idx_to_char, device, mood_list)
 
             t_name = rows.crop((x - 200, y + 35, x + w - 170, y + h + 30))
-            t_name_text = ocr_predict(t_name, model, val_transform, idx_to_char, device)
+            t_name_text = ocr_with_fuzzy(t_name, model, val_transform, idx_to_char, device, my_trainer)
 
             number_img = rows.crop((x + 110, y + 5, x + w + 105, y + h - 5))
             number_text = ocr_predict(number_img, model, val_transform, idx_to_char, device)
@@ -321,7 +324,7 @@ def process_rank(img3_1, start_num=1):
         r_uma_text = ocr_with_fuzzy(r_uma, model, val_transform, idx_to_char, device, char_names_outer)
 
         t_name = rank_crop.crop((x, y + 60, x + w - 80, y + h + 35))
-        t_name_text = ocr_predict(t_name, model, val_transform, idx_to_char, device)
+        t_name_text = ocr_with_fuzzy(t_name, model, val_transform, idx_to_char, device, my_trainer)
         
         result_rank.append({
             "name" : r_uma_text,
@@ -442,6 +445,15 @@ def matching_d_r_m(uma_detail, r_m_result):
 
     return final_match
 
+# ================================== Add CM, Round, Race (number) ==================================
+
+def add_race_info(final_match, cm, round_name, race_name):
+    for uma in final_match:
+        uma["cm_id"] = extract_number(cm)          
+        uma["round"] = extract_number(round_name)  
+        uma["race_no"] = extract_number(race_name) 
+    return final_match
+
 # ===============================================================================================
 # ============================================= Main ============================================
 # ===============================================================================================
@@ -455,7 +467,7 @@ cm_rounds = {
 for cm, rounds in cm_rounds.items():
     for round_name in rounds:
         print(f"\n=== Processing {cm} {round_name} ===")
-        race_dirs = sorted(Path(f"photo/{cm}/{round_name}/detail").glob("race*"))
+        race_dirs = sorted(Path(f"photo/{cm}/{round_name}/detail").glob("race*"), key=lambda p: extract_number(p.name))
         mood_photos = sorted(Path(f"photo/{cm}/{round_name}/mood").glob("*.png"))
         rank_photos = sorted(Path(f"photo/{cm}/{round_name}/rank").glob("*.png"))
 
@@ -483,7 +495,18 @@ for cm, rounds in cm_rounds.items():
                 all_detail_result.append(result1)
 
             uma_detail = matching_detail(all_detail_result)
+
             final_match = matching_d_r_m(uma_detail, r_m_result)
+            final_match = add_race_info(final_match, cm, round_name, race_name)
+
+            if len(final_match) != 9:
+                print(f"WARNING {race_prefix}: {len(final_match)} uma (supposed to be 9)")
+                
+            for u in final_match:
+                if "rank" not in u:
+                    print(f"WARNING {race_prefix}: {u['name']} rank not found")
+                if u.get("mood") is None:
+                    print(f"WARNING {race_prefix}: {u['name']} mood not found")
 
 # ================================== List to JSON ==================================
 
