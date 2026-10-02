@@ -15,11 +15,11 @@ import os
 
 # ================================= Box Detection =================================
 
-def find_boxes(zone, min_w=150, max_w=310, min_h=30, max_h=70):
+def find_boxes(zone, min_w=150, max_w=310, min_h=30, max_h=70, kernel_size=3):
     zone_np = np.array(zone)
     zone_gray = cv2.cvtColor(zone_np, cv2.COLOR_RGB2GRAY)
     
-    kernel = np.ones((3, 3), np.uint8)
+    kernel = np.ones((kernel_size, kernel_size), np.uint8)
     gradient = cv2.morphologyEx(zone_gray, cv2.MORPH_GRADIENT, kernel)
     _, binary = cv2.threshold(gradient, 20, 255, cv2.THRESH_BINARY)
     closed = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
@@ -195,12 +195,12 @@ def process_mood1(img2_1):
     for i in range(6):
         y = 0 + (i * 120)
         rows = mood_crop1.crop((0, y, 561, y + 105))
-        boxes = find_boxes(rows, 45, 110, 25, 45)
+        boxes = find_boxes(rows, 45, 110, 25, 55)
         boxes = boxes[:1]
         
         for box_idx, (x, y2, w, h) in enumerate(boxes):
             mood = rows.crop((x, y2, x + w, y2 + h))
-            mood_text = ocr_with_fuzzy(mood, model, val_transform, idx_to_char, device, mood_list)
+            mood_text = ocr_with_fuzzy(mood, model, val_transform, idx_to_char, device, mood_list, threshold=75)
 
             t_name_img = rows.crop((x - 200, y2 + 35, x + w - 170, y2 + h + 30))
             t_name_text = ocr_with_fuzzy(t_name_img, model, val_transform, idx_to_char, device, my_trainer)
@@ -214,7 +214,7 @@ def process_mood1(img2_1):
             style_normal = normalize_style_name(style_text)
 
             name = rows.crop((x - 200, y2, x + w - 125, y2 + h))
-            name_text = ocr_with_fuzzy(name, model, val_transform, idx_to_char, device, char_names_outer)
+            name_text = ocr_with_fuzzy(name, model, val_transform, idx_to_char, device, char_names_outer, threshold=75)
             
             result_mood1.append({
                 "name" : name_text,
@@ -257,11 +257,11 @@ def process_mood2(img2_2):
         
     for row_num, coords in mood_coords.items():
         rows = mood_crop2.crop(coords)
-        boxes = find_boxes(rows, 45, 103, 25, 45)
+        boxes = find_boxes(rows, 45, 103, 25, 55)
 
         for x, y, w, h in boxes:
             mood = rows.crop((x + 33, y, x + w, y + h - 5))
-            mood_text = ocr_with_fuzzy(mood, model, val_transform, idx_to_char, device, mood_list)
+            mood_text = ocr_with_fuzzy(mood, model, val_transform, idx_to_char, device, mood_list, threshold=75)
 
             t_name = rows.crop((x - 200, y + 35, x + w - 170, y + h + 30))
             t_name_text = ocr_with_fuzzy(t_name, model, val_transform, idx_to_char, device, my_trainer)
@@ -275,7 +275,7 @@ def process_mood2(img2_2):
             style_normal = normalize_style_name(style_text)
 
             name = rows.crop((x - 200, y, x + w - 125, y + h))
-            name_text = ocr_with_fuzzy(name, model, val_transform, idx_to_char, device, char_names_outer)
+            name_text = ocr_with_fuzzy(name, model, val_transform, idx_to_char, device, char_names_outer, threshold=75)
 
             result_mood2.append({
                 "name" : name_text,
@@ -311,7 +311,7 @@ def process_rank(img3_1, start_num=1):
 
     result_rank = []
 
-    boxes = find_boxes(rank_crop, 160, 200, 45, 65)
+    boxes = find_boxes(rank_crop, 160, 200, 45, 65, kernel_size=5)
 
     for i, (x, y, w, h) in enumerate(boxes):
         rank_num = start_num + i
@@ -321,7 +321,7 @@ def process_rank(img3_1, start_num=1):
         number = extract_number(number_text)
 
         r_uma = rank_crop.crop((x, y + 25, x + w, y + h))
-        r_uma_text = ocr_with_fuzzy(r_uma, model, val_transform, idx_to_char, device, char_names_outer)
+        r_uma_text = ocr_with_fuzzy(r_uma, model, val_transform, idx_to_char, device, char_names_outer, threshold=70)
 
         t_name = rank_crop.crop((x, y + 60, x + w - 80, y + h + 35))
         t_name_text = ocr_with_fuzzy(t_name, model, val_transform, idx_to_char, device, my_trainer)
@@ -407,7 +407,7 @@ def matching_r_m(result_ranks, result_moods):
                 "number" : m["number"],
                 "rank" : 9,
                 "mood" : m["mood"],
-                "style" : m["style"]
+                "main_style" : m["main_style"]
             }
             r_m_result.append(rank_9)
 
@@ -424,7 +424,9 @@ def shorting_name(full_name):
 
 def matching_d_r_m(uma_detail, r_m_result):
     final_match = []
-    
+    #print("RM    :", [(rm["name"], rm["rank"]) for rm in r_m_result])
+    #print("DETAIL:", [d["name"] for d in uma_detail])
+
     for detail in uma_detail:
         short_name = shorting_name(detail["name"])
         trainer_detail = detail["trainer"]
@@ -440,6 +442,8 @@ def matching_d_r_m(uma_detail, r_m_result):
             detail["rank"] = match["rank"]
             detail["mood"] = match["mood"]
             r_m_result.remove(match)
+        else:
+            print(f"NO MATCH: {short_name!r} | available: {[rm['name'] for rm in r_m_result]}")
 
         final_match.append(detail)
 
@@ -459,8 +463,6 @@ def add_race_info(final_match, cm, round_name, race_name):
 # ===============================================================================================
 
 cm_rounds = {
-    "cm14" : ["round1", "round2"],
-    "cm16" : ["round1", "round2"],
     "cm17" : ["round2"]
 }
 
@@ -474,7 +476,7 @@ for cm, rounds in cm_rounds.items():
         for race_idx, race_dir in enumerate(race_dirs):
             race_name = race_dir.name
             race_prefix = f"{cm}_{round_name}_{race_name}"
-            print(f"--- race {race_idx+1}/{len(race_dirs)}: {race_name} ---")
+            print(f"\n--- race {race_idx+1}/{len(race_dirs)}: {race_name} ---")
             detail_photos = sorted(race_dir.glob("*.png"))
             mood_pair = mood_photos[race_idx * 2 : race_idx * 2 + 2]
             rank_pair = rank_photos[race_idx * 2 : race_idx * 2 + 2]
@@ -484,9 +486,16 @@ for cm, rounds in cm_rounds.items():
             img3_1 = Image.open(rank_pair[0])
             img3_2 = Image.open(rank_pair[1])
 
-            result_moods = process_mood1(img2_1) + process_mood2(img2_2)
-            result_ranks = process_rank(img3_1, start_num=1) + process_rank(img3_2, start_num=5)
+            r1 = process_rank(img3_1, start_num=1)
+            r2 = process_rank(img3_2, start_num=5)
+            m1 = process_mood1(img2_1)
+            m2 = process_mood2(img2_2)
+
+            result_moods = m1 + m2
+            result_ranks = r1 + r2
             r_m_result = matching_r_m(result_ranks, result_moods)
+            
+            print("rank:", len(r1), len(r2), "| mood:", len(m1), len(m2))
 
             all_detail_result = []
             for i, detail_path in enumerate(detail_photos):
