@@ -6,6 +6,7 @@ import re
 from converter import ocr_predict, ocr_with_fuzzy, model, val_transform, idx_to_char, device, skill_names, char_names_outer, char_names_full, mood_list, style_list
 from pathlib import Path
 import os
+from rapidfuzz import fuzz
 
 # ==========================================================================================
 # ============================= THIS FILE IS FOR IMG2JSON ==================================
@@ -117,8 +118,7 @@ def process_detail(img1):
         result_detail["trainer"] = "Ellen Joe"
 
     name = ocr_with_fuzzy(name_zone, model, val_transform, idx_to_char, device, char_names_full, threshold=75)
-    name_normalized = name.replace("[", "").replace("]", "")
-    result_detail["name"] = name_normalized
+    result_detail["name"] = name
 
     # ==================== Stats ====================
     stat_labels = ["speed", "stamina", "power", "guts", "wit"]
@@ -199,14 +199,14 @@ def process_mood1(img2_1):
         boxes = boxes[:1]
         
         for box_idx, (x, y2, w, h) in enumerate(boxes):
-            mood = rows.crop((x, y2, x + w, y2 + h))
-            mood_text = ocr_with_fuzzy(mood, model, val_transform, idx_to_char, device, mood_list, threshold=75)
+            mood = rows.crop((x + 30, y2, x + w, y2 + h))
+            mood_text = ocr_with_fuzzy(mood, model, val_transform, idx_to_char, device, mood_list, threshold=70)
 
             t_name_img = rows.crop((x - 200, y2 + 35, x + w - 170, y2 + h + 30))
             t_name_text = ocr_with_fuzzy(t_name_img, model, val_transform, idx_to_char, device, my_trainer)
 
-            number_img = rows.crop((x + 105, y2, x + w + 100, y2 + h))
-            number_text = ocr_predict(number_img, model, val_transform, idx_to_char, device)
+            number_img = rows.crop((x + 137, y2 + 8, x + w + 68, y2 + h))
+            number_text = ocr_predict(number_img, model, val_transform, idx_to_char, device, allowed_chars=set("0123456789"))
             number = extract_number(number_text)
 
             style = rows.crop((x + 108, y2 + 35, x + w + 100, y2 + h + 23))
@@ -214,7 +214,7 @@ def process_mood1(img2_1):
             style_normal = normalize_style_name(style_text)
 
             name = rows.crop((x - 200, y2, x + w - 125, y2 + h))
-            name_text = ocr_with_fuzzy(name, model, val_transform, idx_to_char, device, char_names_outer, threshold=75)
+            name_text = ocr_with_fuzzy(name, model, val_transform, idx_to_char, device, char_names_outer, threshold=75, score_choice=fuzz.token_set_ratio)
             
             result_mood1.append({
                 "name" : name_text,
@@ -223,7 +223,8 @@ def process_mood1(img2_1):
                 "trainer" : t_name_text,
                 "main_style" : style_normal
             })
-
+    print(result_mood1)
+    print("-" * 50)
     return result_mood1
 
 # =================================== Mood, Part 2 ===================================
@@ -261,13 +262,13 @@ def process_mood2(img2_2):
 
         for x, y, w, h in boxes:
             mood = rows.crop((x + 33, y, x + w, y + h - 5))
-            mood_text = ocr_with_fuzzy(mood, model, val_transform, idx_to_char, device, mood_list, threshold=75)
+            mood_text = ocr_with_fuzzy(mood, model, val_transform, idx_to_char, device, mood_list, threshold=70)
 
             t_name = rows.crop((x - 200, y + 35, x + w - 170, y + h + 30))
             t_name_text = ocr_with_fuzzy(t_name, model, val_transform, idx_to_char, device, my_trainer)
 
-            number_img = rows.crop((x + 110, y + 5, x + w + 105, y + h - 5))
-            number_text = ocr_predict(number_img, model, val_transform, idx_to_char, device)
+            number_img = rows.crop((x + 137, y + 8, x + w + 68, y + h - 5))
+            number_text = ocr_predict(number_img, model, val_transform, idx_to_char, device, allowed_chars=set("0123456789"))
             number = extract_number(number_text)
 
             style = rows.crop((x + 110, y + 37, x + w + 105, y + h + 24))
@@ -275,7 +276,7 @@ def process_mood2(img2_2):
             style_normal = normalize_style_name(style_text)
 
             name = rows.crop((x - 200, y, x + w - 125, y + h))
-            name_text = ocr_with_fuzzy(name, model, val_transform, idx_to_char, device, char_names_outer, threshold=75)
+            name_text = ocr_with_fuzzy(name, model, val_transform, idx_to_char, device, char_names_outer, threshold=75, score_choice=fuzz.token_set_ratio)
 
             result_mood2.append({
                 "name" : name_text,
@@ -284,7 +285,7 @@ def process_mood2(img2_2):
                 "trainer" : t_name_text,
                 "main_style" : style_normal
             })
-            
+    print(result_mood2)
     return result_mood2
 
 # ===================================== Rank Image =====================================
@@ -316,12 +317,12 @@ def process_rank(img3_1, start_num=1):
     for i, (x, y, w, h) in enumerate(boxes):
         rank_num = start_num + i
 
-        number_img = rank_crop.crop((x + 215, y + 55, x + w + 120, y + h + 34))
-        number_text = ocr_predict(number_img, model, val_transform, idx_to_char, device)
+        number_img = rank_crop.crop((x + 250, y + 55, x + w + 87, y + h + 34))
+        number_text = ocr_predict(number_img, model, val_transform, idx_to_char, device, allowed_chars=set("0123456789"))
         number = extract_number(number_text)
 
         r_uma = rank_crop.crop((x, y + 25, x + w, y + h))
-        r_uma_text = ocr_with_fuzzy(r_uma, model, val_transform, idx_to_char, device, char_names_outer, threshold=70)
+        r_uma_text = ocr_with_fuzzy(r_uma, model, val_transform, idx_to_char, device, char_names_outer, threshold=75, score_choice=fuzz.token_set_ratio)
 
         t_name = rank_crop.crop((x, y + 60, x + w - 80, y + h + 35))
         t_name_text = ocr_with_fuzzy(t_name, model, val_transform, idx_to_char, device, my_trainer)
@@ -461,6 +462,13 @@ def add_race_info(final_match, cm, round_name, race_name):
 # ===============================================================================================
 # ============================================= Main ============================================
 # ===============================================================================================
+
+#img3_1 = Image.open("photo/cm17/round2/rank/Screenshot 2026-08-12 194951.png")
+#img3_2 = Image.open("photo/cm17/round2/rank/Screenshot 2026-08-12 194956.png")
+#process_rank(img3_1, start_num=1)
+#process_rank(img3_2, start_num=5)
+#img2_2 = Image.open("photo/cm17/round2/mood/Screenshot 2026-08-11 152750.png")
+#process_mood2(img2_2)
 
 cm_rounds = {
     "cm17" : ["round2"]
