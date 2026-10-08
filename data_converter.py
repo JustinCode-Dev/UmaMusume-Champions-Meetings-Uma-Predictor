@@ -117,7 +117,7 @@ def process_detail(img1):
         skills_zone = ui_crop1.crop((0, 470, 580, 925))
         result_detail["trainer"] = "Ellen Joe"
 
-    name = ocr_with_fuzzy(name_zone, model, val_transform, idx_to_char, device, char_names_full, threshold=75)
+    name = ocr_with_fuzzy(name_zone, model, val_transform, idx_to_char, device, char_names_full, threshold=70)
     result_detail["name"] = name
 
     # ==================== Stats ====================
@@ -183,7 +183,7 @@ def process_mood1(img2_1):
         if w > 500 and h > 100:
             rectangles.append((x, y, w, h))
     if not rectangles:
-        print("Warning")
+        print("Warning no rectangle found")
         return {}
 
     topmost_rect = min(rectangles, key=lambda r: r[1])
@@ -195,7 +195,7 @@ def process_mood1(img2_1):
     for i in range(6):
         y = 0 + (i * 120)
         rows = mood_crop1.crop((0, y, 561, y + 105))
-        boxes = find_boxes(rows, 45, 110, 25, 55)
+        boxes = find_boxes(rows, 45, 110, 25, 56)
         boxes = boxes[:1]
         
         for box_idx, (x, y2, w, h) in enumerate(boxes):
@@ -224,7 +224,7 @@ def process_mood1(img2_1):
                 "main_style" : style_normal
             })
     print(result_mood1)
-    print("-" * 50)
+    print("--" * 50)
     return result_mood1
 
 # =================================== Mood, Part 2 ===================================
@@ -232,8 +232,11 @@ def process_mood1(img2_1):
 def process_mood2(img2_2):
     img3_2_np = np.array(img2_2)
     gray3_2 = cv2.cvtColor(img3_2_np, cv2.COLOR_RGB2GRAY)
-    edges3_2 = cv2.Canny(gray3_2, 30, 80)
-    contours3_2, _ = cv2.findContours(edges3_2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    _, thresh3_2 = cv2.threshold(gray3_2, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    kernel_horizontal = cv2.getStructuringElement(cv2.MORPH_RECT, (80, 2))
+    morph_closed = cv2.morphologyEx(thresh3_2, cv2.MORPH_CLOSE, kernel_horizontal)
+
+    contours3_2, _ = cv2.findContours(morph_closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     rectangles = []
     for c in contours3_2:
@@ -241,9 +244,9 @@ def process_mood2(img2_2):
         if w > 553 and h > 108:
             rectangles.append((x, y, w, h))
     if not rectangles:
-        print("Warning")
+        print("Warning no rectangle found")
         return {}
-
+    
     botmost_rect = max(rectangles, key=lambda r: r[1])
     rx2, ry2, rw2, rh2 = botmost_rect
     mood_crop2 = img2_2.crop((rx2, ry2 - 575, rx2 + rw2, rh2 + ry2))
@@ -258,11 +261,13 @@ def process_mood2(img2_2):
         
     for row_num, coords in mood_coords.items():
         rows = mood_crop2.crop(coords)
-        boxes = find_boxes(rows, 45, 103, 25, 55)
+        boxes = find_boxes(rows, 45, 103, 25, 56)
+        #rows.save(f"test{row_num}.png")
 
         for x, y, w, h in boxes:
             mood = rows.crop((x + 33, y, x + w, y + h - 5))
             mood_text = ocr_with_fuzzy(mood, model, val_transform, idx_to_char, device, mood_list, threshold=70)
+            #mood.save(f"mood{row_num}.png")
 
             t_name = rows.crop((x - 200, y + 35, x + w - 170, y + h + 30))
             t_name_text = ocr_with_fuzzy(t_name, model, val_transform, idx_to_char, device, my_trainer)
@@ -270,6 +275,7 @@ def process_mood2(img2_2):
             number_img = rows.crop((x + 137, y + 8, x + w + 68, y + h - 5))
             number_text = ocr_predict(number_img, model, val_transform, idx_to_char, device, allowed_chars=set("0123456789"))
             number = extract_number(number_text)
+            #number_img.save(f"number{row_num}.png")
 
             style = rows.crop((x + 110, y + 37, x + w + 105, y + h + 24))
             style_text = ocr_with_fuzzy(style, model, val_transform, idx_to_char, device, style_list)
@@ -312,7 +318,7 @@ def process_rank(img3_1, start_num=1):
 
     result_rank = []
 
-    boxes = find_boxes(rank_crop, 160, 200, 45, 65, kernel_size=5)
+    boxes = find_boxes(rank_crop, 160, 200, 45, 67, kernel_size=5)
 
     for i, (x, y, w, h) in enumerate(boxes):
         rank_num = start_num + i
@@ -333,7 +339,9 @@ def process_rank(img3_1, start_num=1):
             "number" : number,
             "rank" : rank_num
         })
-        
+    print("--"*50)
+    print(result_rank)
+    print("--"*50)
     return result_rank
 
 # ===================================== Style Name Normalization =====================================
@@ -425,8 +433,9 @@ def shorting_name(full_name):
 
 def matching_d_r_m(uma_detail, r_m_result):
     final_match = []
-    #print("RM    :", [(rm["name"], rm["rank"]) for rm in r_m_result])
-    #print("DETAIL:", [d["name"] for d in uma_detail])
+    #print("--"*50)
+    #print("\nRM    :", [(rm["name"], rm["rank"]) for rm in r_m_result])
+    #print("\nDETAIL:", [d["name"] for d in uma_detail])
 
     for detail in uma_detail:
         short_name = shorting_name(detail["name"])
@@ -463,15 +472,13 @@ def add_race_info(final_match, cm, round_name, race_name):
 # ============================================= Main ============================================
 # ===============================================================================================
 
-#img3_1 = Image.open("photo/cm17/round2/rank/Screenshot 2026-08-12 194951.png")
-#img3_2 = Image.open("photo/cm17/round2/rank/Screenshot 2026-08-12 194956.png")
-#process_rank(img3_1, start_num=1)
-#process_rank(img3_2, start_num=5)
-#img2_2 = Image.open("photo/cm17/round2/mood/Screenshot 2026-08-11 152750.png")
+#img2_2 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 173513.png")
 #process_mood2(img2_2)
+#"cm19" : ["round1", "round2"]
+#"cm14" : ["round1", "round2"],
 
 cm_rounds = {
-    "cm17" : ["round2"]
+    "cm18" : ["round1", "round2"]
 }
 
 for cm, rounds in cm_rounds.items():
