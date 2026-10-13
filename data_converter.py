@@ -195,7 +195,7 @@ def process_mood1(img2_1):
     for i in range(6):
         y = 0 + (i * 120)
         rows = mood_crop1.crop((0, y, 561, y + 105))
-        boxes = find_boxes(rows, 45, 110, 25, 56)
+        boxes = find_boxes(rows, 45, 110, 25, 54)
         boxes = boxes[:1]
         
         for box_idx, (x, y2, w, h) in enumerate(boxes):
@@ -262,12 +262,10 @@ def process_mood2(img2_2):
     for row_num, coords in mood_coords.items():
         rows = mood_crop2.crop(coords)
         boxes = find_boxes(rows, 45, 103, 25, 56)
-        #rows.save(f"test{row_num}.png")
 
         for x, y, w, h in boxes:
             mood = rows.crop((x + 33, y, x + w, y + h - 5))
             mood_text = ocr_with_fuzzy(mood, model, val_transform, idx_to_char, device, mood_list, threshold=70)
-            #mood.save(f"mood{row_num}.png")
 
             t_name = rows.crop((x - 200, y + 35, x + w - 170, y + h + 30))
             t_name_text = ocr_with_fuzzy(t_name, model, val_transform, idx_to_char, device, my_trainer)
@@ -275,7 +273,6 @@ def process_mood2(img2_2):
             number_img = rows.crop((x + 137, y + 8, x + w + 68, y + h - 5))
             number_text = ocr_predict(number_img, model, val_transform, idx_to_char, device, allowed_chars=set("0123456789"))
             number = extract_number(number_text)
-            #number_img.save(f"number{row_num}.png")
 
             style = rows.crop((x + 110, y + 37, x + w + 105, y + h + 24))
             style_text = ocr_with_fuzzy(style, model, val_transform, idx_to_char, device, style_list)
@@ -339,9 +336,9 @@ def process_rank(img3_1, start_num=1):
             "number" : number,
             "rank" : rank_num
         })
-    print("--"*50)
-    print(result_rank)
-    print("--"*50)
+    #print("--"*50)
+    #print(result_rank)
+    #print("--"*50)
     return result_rank
 
 # ===================================== Style Name Normalization =====================================
@@ -404,6 +401,7 @@ def matching_r_m(result_ranks, result_moods):
     for r in result_ranks:
         match = next((m for m in result_moods if m["number"] == r["number"]), None)
         r["mood"] = match["mood"] if match else None
+        r["main_style"] = match["main_style"] if match else None
         if match:
             mood_processed.add(match["number"])
         r_m_result.append(r)
@@ -419,7 +417,9 @@ def matching_r_m(result_ranks, result_moods):
                 "main_style" : m["main_style"]
             }
             r_m_result.append(rank_9)
-
+            
+    print("--"*50)
+    print(r_m_result)
     return r_m_result
 
 # ======================================== Shorting name ========================================
@@ -451,6 +451,7 @@ def matching_d_r_m(uma_detail, r_m_result):
         if match:
             detail["rank"] = match["rank"]
             detail["mood"] = match["mood"]
+            detail["main_style"] = match["main_style"]
             r_m_result.remove(match)
         else:
             print(f"NO MATCH: {short_name!r} | available: {[rm['name'] for rm in r_m_result]}")
@@ -472,13 +473,8 @@ def add_race_info(final_match, cm, round_name, race_name):
 # ============================================= Main ============================================
 # ===============================================================================================
 
-#img2_2 = Image.open("photo/cm14/round1/mood/Screenshot 2026-06-05 173513.png")
-#process_mood2(img2_2)
-#"cm19" : ["round1", "round2"]
-#"cm14" : ["round1", "round2"],
-
 cm_rounds = {
-    "cm18" : ["round1", "round2"]
+    "cm14" : ["round1", "round2"]
 }
 
 for cm, rounds in cm_rounds.items():
