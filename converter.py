@@ -1,8 +1,7 @@
 from PIL import Image
-import pytesseract
 import cv2
 import numpy as np
-from rapidfuzz import process
+from rapidfuzz import process, fuzz
 import json
 import re
 import pandas as pd
@@ -10,10 +9,6 @@ from pathlib import Path
 
 import torch
 from crnn import CrnnUma, decoder_predictions, build_vocab, build_char_maps, val_transform
-import torch
-import torchvision.transforms as transforms
-
-pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 with open("data/raw/character.json", "r", encoding="utf-8") as f:
     characters = json.load(f)
@@ -28,6 +23,13 @@ for c in characters:
     match = re.search(r"\((.*?)\)", c["name"])
     if match:
         char_names.append(match.group(1))
+
+char_names_full = [k["name"] for k in characters]
+
+# ======================== Mood & Style Validation ========================
+
+mood_list = ["BAD", "NORMAL", "GOOD", "GREAT"]
+style_list = ["Front", "Pace", "Late", "End"]
 
 # ================================================================================
 # ================================ Box Detection =================================
@@ -69,7 +71,6 @@ def padding_img(image, target_height=48, max_width=460):
     img = img.resize((final_w, target_height), Image.Resampling.LANCZOS)
     padded_img = Image.new('L', (max_width, target_height), color=255)
     padded_img.paste(img, (5, 0))
-    #padded_img.save("padding_test.png")
 
     return padded_img
 
@@ -81,36 +82,37 @@ num_classes = len(char_to_idx)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = CrnnUma(num_classes=num_classes)
-model.load_state_dict(torch.load("umaocr/model/crnn_uma_model_v9.pth", map_location=device))
+model.load_state_dict(torch.load("model/ocr/UmaOCR_v6.pth", map_location=device))
 model.to(device)
 model.eval()
 
-def ocr_predict(pil_image, model, val_transform, idx_to_char, device):
+def ocr_predict(pil_image, model, val_transform, idx_to_char, device, allowed_chars=None):
     padded = padding_img(pil_image)
     tensor = val_transform(padded).unsqueeze(0).to(device)
 
     with torch.no_grad():
         output = model(tensor)
-        prediction = decoder_predictions(output, idx_to_char)
+        prediction = decoder_predictions(output, idx_to_char, allowed_chars=allowed_chars)
 
     return prediction[0]
 
-def ocr_with_fuzzy(pil_image, model, val_transform, idx_to_char, device, choices, threshold=85):
+def ocr_with_fuzzy(pil_image, model, val_transform, idx_to_char, device, choices, threshold=80, score_choice=fuzz.WRatio):
     raw_text = ocr_predict(pil_image, model, val_transform, idx_to_char, device)
-    match, score, _ = process.extractOne(raw_text, choices)
-    #print("\nraw text")
-    #print(raw_text)
+
+    cleaned_text = re.sub(r'\.', ' ', raw_text)
+    cleaned_text = " ".join(cleaned_text.split())
+    cleaned_text = cleaned_text.replace("[", "(").replace("]", ")")
+    
+    match, score, _ = process.extractOne(cleaned_text, choices, scorer=score_choice)
 
     if score >= threshold:
         return match
     else:
         return f"{raw_text} (unsure)"
 
-
 # =====================================================================================
 # ====================================== Image 1 ======================================
 # =====================================================================================
-
 
 def process_img1(img1, prefix, rows):
 
@@ -127,14 +129,13 @@ def process_img1(img1, prefix, rows):
     if contours1:
         topmost1 = min(contours1, key=lambda c: cv2.boundingRect(c)[1])
         x1, y1, w1, h1 = cv2.boundingRect(topmost1)
-        #print(f"Header: x={x}, y={y}, w={w}, h={h}")
+
     if not contours1:
         print(f"Warning: green header not found on")
         return
 
     ui_top1 = y1
     ui_crop1 = img1.crop((x1, ui_top1, x1 + w1, ui_top1 + 925))
-    #ui_crop1.save("test.png")
 
     # ================== UI Button ==================
 
@@ -172,7 +173,6 @@ def process_img1(img1, prefix, rows):
         stat.convert('L').save(filename)
         text = ocr_predict(stat, model, val_transform, idx_to_char, device)
         rows.append({"filename": filename, "label": text})
-        #stat.save(f"stats{k + 1}.png")
 
     # ==================== Skills ====================
     skills = find_boxes(skills_zone)
@@ -182,23 +182,20 @@ def process_img1(img1, prefix, rows):
         skill.convert('L').save(filename)
         text = ocr_with_fuzzy(skill, model, val_transform, idx_to_char, device, skill_names)
         rows.append({"filename": filename, "label": text})
-        #skill.save(f"skill_{i + 1}.png")
 
     # ==================== Aptitude ====================
     aptitude_labels = ["turf", "dirt", "sprint", "mile", "medium", "long", "front_runner", "pace_chaser", "late_surger", "end_closer"]
     aptitude = find_boxes(aptitude_zone, 83, 123, 20, 40)
-    for j, (x, y, w, h) in enumerate(aptitude):
+    for label, (x, y, w, h) in zip(aptitude_labels, aptitude):
         aptitude_crop = aptitude_zone.crop((x + 70, y, x + w, y + h))
+        filename = f"uma_data/images/{label}_{prefix}.png"
+        aptitude_crop.convert('L').save(filename)
         text = ocr_predict(aptitude_crop, model, val_transform, idx_to_char, device)
-        filename = f"uma_data/images/{aptitude_labels[j]}_{prefix}.png"
         rows.append({"filename": filename, "label": text})
-        #aptitude_crop.save(f"aptitude_{j+1}.png")
-
 
 # =====================================================================================================
 # ========================================== Image 2, part 1 ==========================================
 # =====================================================================================================
-
 
 def process_img2_1(img2_1, race_prefix, rows):
 
@@ -221,11 +218,6 @@ def process_img2_1(img2_1, race_prefix, rows):
     rx1, ry1, rw1, rh1 = topmost_rect
 
     mood_crop1 = img2_1.crop((rx1, ry1, rx1 + rw1, ry1 + 717))
-    #mood_crop1.save("mood_test1.png")
-
-    # ======================== Mood Validation ========================
-
-    mood_list = ["BAD", "NORMAL", "GOOD", "GREAT"]
 
     # ==================== Uma Names (Mood Screen), Part 1 ====================
 
@@ -248,11 +240,9 @@ def process_img2_1(img2_1, race_prefix, rows):
             text_name = ocr_with_fuzzy(names, model, val_transform, idx_to_char, device, char_names_outer, 80)
             rows.append({"filename": filename, "label": text_name})
 
-
 # =====================================================================================================
 # ========================================== Image 2, Part 2 ==========================================
 # =====================================================================================================
-
 
 def process_img2_2(img2_2, race_prefix, rows):
     img2_2_np = np.array(img2_2)
@@ -271,13 +261,7 @@ def process_img2_2(img2_2, race_prefix, rows):
 
     botmost_rect = max(rectangles, key=lambda r: r[1])
     rx2, ry2, rw2, rh2 = botmost_rect
-    #print(f"Header: x={rx2}, y={ry2}, w={rw2}, h={rh2}")
     mood_crop2 = img2_2.crop((rx2, ry2 - 575, rx2 + rw2, rh2 + ry2))
-    #mood_crop2.save("mood_test2.png")
-    
-    # ======================== Mood Validation ========================
-
-    mood_list = ["BAD", "NORMAL", "GOOD", "GREAT"]
 
     # ==================== Uma Names (Mood Screen), Part 2 ====================
     
@@ -304,11 +288,9 @@ def process_img2_2(img2_2, race_prefix, rows):
             text_name = ocr_with_fuzzy(names, model, val_transform, idx_to_char, device, char_names_outer, 80)
             rows.append({"filename": filename, "label": text_name})
 
-
 # =====================================================================================
 # ====================================== Image 3 ======================================
 # =====================================================================================
-
 
 def process_img3(img3_1, race_prefix, rows, start_num=1):
 
@@ -329,7 +311,6 @@ def process_img3(img3_1, race_prefix, rows, start_num=1):
         
     rank_top = y2
     rank_crop = img3_1.crop((x2, rank_top, x2 + w2 - 15, rank_top + 925))
-    #rank_crop.save("rank.png")
 
     boxes = find_boxes(rank_crop, 160, 200, 45, 65)
 
@@ -340,47 +321,47 @@ def process_img3(img3_1, race_prefix, rows, start_num=1):
         rank.convert('L').save(filename)
         text = ocr_with_fuzzy(rank, model, val_transform, idx_to_char, device, char_names_outer)
         rows.append({"filename": filename,"label": text})
-        #rank.save(f"rank_{i+1}.png")
-
 
 # ==========================================================================================
 # ========================================== Main ==========================================
 # ==========================================================================================
 
-rows = []
-cm_rounds = {
-    "cm16" : ["round1", "round2"],
-    "cm17" : ["round2"]
-}
-
-for cm, rounds in cm_rounds.items():
-    for round_name in rounds:
-       race_dirs = sorted(Path(f"photo/{cm}/{round_name}/detail").glob("race*"))
-       mood_photos = sorted(Path(f"photo/{cm}/{round_name}/mood").glob("*.png"))
-       rank_photos = sorted(Path(f"photo/{cm}/{round_name}/rank").glob("*.png"))
-
-       for race_idx, race_dir in enumerate(race_dirs):
-           race_name = race_dir.name
-           detail_photos = sorted(race_dir.glob("*.png"))
-           mood_pair = mood_photos[race_idx * 2 : race_idx * 2 + 2]
-           rank_pair = rank_photos[race_idx * 2 : race_idx * 2 + 2]
-   
-           race_prefix = f"{cm}_{round_name}_{race_name}"
-
-           img2_1 = Image.open(mood_pair[0])
-           img2_2 = Image.open(mood_pair[1])
-           img3_1 = Image.open(rank_pair[0])
-           img3_2 = Image.open(rank_pair[1])
-           
-   
-           result2_1 = process_img2_1(img2_1, race_prefix, rows)
-           result2_2 = process_img2_2(img2_2, race_prefix, rows)
-           result3_1 = process_img3(img3_1, race_prefix, rows, start_num=1)
-           result3_2 = process_img3(img3_2, race_prefix, rows, start_num=5)
-   
-           for i, detail_path in enumerate(detail_photos):
-               prefix = f"{cm}_{round_name}_{race_name}_{i}"
-               img1 = Image.open(detail_path)
-               result1 = process_img1(img1, prefix, rows)
-
-pd.DataFrame(rows).to_csv("uma_data/labels_dl.csv", mode='a', header=False, index=False, encoding='utf-8-sig')
+if __name__ == "__main__":
+    rows = []
+    cm_rounds = {
+        "cm16" : ["round1", "round2"],
+        "cm17" : ["round2"]
+    }
+    
+    for cm, rounds in cm_rounds.items():
+        for round_name in rounds:
+           race_dirs = sorted(Path(f"photo/{cm}/{round_name}/detail").glob("race*"))
+           mood_photos = sorted(Path(f"photo/{cm}/{round_name}/mood").glob("*.png"))
+           rank_photos = sorted(Path(f"photo/{cm}/{round_name}/rank").glob("*.png"))
+    
+           for race_idx, race_dir in enumerate(race_dirs):
+               race_name = race_dir.name
+               detail_photos = sorted(race_dir.glob("*.png"))
+               mood_pair = mood_photos[race_idx * 2 : race_idx * 2 + 2]
+               rank_pair = rank_photos[race_idx * 2 : race_idx * 2 + 2]
+    
+               race_prefix = f"{cm}_{round_name}_{race_name}"
+    
+               img2_1 = Image.open(mood_pair[0])
+               img2_2 = Image.open(mood_pair[1])
+               img3_1 = Image.open(rank_pair[0])
+               img3_2 = Image.open(rank_pair[1])
+               
+               result2_1 = process_img2_1(img2_1, race_prefix, rows)
+               result2_2 = process_img2_2(img2_2, race_prefix, rows)
+               result3_1 = process_img3(img3_1, race_prefix, rows, start_num=1)
+               result3_2 = process_img3(img3_2, race_prefix, rows, start_num=5)
+    
+               for i, detail_path in enumerate(detail_photos):
+                   prefix = f"{cm}_{round_name}_{race_name}_{i}"
+                   img1 = Image.open(detail_path)
+                   result1 = process_img1(img1, prefix, rows)
+    
+    df = pd.DataFrame(rows)
+    df["filename"] = df["filename"].str.replace("uma_data/images/", "images/", regex=False)
+    df.to_csv("uma_data/labels_dl.csv", mode='a', header=False, index=False, encoding='utf-8-sig')
