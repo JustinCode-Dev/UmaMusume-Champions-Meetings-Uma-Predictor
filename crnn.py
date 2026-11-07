@@ -78,6 +78,12 @@ def build_char_maps(chars):
 
     return char_to_idx, idx_to_char
 
+def export_tokens_file(idx_to_char, path="tokens.txt"):
+    with open(path, "w", encoding="utf-8") as f:
+        for idx in sorted(idx_to_char.keys()):
+            char = idx_to_char[idx]
+            f.write((char if char else "<blank>") + "\n")
+
 class CrnnUma(nn.Module):
     def __init__(self, num_classes):
         super().__init__()
@@ -148,6 +154,8 @@ def train_model(model, dataloader, char_to_idx, epochs=15, lr=0.001):
 
     model.train()
 
+    best_loss = float('inf')
+
     for epoch in range(epochs):
         running_loss = 0.0
         for batch_idx, (images, labels) in enumerate(dataloader):
@@ -177,7 +185,18 @@ def train_model(model, dataloader, char_to_idx, epochs=15, lr=0.001):
         current_lr = optimizer.param_groups[0]['lr']
         print(f"Epoch [{epoch+1}/{epochs}] - Loss: {epoch_loss:.4f} - LR: {current_lr:.6f}")
 
-def decoder_predictions(outputs, idx_to_char):
+        if epoch_loss < best_loss:
+            best_loss = epoch_loss
+            torch.save(model.state_dict(), "model/ocr/UmaOCR_v6.pth")
+            print(f"Checkpoint locked! Best Loss: {best_loss:.4f}")
+
+def decoder_predictions(outputs, idx_to_char, allowed_chars=None, blank_idx=0):
+    if allowed_chars is not None:
+        outputs = outputs.clone()
+        for idx, char in idx_to_char.items():
+            if idx != blank_idx and char not in allowed_chars:
+                outputs[:, :, idx] = float('-inf')
+                
     preds = torch.argmax(outputs, dim=2)
 
     decoded_texts = []
@@ -210,16 +229,18 @@ if __name__ == "__main__":
     train_subset, _ = random_split(train_dataset_full, [train_size, val_size], generator=torch.Generator().manual_seed(42))
     _, val_subset = random_split(val_dataset_full, [train_size, val_size], generator=torch.Generator().manual_seed(42))
 
-    train_loader = DataLoader(train_subset, batch_size=16, shuffle=True)
-    val_loader = DataLoader(val_subset, batch_size=16, shuffle=False)
+    train_loader = DataLoader(train_subset, batch_size=32, shuffle=True, num_workers=4, pin_memory=True)
+    val_loader = DataLoader(val_subset, batch_size=32, shuffle=False, num_workers=4, pin_memory=True)
 
     model = CrnnUma(num_classes=num_classes)
     print("Training...")
-    train_model(model, train_loader, char_to_idx, epochs=15, lr=0.001)
+    train_model(model, train_loader, char_to_idx, epochs=24, lr=0.0012)
 
     print("Evaluation...")
-    model.eval()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.load_state_dict(torch.load("model/ocr/UmaOCR_v6.pth"))
+    model.to(device)
+    model.eval()
 
     with torch.no_grad():
         images, labels = next(iter(val_loader))
@@ -231,5 +252,3 @@ if __name__ == "__main__":
             print(f"Target : {labels[idx]}")
             print(f"Prediction Result : {predictions[idx]}")
             print("-" * 30)
-    torch.save(model.state_dict(), "crnn_uma_model_v2.pth")
-    print("Model saved")
