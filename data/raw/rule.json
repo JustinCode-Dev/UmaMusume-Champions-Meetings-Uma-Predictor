@@ -1,0 +1,350 @@
+{
+    "mood_modifier":{
+        "great": 1.04,
+        "good": 1.02,
+        "normal": 1.0,
+        "bad": 0.98
+    },
+    "track_condition":{
+        "speed_reduction": {
+        "heavy": 50
+        },
+    "power_reduction": {
+        "turf": {
+            "not_firm": 50
+        },
+        "dirt": {
+            "good": 50,
+            "others": 100
+        }
+    },
+    "stamina_drain_bonus": {
+        "soft": 0.02,
+        "heavy": 0.02,
+        "unit": "per second"
+        }   
+    },
+
+    "bad_conditions":{
+        "late_start":{
+            "chance": 0.205,
+            "mitigation_mode": "multiplicative",
+            "modifier":{
+                "Gatekept":1.5,
+                "focus":0.9,
+                "Concentration":0.4
+            }
+        },
+        "debuff":{
+            "occurrence": {
+                "presence_chance": 0.6,
+                "count_distribution": {
+                    "1_debuffer": 0.3,
+                    "2_debuffers": 0.5,
+                    "3_debuffers": 0.15,
+                    "4_debuffers": 0.05
+                }
+            },
+            "debuff_skill_distribution": {
+                "1_skills": 0.5,
+                "3_skills": 0.4,
+                "6_skills": 0.1
+                },
+            "impact_weights": {
+                "stamina": 0.6,
+                "speed": 0.3,
+                "condition": 0.1
+                },
+            "impact_values": {
+                "stamina": {
+                    "flat_reduction": -45
+                    },
+                "speed": {
+                    "multiplier": 0.992
+                    },
+                "condition": {
+                    "blocked_chance_add": 0.05,
+                    "rushed_duration_mod": 1.15
+                    }
+                }
+        },
+        "blocked":{
+            "speed_penalty_min": 0.988,
+            "speed_penalty_max": 1.0,
+            "distance_threshold": 2.0,
+            "lane_threshold":0.75,
+            "bump_thershold": 0.4,
+            "occurance_chance": 0.15,
+            "recovery_stat": "power",
+            "note": "Penalty linear: 0.988 + 0.012 * (DistanceGap/2)"
+        },
+        "rushed":{
+            "formula_based":"wit",
+            "scaling_table": {
+                "300": 0.1867,
+                "600": 0.1233,
+                "900": 0.12,
+                "1200": 0.0633
+            },
+            "penalty": {
+                "stamina_drain_multiplier": 1.6
+            }
+        },        
+        "distance_rank":{
+            "S": 1.05,
+            "A": 1.0,
+            "B": 0.9,
+            "C": 0.8,
+            "D": 0.6,
+            "E": 0.4,
+            "F": 0.2,
+            "G": 0.1,
+            "target_stat":"speed"
+        },
+        "track_rank":{
+            "S": 1.1,
+            "A": 1.0,
+            "B": 0.85,
+            "C": 0.75,
+            "D": 0.6,
+            "E": 0.4,
+            "F": 0.2,
+            "G": 0.1,
+            "target_stat":"power"
+        },
+        "style_condition":{
+            "S": 1.1,
+            "A": 1.0,
+            "B": 0.85,
+            "C": 0.75,
+            "D": 0.6,
+            "E": 0.4,
+            "F": 0.2,
+            "G": 0.1,
+            "target_stat":"wit"
+        }
+    },
+
+    "good_conditions":{
+        "skills_proc":{
+            "formula_based":"wit",
+            "mandatory_checks": ["distance", "track", "ground", "weather", "style", "course", "season"],
+            "scaling_table": {
+                "300": 0.70,
+                "600": 0.85,
+                "900": 0.9,
+                "1200": 0.925,
+                "note": "activation chance = max(100 - (9000 / base_wit), 20)/100"
+            }
+        }
+    },
+    "scoring":{
+        "performance_score":{
+            "uma_tier":{
+                "SS": 10,
+                "S": 8,
+                "A": 6,
+                "B": 5
+            },
+            "mood":{
+                "great": 5,
+                "good": 4,
+                "normal": 2,
+                "bad": 1
+            },
+            "stats":{
+                "speed":{
+                    "1200": 10,
+                    "1000": 8,
+                    "900": 7,
+                    "800": 6,
+                    "700": 5,
+                    "600": 4,
+                    "500": 3,
+                    "400": 2,
+                    "300": 1
+                },
+                "stamina":{
+                    "1200":10,
+                    "900": 9,
+                    "700": 8,
+                    "600": 5,
+                    "500": 4,
+                    "400": 2,
+                    "300": 1
+                },
+                "power":{
+                    "1200": 10,
+                    "1000": 9,
+                    "900": 7,
+                    "800": 6,
+                    "700": 5,
+                    "600": 4,
+                    "500": 3,
+                    "400": 2,
+                    "300": 1
+                },
+                "guts":{
+                    "1200":10,
+                    "900": 9,
+                    "500": 8,
+                    "400": 4,
+                    "300": 2
+                },
+                "wit":{
+                    "1200": 10,
+                    "1000": 9,
+                    "900": 7,
+                    "800": 6,
+                    "700": 5,
+                    "600": 4,
+                    "500": 3,
+                    "400": 2,
+                    "300": 1
+                }
+            },
+            "distance":{
+                "S": 10,
+                "A": 9,
+                "B": 7,
+                "C": 5,
+                "D": 4,
+                "E": 3,
+                "F": 2,
+                "G": 1
+            },
+            "track":{
+                "S": 10,
+                "A": 9,
+                "B": 7,
+                "C": 5,
+                "D": 4,
+                "E": 3,
+                "F": 2,
+                "G": 1
+            },
+            "style":{
+                "S": 10,
+                "A": 9,
+                "B": 7,
+                "C": 5,
+                "D": 4,
+                "E": 3,
+                "F": 2,
+                "G": 1
+            },
+            "skill_level":{
+                "6": 10,
+                "5": 9,
+                "4": 8,
+                "3": 6,
+                "2": 4,
+                "1": 2
+            },
+            "skill":{
+                "recommended_skills": 10,
+                "non_recomended": 5
+            },
+            "weights": {
+                "uma_tier": 0.25,
+                "stats": 0.30,
+                "distance": 0.10,
+                "track": 0.10,
+                "style": 0.10,
+                "skill": 0.15
+            }
+        },
+        "debuffer_score":{
+            "debuff_skill_threshold":{
+                "7": 10,
+                "5": 7,
+                "2": 3,
+                "1": 1
+            }
+        }
+    },
+    "is_debuffer":{
+        "debuffer_threshold": 4
+    },
+    "stats_priorities" :{
+        "sprint":{
+            "speed":5,
+            "stamina":1,
+            "power":4,
+            "guts":2,
+            "wit":3
+        },
+        "mile":{
+            "speed":5,
+            "stamina":2,
+            "power":4,
+            "guts":1,
+            "wit":3
+        },
+        "medium":{
+            "speed":5,
+            "stamina":4,
+            "power":3,
+            "guts":1,
+            "wit":2
+        },
+        "long":{
+            "speed":4,
+            "stamina":5,
+            "power":3,
+            "guts":1,
+            "wit":2
+        }
+    },
+    "cm":{
+        "12":{
+            "track":"turf",
+            "distance":"medium"
+        },
+        "14":{
+            "track":"turf",
+            "distance":"medium"
+        },
+        "15":{
+            "track":"turf",
+            "distance":"medium"
+        },
+        "16":{
+            "track":"turf",
+            "distance":"sprint"
+        },
+        "17":{
+            "track":"dirt",
+            "distance":"medium"
+        },
+        "18":{
+            "track":"turf",
+            "distance": "mile"
+        },
+        "19":{
+            "track":"turf",
+            "distance":"medium"
+        },
+        "20":{
+            "track":"turf",
+            "distance":"long"
+        },
+        "21":{
+            "track":"turf",
+            "distance":"sprint"
+        },
+        "22":{
+            "track":"dirt",
+            "distance":"mile"
+        },
+        "23":{
+            "track":"turf",
+            "distance":"medium"
+        },
+        "24":{
+            "track":"turf",
+            "distance":"long"
+        }
+    }
+}
+
