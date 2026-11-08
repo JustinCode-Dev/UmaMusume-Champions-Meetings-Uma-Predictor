@@ -173,15 +173,3 @@ def extract_conditions(uma, rules, train=True):
     for tr in track:
         features[f"is_{tr}"] = 1 if info[0] == tr else 0
     return features
-
-def extract_(uma, frequent_skill):
-    features = {}
-
-    uma_skills = set(get_skills(uma))
-
-    for all_skill in frequent_skill:
-        features[all_skill] = 1 if all_skill in uma_skills else 0
-
-    features["rank"] = get_rank(uma)
-
-    return features
