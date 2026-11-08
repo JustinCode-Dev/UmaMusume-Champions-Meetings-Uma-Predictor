@@ -4,8 +4,11 @@ from torch.utils.data import DataLoader, Dataset
 from PIL import Image
 import torchvision.transforms as transforms
 import os
+import sys
 
-from crnn import CrnnUma, UmaDataset, build_vocab, build_char_maps, decoder_predictions
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from src.crnn import CrnnUma, UmaDataset, build_vocab, build_char_maps, decoder_predictions
 
 def calculate_cer(reference, hypothesis):
     r = list(reference)
@@ -37,7 +40,7 @@ def evaluate_weights():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     model = CrnnUma(num_classes=len(char_to_idx)).to(device)
-    model.load_state_dict(torch.load("model/crnn_uma_model_v9.pth", map_location=device))
+    model.load_state_dict(torch.load("umaocr/model/UmaOCR_v6.pth", map_location=device))
     model.eval()
 
     dataset = UmaDataset(csv_file=csv_path, img_dir="uma_data")
