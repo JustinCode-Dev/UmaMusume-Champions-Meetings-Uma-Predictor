@@ -1,6 +1,5 @@
 import json
 import os
-import re
 import shutil
 import requests
 from bs4 import BeautifulSoup
@@ -71,5 +70,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# note
+# "OMG! ☆ The Final Sprint (ﾟ∀ﾟ)" -→ "OMG! (ﾟ∀ﾟ) The Final Sprint! ☆"
+#           Wrong                               Right
 
 # Data sourced from game8 (https://game8.co/games/Umamusume-Pretty-Derby/archives/535927)
