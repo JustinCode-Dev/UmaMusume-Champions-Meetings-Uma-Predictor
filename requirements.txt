@@ -1,0 +1,14 @@
+beautifulsoup4==4.15.0
+joblib==1.6.0
+lightgbm==4.7.0
+numpy==2.5.4
+opencv_python==5.0.0.93
+pandas==3.1.1
+Pillow==13.0.0
+rapidfuzz==3.14.6
+Requests==2.34.2
+scikit_learn==1.9.1
+streamlit==1.65.0
+torch==2.15.0
+torchvision==0.29.1
+xgboost==3.4.1
