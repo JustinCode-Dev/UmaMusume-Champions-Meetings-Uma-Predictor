@@ -1,10 +1,5 @@
 import json
 
-with open("data/raw/skills.json", "r", encoding="utf-8") as f:
-    skills_data = json.load(f)
-
-skill_rarity = {s["name"]: s["rarity"] for s in skills_data}
-
 with open("data/raw/style_skill.json", "r", encoding="utf-8") as s:
     data_style_skills = json.load(s)
 
