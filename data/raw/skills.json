@@ -1,0 +1,2932 @@
+[
+  {
+    "name": "Sky-High Teio Step",
+    "effect": "When closing the gap to runners ahead late-race, greatly increase velocity with flashy footwork on the final straight.Tokai Teio (Peak Joy)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "The Duty of Dignity Calls",
+    "effect": "Increase velocity with determination to keep the lead when positioned toward the front on the final corner. If in a long-distance race and still going strong, increase velocity greatly instead.Mejiro McQueen (Frontline Elegance)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Behold Thine Emperor's Divine Might",
+    "effect": "Greatly increase velocity on the final straight after passing another runner 3 times late-race.Symboli Rudolf (Emperor's Path)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Warning Shot!",
+    "effect": "Slightly increase velocity with a long spurt starting halfway through the race.Gold Ship (Red Strife)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "The View from the Lead is Mine!",
+    "effect": "Increase velocity by drawing on all remaining strength when in the lead by a fair margin in the second half of the race.Silence Suzuka (Innocent Silence)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Red Ace",
+    "effect": "Slightly swell with the determination to be number one when positioned toward the front in the second half of the race.Daiwa Scarlet (Peak Blue)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Xceleration",
+    "effect": "Become stronger at challenging rivals and moderately increase velocity when positioned toward the front with 200m or less remaining.Vodka (Wild Top Gear)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Shooting Star",
+    "effect": "Ride the momentum to surge ahead and very slightly increase acceleration after passing another runner toward the front late-race.Special Week (Special Dreamer)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Red Shift/LP1211-M",
+    "effect": "Increase acceleration by shifting gears when positioned toward the front on the final corner or later.Maruzensky (Formula R)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Triumphant Pulse",
+    "effect": "Greatly increase ability to break out of the pack by opening up a path when positioned toward the front with 200m remaining.Oguri Cap (Starlight Beat)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Shooting for Victory!",
+    "effect": "Increase acceleration with a pow, a wow, and a bang when well-positioned upon approaching the final straight.Taiki Shuttle (Wild Frontier)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "This Dance Is for Vittoria!",
+    "effect": "Increase velocity with royal brilliance when positioned toward the front and close to the runner ahead or behind on the final corner or later.T.M. Opera O (O Sole Suo!)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Blue Rose Closer",
+    "effect": "When the skill user has passed another runner late-race and has reached the front part of the pack, draw on deep resolve to increase velocity on the final straight.Rice Shower (Rosy Dreams)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "G00 1st. F∞;",
+    "effect": "If the user didn't have a late start, increase velocity when toward the front on the final straight. If the user had kept position toward the front, greatly increase velocity instead.Mihono Bourbon (MB-19890425)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Focused Mind",
+    "effect": "Moderately increase velocity with a strong turn of foot when passing another runner toward the back on the final straight.Grass Wonder (Stone-Piercing Blue)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Corazón ☆ Ardiente",
+    "effect": "Slightly hang on to the advantage when positioned toward the front with energy to spare on the final straight.El Condor Pasa (El Numero 1)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Empress's Pride",
+    "effect": "Moderately increase velocity with the stride of an empress when passing another runner from midpack or further back on the final corner.Air Groove (Empress Road)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "1st Place Kiss☆",
+    "effect": "Slightly increase ability to break out of the pack on the straight after engaging in a challenge toward the front on the final corner or later.Mayano Top Gun (Scramble Zone)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Clear Heart",
+    "effect": "Recover endurance when well-positioned mid-race.Super Creek (Murmuring Stream)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Feel the Burn!",
+    "effect": "Moderately increase acceleration in an attempt to move up on a corner late-race.Mejiro Ryan (Down the Line)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Introduction to Physiology",
+    "effect": "Moderately recover endurance and slightly increase velocity for a moderate duration when sitting off the pace on a corner in the second half of the race.Agnes Tachyon (Tach-nology)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "V Is for Victory!",
+    "effect": "Moderately increase velocity with winning ambition when positioned toward the front on the final straight after engaging in a challenge on the final corner or later.Winning Ticket (Get to Winning!)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Class Rep + Speed = Bakushin",
+    "effect": "Moderately increase velocity with BAKUSHIN power when engaged in a challenge toward the front in the second half of the race.Sakura Bakushin O (Blossom in Learning)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Super-Duper Stoked",
+    "effect": "Moderately recover endurance with a glance at nearby runners when positioned toward the back on the final corner.Haru Urara (Bestest Prize)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Luck Be with Me!",
+    "effect": "Moderately clear a path forward with the power of divination when the way ahead is jammed late-race.Matikane Fukukitaru (Rising Fortune)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "I Can Win Sometimes, Right?",
+    "effect": "Moderately increaase velocity with an arousal of fighting spirit when positioned 3rd and about to lose late-race.Nice Nature (Poinsettia Ribbon)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Call Me King",
+    "effect": "Increase velocity in a true display of skill with 200m remaining after racing calmly.King Halo (King of Emeralds)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "∴win Q.E.D.",
+    "effect": "Increase velocity when positioned toward the front on the final corner or later late-race. If the skill user ran calmly, formulate the perfect plan and increase velocity greatly instead.Biwa Hayahide (pf. Winning Equation...)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Legacy of the Strong",
+    "effect": "Increase velocity continuously when pressured toward the front late-race on the final corner or later.Mejiro McQueen (End of the Skies)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Certain Victory",
+    "effect": "Greatly increase velocity with an indomitable fighting spirit on the final straight after being on the heels of another runner toward the front of the final corner or later.Tokai Teio (Beyond the Horizon)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "#LookatCurren",
+    "effect": "Gain momentum and begin to advance when passing another runner while well-positioned around halfway through the race.Curren Chan (Fille Éclair)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Nemesis",
+    "effect": "Increase velocity with smoldering ambition when moving up from midpack on the final corner or later.Narita Taishin (Nevertheless)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "SPARKLY☆STARDOM",
+    "effect": "Become empowered to keep the spotlight when positioned toward the front and close to the runner behind on a straight mid-race.Smart Falcon (LOVE☆4EVER)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Shadow Break",
+    "effect": "Increase velocity with beastly strength when passing another runner on the outside on the final corner or later. If the user engaged in a challenge mid-race, greatly increase velocity instead.Narita Brian (Maverick)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Flowery ☆ Maneuver",
+    "effect": "Increase velocity when passing another runner toward the front on the final corner or later. If passing toward the back, increase acceleration instead.Mayano Top Gun (Sunlight Bouquet)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Eternal Moments",
+    "effect": "Increase velocity when starting to make a move from a position toward the front mid-race.Air Groove (Quercus Civilis)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Victoria por Plancha ☆",
+    "effect": "Hang on to the advantage when positioned toward the front with energy to spare on the final straight.El Condor Pasa (El Numero 1)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Where There's a Will, There's a Way",
+    "effect": "Increase Velocity with a strong turn of foot when passing another runner toward the back on the final straight.Grass Wonder (Stone-Piercing Blue)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Genius x Bakushin = Victory",
+    "effect": "Increase velocity with BAKUSHIN power when engaged in a challenge toward the front in the second half of the race.Sakura Bakushin O (Blossom in Learning)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Prideful King",
+    "effect": "Greatly Increase velocity in a true display of skill with 200m remaining after racing calmly.King Halo (King of Emeralds)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Cut and Drive!",
+    "effect": "Become stronger at challenging rivals and increase velocity when positioned toward the front with 200m or less remaining.Vodka (Wild Top Gear)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Anchors Aweigh!",
+    "effect": "Moderatety increase velocity steadily with a long spurt starting halfway through the race.Gold Ship (Red Strife)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Resplendent Red Ace",
+    "effect": "Swell with the determination to be number one when positioned toward the front in the second half of the race.Daiwa Scarlet (Peak Blue)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Blazing Pride",
+    "effect": "Increase velocity with the stride of an empress when passing another runner from midpack or further back on the final corner.Air Groove (Empress Road)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Flashy☆Landing",
+    "effect": "Increase ability to break out of the pack on the straight after engaging in a challenge toward the front on the final corner or later.Mayano Top Gun (Scramble Zone)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Let's Pump Some Iron",
+    "effect": "Increase acceleration in an attempt to move up on a corner late-race.Mejiro Ryan (Down the Line)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "U=ma2",
+    "effect": "Recover endurance and moderately increase velocity for a moderate duration when sitting off the pace on a corner in the second half of the race.Agnes Tachyon (Tach-nology)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Our Ticket to Win!",
+    "effect": "Increase velocity with winning ambition when positioned toward the front on the final straight after engaging in a challenge on the final corner or later.Winning Ticket (Get to Winning!)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Pure Heart",
+    "effect": "Greatly recover endurance when well-positioned mid-race.Super Creek (Murmuring Stream)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Super-Duper Climax",
+    "effect": "Recover endurance with a glance at nearby runners when positioned toward the back on the final corner.Haru Urara (Bestest Prize)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "I See Victory in My Future!",
+    "effect": "Clear a path forward with the power of divination when the way ahead is jammed late-race.Matikane Fukukitaru (Rising Fortune)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Just a Little Farther!",
+    "effect": "Increase velocity with flaring fighting spirit when positioned 3rd and about to lose late-race.Nice Nature (Poinsettia Ribbon)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Superior Heal",
+    "effect": "Greatly recover endurance with a gentle light when overtaken toward the back mid-race.Grass Wonder (Saintly Jade Cleric)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Condor's Fury",
+    "effect": "Increase acceleration with blazing passion when aiming for the front from midpack on the final corner.El Condor Pasa (Kukulkan Warrior)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "You and Me! One-on-One!",
+    "effect": "Increase velocity on the final straight after passing another runner on the outside toward the back on the final corner or later.Hishi Amazon (Azure Amazon)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Angling and Scheming",
+    "effect": "Increase acceleration at an opportune moment when in the lead on a corner late-race.Seiun Sky (Reeling in the Big One)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Lights of Vaudeville",
+    "effect": "When just breaking out of the pack toward the front late-race, dazzle everyone and greatly increase velocity with 300m remaining.Fuji Kiseki (Shooting Star Revue)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "KEEP IT REAL.",
+    "effect": "Moderately increase acceleration steadily with a wink when starting to make a move from midpack in the second half of the race.Gold City (Authentic / 1928)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "A Kiss for Courage",
+    "effect": "Increase velocity enthusiastically when positioned toward the front in the second half of the race after recovering endurance with a skill.Maruzensky (Hot☆Summer Night)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Dazzl'n ♪ Diver",
+    "effect": "Recover endurance by relaxing after activating 2 skills when positioned midpack mid-race.Special Week (Hopp'n♪Happy Heart)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "I Never Goof Up!",
+    "effect": "Aim for the front with unwavering determination when passing another runner late-race.Meisho Doto (Turbulent Blue)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Schwarzes Schwert",
+    "effect": "Increase velocity when 3rd or worse on the final straight after racing calmly. If the user has maintained position in midpack, greatly increase velocity instead.Eishin Flash (Meisterschaft)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Bountiful Harvest",
+    "effect": "Increase velocity with a surge of great fortune when pressured by another runner toward the back in the second half of the race.Matikane Fukukitaru (Lucky Tidings)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "YUMMY☆SPEED!",
+    "effect": "Kick forward hard with renewed vigor when starting to get tired while well-positioned halfway through the race.Hishi Akebono (Buono☆Alla Moda)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "OMG! (ﾟ∀ﾟ) The Final Sprint! ☆",
+    "effect": "Increase velocity and navigation with the pure euphoria of being within breathing distance of precious waifus after passing another runner 2 times.Agnes Digital (Full-Color Fangirling)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Every Rose Has Its Fangs",
+    "effect": "Drain endurance from runners in front and moderately increase velocity when well-positioned mid-race.Rice Shower (Vampire Makeover!)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Give Mummy a Hug ♡",
+    "effect": "Increase ability to break out of the pack when well-positioned and close to the runner ahead on the final straight.Super Creek (Chiffon-Wrapped Mummy)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "A Princess Must Seize Victory!",
+    "effect": "Increase velocity with pretty princess power when engaged in a challenge on the final straight.Kawakami Princess (Princess of Pink)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Chasing After You",
+    "effect": "Chase after an unseen friend when in midpack in the second half of the race, moderately increasing velocity steadily and very slightly intimidating runners ahead.",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Arrows Whistle, Shadows Disperse",
+    "effect": "Burning spirit increases velocity continuously on the last corner and later when pressured while in the front of the pack late-race.Symboli Rudolf (Archer by Moonlight)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Dancing in the Leaves",
+    "effect": "Increase ability to break out of the pack when engaged in a challenge in midpack on the final corner.Gold City (Autumn Cosmos)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Pop & Polish",
+    "effect": "Get pumped and increase velocity when pressured or trying to pass another runner toward the front on the final straight.Tosen Jordan (Jokester ☆ Vibes)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Moving Past, and Beyond",
+    "effect": "Having run the race calmly, increase acceleration with hardened determination when making a move mid-race, or on a crucial corner late-race whilst in midpack.Mejiro Dober (Off the Line)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Festive Miracle",
+    "effect": "Control breathing and kick forward hard toward victory in the second half of the race after recovering endurance with skills at least 3 times.Oguri Cap (Ashen Miracle)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Presents from X",
+    "effect": "Increase velocity by deriving a path to victory mid-race after staying well-positioned from the start of the race up until the second half.Biwa Hayahide (Rouge Caroler)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Fairy Tale",
+    "effect": "Increase velocity with the excitement of running when engaged in a challenge while well-positioned in the second half of the race.Fine Motion (Noble Seamair)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "White Lightning Comin' Through!",
+    "effect": "Bolt down the track like lightning when well-positioned or aiming for the front from midpack on a straight in the second half of the race.",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "114th Time's the Charm",
+    "effect": "Give max effort when far from the lead on the final corner, moderately increasing velocity steadily for a duration proportional to distance from the leadHaru Urara (New Year ♪ New Urara!)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Barcarole of Blessings",
+    "effect": "Increase velocity when positioned in the front part of the pack with 400m remaining. If the skill user has activated at least 7 skills, increase velocity greatly instead.T.M. Opera O (New Year, Same Radiance!)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Ambition to Surpass the Sakura",
+    "effect": "Increase velocity with blossoming ambition when well-positioned and close to the runner ahead with 300m or less remaining.Sakura Chiyono O (Strength in Full Bloom)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Operation Cacao",
+    "effect": "Take a slight breather and increase velocity when in the front part of the pack and detecting another runner coming from behind on a corner mid-race.Mihono Bourbon (CODE: ICING)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Guten Appetit ♪",
+    "effect": "Draw extra strength from pride, increasing velocity continuously on the final straight if the skill user passed another runner at least 2 times on the final corner or later.Eishin Flash (Precise Chocolatier)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "A Lifelong Dream, A Moment's Flight",
+    "effect": "Seize the moment when close to the runner behind on the final straight, slightly consuming endurance to greatly increase velocity for a moderate duration.Mejiro Ardan (Crystalline)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Shooting Star of Dioskouroi",
+    "effect": "Increase velocity with guidance from the stars when far from the lead on the final straight. If positioned around the very back, greatly increase velocity instead.Admire Vega (Starry Nocturne)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Victory Cheer!",
+    "effect": "Moderately increase velocity when positioned toward the front on the third corner in the second half of the race. Or, kick forward hard when toward the front on the backstretch late-race.Kitasan Black (Gilded Shrine to Glory)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Ready, Go!",
+    "effect": "Moderately recover endurance and slightly increase velocity with newfound resolve when in midpack around halfway through the race.Matikane Tannhauser (Clippety Tippety Clop)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Go, Go, Mun!",
+    "effect": "Recover endurance and moderately increase velocity with newfound resolve when in midpack around halfway through the race.Matikane Tannhauser (Clippety Tippety Clop)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Eternal Encompassing Shine",
+    "effect": "If well-positioned at the start of the final straight, her strong willpower to win increases velocity. If positioned near the front, greatly increase velocity instead.Satono Diamond (Natural Brilliance)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Lovely Spring Breeze",
+    "effect": "From the midpack in the second half of the race, slightly increase velocity steadily for a duration based on remaining endurance.Mejiro Bright (Brunissage Line)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Ravissant",
+    "effect": "When passing another racer at the front part of the pack on the final corner or later, perform a dazzling display that greatly increases velocity for a moderate duration.Fuji Kiseki (Succès Étoilé)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Break It Down!",
+    "effect": "High spirits increase velocity when positioned toward the front on a late-race straight. If it's the backstretch, also slightly increase acceleration.Seiun Sky (Soirée des Chatons)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Budding Blossom",
+    "effect": "If the user engaged in a challenge on a mid-race corner, increase acceleration when well-positioned late-race at least halfway through the final corner.Nishino Flower (Layered Petals)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Peerless Dance of Flowering Flames",
+    "effect": "If the user passes another runner on the final corner or later, increase velocity with fiery fighting spirit when in the front part of the pack with 300m or less remaining.Yaeno Muteki (Blazed Head, Covered Fists)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Go☆Go☆Goal!",
+    "effect": "If the skill user passes another runner on the final corner or later, increase velocity from the midpack onward on the final straight. If the skill user isn't one of the top favorites, muster resolve to keep steadily increasing velocity.",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Louder! Tracen Cheer!",
+    "effect": "If the skill user stays toward the very back during the first half of the race without being rushed, unleash fighting spirit to increase acceleration on the final straight.King Halo (Cheerleader in Noble White)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "All Charged! It's Go Time!",
+    "effect": "Moderately increase velocity when positioned toward the front with about 300m remaining. If coming out of an uphill, greatly increase velocity instead.Ines Fujin (Always Electrifying)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Keep Pushing Ahead",
+    "effect": "If positioned toward the front from the start of the race until the second half of the race, good vibes recover endurance and moderately increase velocity steadily.Mejiro Palmer (Line Breakthrough)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Best Day Ever",
+    "effect": "If well-positioned late-race on the final corner or later, increase velocity. If there's a large distance left to the finish, also increase acceleration very slightly with perfect form.Fine Motion (Titania)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "One True Color",
+    "effect": "If positioned toward the front with 350m or less remaining and there is another Umamusume close behind, the determination to stay ahead makes it easier to break out of the pack.Curren Chan (Ma Chérie of the New Moon)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Now We're Cruisin'!",
+    "effect": "When competing for the lead if positioned in the midpack or further for the first half of the race, show off some Edo spirit and greatly increase velocity.Inari One (Edomurasaki)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Victory Belongs to Me—Strelitzia! ☆",
+    "effect": "If positioned toward the back and racing calmly until the start of the final corner, when there are 300m remaining, cast a magic spell to increase velocity continuously.Sweep Tosho (Platanus Witch)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Joyful Voyage!",
+    "effect": "If positioned toward the front with 200m remaining, increase velocity. Then, if also positioned near the leading Umamusume, gather strength to move slightly forward.",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Wherever This Wonder Leads",
+    "effect": "If positioned midpack on a downhill just before late-race and there's a large distance left to the finish, enjoy the race to the fullest, increasing velocity.",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "trigger:BEAT",
+    "effect": "When near the inner rail midpack on the final corner or later, calculate the path to victory, increasing velocity and ability to navigate smoothly on the final straight.Air Shakur (unsigned)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Dreams Donned with Pride!",
+    "effect": "If the user activates another skill on the final corner late-race, take the crowd's cheers to heart and moderately increase velocity. If racing at Nakayama Racecourse, greatly increase velocity instead.",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Your Smile Sparkles as the Waves",
+    "effect": "When positioned in the front part of the pack in the second half of the race, start a long spurt based on remaining endurance, slightly increasing velocity continuously.Mejiro McQueen (Fair Lady of the Waves)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "564 Escapades",
+    "effect": "Slightly increase velocity sometime in the second half of the race. If you've got any cool rare skills lying around, go ahead and activate 2 regardless of their conditions – it's on the house.Gold Ship (RUN! RUIN! LAUNCHER!)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Red-Hot Discipline!",
+    "effect": "Very slightly increase acceleration for a brief duration when closing in from the back on the final corner or later late-race. Effect and duration increase when passing another runner (up to 3 times).Bamboo Memory (Iron Ambition)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Luck Runs My Way",
+    "effect": "Moderately increase velocity sometime upon approaching late-race, then increase velocity and acceleration based on how many passive skills the skill user has in effect. (up to 6)Copano Rickey (Eightfold ☆Fortune)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "α-star*",
+    "effect": "Moderately increase velocity steadily when positioned toward the lead around halfway through the race. Also moderately recovery endurance.Smart Falcon (Twilight Triumph)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Hephaestus",
+    "effect": "Aim higher, increasing velocity from midpack upon approaching the final straight late-race.Narita Taishin (Difference Engineer)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Ticket to Your Dreams!",
+    "effect": "Moderately increase velocity steadily when in midpack or further back on the final straight in the last spurt. Effect increases when activating a skill (up to 3 times).Winning Ticket (Dream Deliverer)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Snow Bright, Snow Flight",
+    "effect": "With 300m or less remaining, increase velocity when leading or positioned toward the front close to the lead runner.Yukino Bijin (Darl'n Snowflake)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "I'm Possible!",
+    "effect": "Increase velocity when positioned 2nd or later within 4 lengths of the lead with 200m remaining. If within 2 lengths, increase velocity instead.Seeking the Pearl (Rocket☆Star)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "THE MOE AAAA Thanks for My Life",
+    "effect": "Simp hard and increase velocity when positioned midpack or further back on a mid-race corner and there are at least 3 beautiful radiant Umamusume nearby.Agnes Digital (Fanatic♡ Jiangshi)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Spooky, Scary, Happy",
+    "effect": "Increase velocity and very slightly intimidate up to 2 runners ahead and up to 2 runners behind when positioned toward the front upon entering the final straight.Meisho Doto (Dot-o'-Lantern)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Silent Letter",
+    "effect": "Increase ability to break out of the pack with a strong desire to linger in fans' hearts when pressured toward the front with 400m or less remaining.Aston Machan (Flare)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Sunny Breeze",
+    "effect": "Very slightly increase acceleration continuously for a long duration when toward the front on the latter half of the final corner after biding time in the race's first half. Effect increases if 2nd.Yamanin Zephyr (Fluttertail Spirit)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Lightning Flare",
+    "effect": "Moderately increase velocity continuously when the skill user activates 2 skills mid-race. Increase this skill's effectiveness if the user activates another skill while it's active (up to 2 times).Tamamo Cross (Raging Thunder)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Firelight",
+    "effect": "Increase velocity on the final straight after pressuring a runner toward the back on a corner late-race. Effect increases for each time the user passed a runner on a corner late-race.Inari One (Golden Dream)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Laugh at the Odds",
+    "effect": "Increase velocity when well-positioned with 400m or less remaining, after trying to pass another runner on the final corner or later. If unfavored, greatly increase velocity instead.Nakayama Festa (Desperate Measures)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Never Say Never",
+    "effect": "Moderately increase velocity when positioned toward the front with 300m remaining. If it's a dirt race and the skill user is close to the lead, also moderately surge ahead.Wonder Acute (Butterfly Sting)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Into High Gear!",
+    "effect": "If positioned midpack on a downhill mid-race or later, increase velocity for a moderate duration after the downhill. If it's at Tokyo Racecourse, also kick into high gear.Vodka (Fiery Aqua Vitae)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Queen's Lumination",
+    "effect": "Moderately increase velocity continuously when toward the front on a straight in the second half of the race. Effect increases if leading and close to the runner behind.Daiwa Scarlet (Nuit Étoilée de Scarlet)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Raise My Soul's Blade!",
+    "effect": "Increase velocity when positioned toward the front late-race with 400m remaining. Increase velocity greatly instead if it's a G1 or similarly major race and the skill user is favored.Zenno Rob Roy (Heroic Author)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Free from the Ashes",
+    "effect": "Increase velocity when in the front part of the pack on the latter half of the final corner late-race. If the race is long and the user engaged in a challenge mid-race, massively increase instead.Narita Brian (Ravenous Wolf)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Bring on the Banquet!",
+    "effect": "Surge ahead for a moderate duration and very slightly increase acceleration when positioned toward the front on a late-race corner far from the finish.Kitasan Black (Crane's Ambition)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Rain Cloud Bolt",
+    "effect": "Shine brilliantly, increasing velocity and moderately recovering endurance when positioned midpack around halfway through the race.Satono Diamond (Jade's Prosperity)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Shine On, Tomakomai! ☆",
+    "effect": "Slightly increase acceleration when well-positioned in the last spurt after engaging in a challenge on a mid-race corner in a dirt race. Effect increases if still going strong.Hokko Tarumae (Starry Lightship)",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Hands in the Air Like Ya Don't Care!",
+    "effect": "Moderately crank the velocity when vibing toward the front sometime upon approaching late-race. If it's like a sprint or mile race or smth, moderately crank the velocity CONTINUOUSLY!",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Fresh☆Parlor",
+    "effect": "Moderately increase velocity continuously and moderately recover endurance when positioned toward the front in the first half of mid-race.",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "A Free Pour for You",
+    "effect": "Increase velocity for a moderate duration when 2nd or worse and within 4 lengths of the lead on a downhill just before late-race. If the race is medium, also very slightly increase acceleration.",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Ding Dong Boo",
+    "effect": "Moderately increase velocity when dueling. Also increase acceleration on dirt.",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Lyricism at the End of a Journey",
+    "effect": "Moderately increase velocity continuously when toward the back sometime upon approaching late-race. Effect increases if far from the lead and the race is medium or long.",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Engines Fired!",
+    "effect": "Very slightly increase velocity continuously for an extremely long duration when leading by a fair margin halfway through mid-race, but very slightly lose speed during the final spurt.",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Full Throttle! Full Blast!",
+    "effect": "Slightly increase velocity continuously for an extremely long duration when leading by a fair margin halfway through mid-race, but very slightly lose speed during the final spurt.",
+    "rarity": "unique skill"
+  },
+  {
+    "name": "Technician",
+    "effect": "Moderately increase ability to navigate smoothly.\n\n\n(Pace Chaser)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Lightning Step",
+    "effect": "Avoid becoming surrounded for a medium duration mid-race.\n\n\n(Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Vanguard Spirit",
+    "effect": "Increase ability to maintain the lead when leading by a fair margin mid-race.\n\n\n(Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Professor of Curvature",
+    "effect": "Increase velocity on a corner with skilled turning.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "The Coast Is Clear!",
+    "effect": "Moderately widen field of view with situational awareness when moving sideways.\n\n\n(End Closer)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Concentration",
+    "effect": "Decrease time lost to slow starts.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Unrestrained",
+    "effect": "Increase abilty to keep the lead on the final corner.\n\n\n(Front Runner)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Killer Tunes",
+    "effect": "Increase positioning ability when positioned toward the front mid-race.\n\n\n(Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Furious Feat",
+    "effect": "Increase passing ability when positioned toward the back late-race.\n\n\n(Mile)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "In Body and Mind",
+    "effect": "Increase velocity in the last spurt.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Changing Gears",
+    "effect": "Increase passing ability when positioned toward the front mid-race.\n\n\n(Mile)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Step on the Gas!",
+    "effect": "Increase acceleration when passing another runner in the second half of the race.\n\n\n(Mile)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Corner Connoisseur",
+    "effect": "Increase acceleration on a corner with masterful turning.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Mile Maven",
+    "effect": "Widen the margin when positioned toward the front upon approaching mid-race.\n\n\n(Mile)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Speed Star",
+    "effect": "Increase the ability to break out of the pack on the final corner.\n\n\n(Pace Chaser)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Determined Descent",
+    "effect": "Moderately improve running on a downhill.\n\n\n(Pace Chaser)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Taking the Lead",
+    "effect": "Increase ability to go to the front early-race.\n\n\n(Front Runner)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "On Your Left!",
+    "effect": "Increase acceleration when positioned midpack or further back in the early part of late-race.\n\n\n(Late Surger)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Clairvoyance",
+    "effect": "Widen field of view with heightened observation early-race.\n\n\n(Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Lane Legerdemain",
+    "effect": "Increase navigation late-race.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "No Stopping Me!",
+    "effect": "Increase maneuverability when the way ahead is blocked in the last spurt",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Rising Dragon",
+    "effect": "Increase velocity when passing another runner on the outside on the final corner.\n\n\n(Late Surger)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Hard Worker",
+    "effect": "Moderately increase acceleration for a medium duration when trying to pass another runner.\n\n\n(Late Surger)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Fast and Furious",
+    "effect": "Increase velocity when positioned midpack or further back mid-race.\n\n\n(Late Surger)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Turbo Sprint",
+    "effect": "Increase acceleration late-race.\n\n\n(Sprint)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Staggering Lead",
+    "effect": "Increase ability to maintain the lead when leading by a large margin mid-race.\n\n\n(Sprint)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Blinding Flash",
+    "effect": "Increase spurting ability when positioned toward the back late-race.\n\n\n(Sprint)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "The Bigger Picture",
+    "effect": "Widen field of view with heightened observation mid-race.\n\n\n(Late Surger)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Rushing Gale!",
+    "effect": "Increase acceleration and slightly increase velocity on a straight.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Escape Artist",
+    "effect": "Increase ability to go to the front mid-race.\n\n\n(Front Runner)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Unyielding",
+    "effect": "Increase velocity and very slightly increase acceleration when pressured on the final corner or later.\n\n\n(Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Center Stage",
+    "effect": "Greatly increase navigation early-race.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Plan X",
+    "effect": "Increase passing ability when positioned toward the front upon approaching late-race.\n\n\n(Sprint)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Beeline Burst",
+    "effect": "Increase velocity on a straight.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Encroaching Shadow",
+    "effect": "Increase acceleration on a straight in the last spurt.\n\n\n(End Closer)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "It's On!",
+    "effect": "Increase velocity when passing another runner mid-race.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Trending in the Charts!",
+    "effect": "Increase velocity when engaged in a challenge mid-race.\n\n\n(Dirt)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Big-Sisterly",
+    "effect": "Increase passing ability.\n\n\n(Mile)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Sixth Sense",
+    "effect": "Avoid becoming surrounded early-race.\n\n\n(Front Runner)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Innate Experience",
+    "effect": "Increase velocity when near the inner rail on the final corner.\n\n\n(Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Sturm und Drang",
+    "effect": "Increase velocity during the last spurt when positioned toward the back late-race.\n\n\n(End Closer)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Shatterproof",
+    "effect": "Moderately increase acceleration when positioned toward the back mid-race.\n\n\n(Pace Chaser)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Crusader",
+    "effect": "Widen field of view when positioned toward the back late-race.\n\n\n(End Closer)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Overwhelming Pressure",
+    "effect": "Increase velocity and very slightly increase acceleration after passing another runner late-race.\n\n\n(Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Perfect Prep!",
+    "effect": "Prepare to make for the finish line for a medium duration mid-race.\n\n\n(Sprint)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Superstan",
+    "effect": "Increase velocity when close to many runners.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Lead the Charge!",
+    "effect": "Prepare to aim for the front late-race. (Dirt)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "15,000,000 CC",
+    "effect": "Increase velocity on an uphill.\n\n\n(Late Surger)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Burning Spirit SPD",
+    "effect": "Burn bright with team spirit, increasing velocity in proportion to the total Speed of racing team members mid-race.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Burning Spirit PWR",
+    "effect": "Burn bright with team spirit, increasing acceleration in proportion to the total Power of racing team members late-race.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Burning Spirit GUTS",
+    "effect": "Burn bright with team spirit, increasing vigor in proportion to the total Guts of racing team members late-race.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Burning Spirit WIT",
+    "effect": "Burn bright with team spirit, increasing strategic navigation in proportion to the total Wit of racing team members early-race.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Come What May",
+    "effect": "Increase velocity when well-positioned on a straight in the last spurt.\n\n\n(Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Tail Nine",
+    "effect": "Increase velocity after activating many skills mid-race.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Headliner",
+    "effect": "Increase velocity when positioned toward the front upon approaching late-race.\n\n\n(Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Daring Strike",
+    "effect": "Moderately increase velocity for a medium duration when positioned toward the back mid-race.\n\n\n(End Closer)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Nothing Ventured",
+    "effect": "Greatly increase velocity in the second half of the race, but also greatly increase fatigue sometimes.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Flash Forward",
+    "effect": "Increase velocity on a straight.\n\n\n(Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "In High Spirits",
+    "effect": "Increase velocity when positioned toward the front upon approaching late-race.\n\n\n(Sprint)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Blast Forward",
+    "effect": "Increase velocity on a straight.\n\n\n(Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Glittering Star",
+    "effect": "Very slightly control breathing and kick forward in the second half of the race. Effect is increased in proportion to number of career wins.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Radiant Star",
+    "effect": "Control breathing and kick forward in the second half of the race. Effect is increased in proportion to number of career wins.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Best in Japan",
+    "effect": "Everyone's expectations strongly inspire the skill user, increasing velocity on the final corner.\n\n\n(Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Top Runner",
+    "effect": "Increase ability to pass or challenge another runner early-race or mid-race.\n\n\n(Front Runner)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Burning Soul",
+    "effect": "Moderately recover endurance and increase velocity when engaging in a challenge midpack mid-race.\n\n\n(Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "From the Brink",
+    "effect": "Increase acceleration when positioned midpack or further back in the early part of late-race.\n\n\n(Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Neck and Neck",
+    "effect": "Increase acceleration when positioned toward the front in the early part of late-race.\n\n\n(Pace Chaser)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Dauntless",
+    "effect": "When positioned in the midpack during the second half of the race, increase velocity and very slightly increase acceleration.\n\n\n(Late Surger)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Full of Vigor",
+    "effect": "When positioned toward the back on the final corner, increase velocity.\n\n\n(Mile)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Wild Wind",
+    "effect": "When positioned toward the front mid-race, increase velocity and slightly decrease the velocity of runners behind the user.\n\n\n(Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "See Ya Later!",
+    "effect": "Increase velocity when followed by another runner directly behind for a long time.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Keep Going!",
+    "effect": "Moderately expend endurance to greatly increase velocity mid-race.\n\n\n(Late Surger)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Elated",
+    "effect": "When positioned toward the back mid-race, increase velocity.\n\n\n(Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Moonlit Flash",
+    "effect": "Increase velocity on straights.\n\n\n(End Closer)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Refraction Arc",
+    "effect": "Increase velocity on corners.\n\n\n(Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Chance of Victory",
+    "effect": "Increase velocity when positioned toward the front upon approaching late-race.\n\n\n(Dirt)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "I Wanna Win With You",
+    "effect": "Increase velocity and slightly increase acceleration when positioned toward the front in the second half of the race. Increase this skill's effectiveness based on the user's number of fans.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Be the Center!",
+    "effect": "Increase acceleration when positioned toward the front late-race.\n\n\n(Dirt)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Full Speed!",
+    "effect": "Increase velocity when positioned toward the front in the last spurt.\n\n\n(Dirt)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Unstoppable",
+    "effect": "Increase velocity mid-race.\n\n\n(Pace Chaser)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Breakin' Ahead",
+    "effect": "Increase velocity and increase navigation when positioned around the very back mid-race.\n\n\n(End Closer)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Givin' It 1000%",
+    "effect": "Greatly expend endurance and greatly increase velocity in the early part of mid-race.\n\n\n(Front Runner)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Past My Limits",
+    "effect": "Increase velocity in the last spurt. Increase this skill's effectiveness based on the value of the user's highest attribute.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Shocking Flash",
+    "effect": "Increase velocity on a straight.\n\n\n(Sprint)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Lightning Surge",
+    "effect": "Increase acceleration when trying to pass another runner from the back late-race.\n\n\n(Sprint/Mile)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Can't Keep Me Down",
+    "effect": "Increase velocity when positioned toward the back mid-race.\n\n\n(Dirt)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Perfect Spot!",
+    "effect": "Reduce wind resistance when following directly behind a runner.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Ambitious Breeze",
+    "effect": "Moderately increase velocity for a medium duration when positioned 2nd or later within 2 lengths of the lead just before late-race.\n\n\n(Pace Chaser)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Claw Forward",
+    "effect": "Moderately expend endurance to increase acceleration when positioned midpack or further back in the last spurt.\n\n\n(Late, Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Beast Mode",
+    "effect": "Increase acceleration late-race if the skill user led or was within 4 lengths of the lead just before late-race.\n\n\n(Pace, Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Hot Pursuit",
+    "effect": "Increase velocity when trying to pass another runner in the second half of the race.\n\n\n(Pace/Late)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Dancer in the Dirt",
+    "effect": "Increase velocity when following directly behind a runner.\n\n\n(Dirt)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Solid Strike",
+    "effect": "Moderately increase velocity and acceleration upon approaching late-race when leading or within 4 lengths of the lead.\n\n\n(Pace, Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Sharp Streak",
+    "effect": "Increase velocity on a straight.\n\n\n(Late Surger)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Top Gear",
+    "effect": "Greatly increase velocity when positioned 2nd or further back within 4 lengths of the lead on the final straight.\n\n\n(Late Surger)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Can't Even Catch My Shadow",
+    "effect": "Greatly Increase velocity when leading on the final straight and there's another runner within 1 length behind.\n\n\n(Front Runner)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Razor-Sharp Steps",
+    "effect": "Increase acceleration in the early part of late-race if the skill user stayed toward the back of the pack without rushing until the start of late-race.\n\n\n(End Closer)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Reckless Charge",
+    "effect": "Increase velocity when positioned toward the front upon approaching late-race.\n\n\n(Mile)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Gale Arc",
+    "effect": "Increase velocity on a corner.\n\n\n(Front Runner)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Ultimate Downhiller",
+    "effect": "Increase velocity on a downhill.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Sharp Arc",
+    "effect": "Increase velocity on a corner.\n\n\n(Late Surger)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Flawless",
+    "effect": "Surge ahead when positioned toward the back on a third corner just before the final corner.\n\n\n(Medium/Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Advantage Formation",
+    "effect": "Increase velocity mid-race.\n\n\n(Mile/Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Calm and Collected",
+    "effect": "Decrease fatigue upon approaching mid-race.\n\n\n(Pace Chaser)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Go-Home Specialist",
+    "effect": "Reduce fatigue on a downhill.\n\n\n(End Closer)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Race Planner",
+    "effect": "Decrease fatigue mid-race.\n\n\n(Pace Chaser)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Breath of Fresh Air",
+    "effect": "Recover endurance on a mid-race straight.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Gourmand",
+    "effect": "Recover endurance mid-race.\n\n\n(Pace Chaser)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Cooldown",
+    "effect": "Take a breather and decrease fatigue mid-race.\n\n\n(Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Trackblazer",
+    "effect": "Decrease fatigue when positioned toward the front mid-race.\n\n\n(Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Swinging Maestro",
+    "effect": "Recover endurance on a corner with efficient turning.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Iron Will",
+    "effect": "When the way ahead is jammed early or mid-race, draw on firm willpower to recover endurance and increase navigation.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Indomitable",
+    "effect": "Recover endurance when passed by another runner mid-race.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Restless",
+    "effect": "Reduce fatigue on an uphill.\n\n\n(Front Runner)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Keen Eye",
+    "effect": "Decrease fatigue, then moderately decrease velocity of runners ahead when positioned toward the back upon approaching mid-race.\n\n\n(Mile)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Unruffled",
+    "effect": "Recover endurance when surrounded mid-race.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Adrenaline Rush",
+    "effect": "When endurance is running low, rekindle determination and increase velocity.\n\n\n(Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Miraculous Step",
+    "effect": "Decrease fatigue when moving sideways.\n\n\n(Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Sleeping Lion",
+    "effect": "Decrease fatigue mid-race.\n\n\n(End Closer)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Relax",
+    "effect": "Recover endurance when positioned midpack or further back mid-race.\n\n\n(Late Surger)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Burning Spirit STA",
+    "effect": "Burn bright with team spirit, recovering endurance in proportion to the total Stamina of racing team members mid-race.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Lie in Wait",
+    "effect": "Recover endurance when positioned midpack or further back upon approaching mid-race.\n\n\n(Late Surger)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "VIP Pass",
+    "effect": "Decrease fatigue when determined to pass another runner.\n\n\n(Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Serenity",
+    "effect": "Relax and recover endurance when following directly behind a runner.\n\n\n(End Closer)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Of Calm Mind",
+    "effect": "If positioned in the midpack around when the mid-race starts, slightly decrease velocity and greatly recover endurance.\n\n\n(Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Master of the Sands",
+    "effect": "Recover endurance and increase velocity when positioned toward the back mid-race.\n\n\n(Dirt)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Heart All Set",
+    "effect": "If the skill user began the race without a late start, greatly recover endurance in the early part of the mid-race.\n\n\n(Pace, Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Super Lucky Seven",
+    "effect": "Good things may happen when in bracket 7.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Runaway",
+    "effect": "Attempt to gain an especially large lead and keep it until the finish.\n\n\n(Front Runner)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Fall Frenzy",
+    "effect": "Increase performance in fall, boosting Speed and Power.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Yodo Invicta",
+    "effect": "Increase performance at Kyoto Racecourse, increasing Stamina, Wit, and Speed.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Spring Spectacle",
+    "effect": "Increase performance in spring, boosting Speed and Power.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Firm Course Menace",
+    "effect": "Increase performance on firm ground, boosting Power and Speed.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Right-Handed Demon",
+    "effect": "Increase proficiency in right-handed tracks, increasing Speed and Power.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Strong Steps",
+    "effect": "Increase Speed when the Power attribute exceeds 1000. If Power 1200 or higher, increase Speed greatly instead.\n\n\n(Dirt)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Maestro of the Mud",
+    "effect": "Increase performance on soft and heavy ground, increasing Speed and Power.\n\n\n(Dirt)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Risk-Maker",
+    "effect": "Occasionally tap into untold inner strength, greatly increasing Speed, Power, and Guts. More likely to activate when skill user is unfavored.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Dominator",
+    "effect": "Decrease velocity of runners ahead when positioned toward the back late-race.\n\n\n(Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Dazzling Disorientation",
+    "effect": "Moderately narrow the field of view for runners behind when positioned toward the front late-race.\n\n\n(Pace Chaser)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Illusionist",
+    "effect": "Narrow the field of view for runners ahead of late-race.\n\n\n(Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Mystifying Murmur",
+    "effect": "Disturb runners directly ahead mid-race.\n\n\n(Medium)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "All-Seeing Eyes",
+    "effect": "Startle other runners late-race.\n\n\n(Late Surger)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Adored by All",
+    "effect": "Intimidate runners behind when positioned towards the front early-race.\n\n\n(Sprint)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Tantalizing Trick",
+    "effect": "Increase fatigue for rushed runners behind when positioned toward the front mid-race.",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Stamina Siphon",
+    "effect": "Slightly steal endurance from runners ahead when positioned toward the back mid-race.\n\n\n(Long)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Battle Formation",
+    "effect": "Dull movement for runners ahead when positioned toward the back early-race.\n\n\n(Mile)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "Petrifying Gaze",
+    "effect": "Unnerve runners in focus late-race.\n\n\n(End Closer)",
+    "rarity": "rare skill"
+  },
+  {
+    "name": "No Looking Back",
+    "effect": "Slightly increase velocity when positioned toward the front upon approaching late-race.\n\n\n(Mile)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "On the Way to Our Dream",
+    "effect": "Slightly increase velocity and minimally increase acceleration when positioned toward the front in the second half of the race. Increase this skill's effectiveness based on the user's number of fans.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Got the Spirit!",
+    "effect": "Slightly increase acceleration when positioned toward the front late-race.\n\n\n(Dirt)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Racing Spirit: Speed",
+    "effect": "Slightly increase velocity upon approaching late-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Full Tilt",
+    "effect": "Slightly increase velocity when positioned toward the front in the last spurt.\n\n\n(Dirt)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "On the Attack",
+    "effect": "Slightly increase velocity mid-race.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Breakin' Out",
+    "effect": "Slightly increase velocity and slightly increase navigation when positioned around the very back mid-race.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Mad Dash",
+    "effect": "Greatly expend endurance and moderately increase velocity in the early part of mid-race.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Down in the Dirt ◯",
+    "effect": "Slightly increase velocity when following directly behind a runner.\n\n\n(Dirt)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Racing Spirit: Stamina",
+    "effect": "Moderately expend endurance to moderately increase velocity in the last spurt.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "My True Strength",
+    "effect": "Slightly increase acceleration late-race if the skill user led or was within 4 lengths of the lead just before late-race.\n\n\n(Pace, Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Latch On",
+    "effect": "Slightly increase velocity when trying to pass another runner in the second half of the race.\n\n\n(Pace/Late)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Leap Forward",
+    "effect": "Slightly increase acceleration when trying to pass another runner from the back late-race.\n\n\n(Sprint/Mile)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Aspire",
+    "effect": "Very slightly increase velocity for a medium duration when positioned 2nd or later and within 2 lengths of the lead just before late-race.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Scramble",
+    "effect": "Moderately expend endurance to slightly increase acceleration when positioned midpack or further back in the last spurt.\n\n\n(Late, Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Steady Gait",
+    "effect": "Very slightly increase velocity and acceleration upon approaching late-race when leading or within 4 lengths of the lead.\n\n\n(Pace, Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Pedal to the Metal",
+    "effect": "Moderately increase velocity when positioned 2nd or further back within 4 lengths of the lead on the final straight.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Firm Resolve",
+    "effect": "Moderately increase velocity when leading on the final straight and there's another runner within 1 length behind.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Racing Spirit: Power",
+    "effect": "Slightly increase velocity for a medium duration when trying to pass another runner in the last spurt.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Graceful Stride",
+    "effect": "Slightly increase velocity mid-race.\n\n\n(Mile/Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Downhill Speedster",
+    "effect": "Slightly increase velocity on downhills.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Unconventional",
+    "effect": "Slightly surge ahead when positioned toward the back on a third corner just before the final corner.\n\n\n(Medium/Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sunny Sign",
+    "effect": "Slightly increase velocity when positioned toward the front upon approaching late-race.\n\n\n(Dirt)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sharp Steps",
+    "effect": "Slightly increase acceleration in the early part of late-race if the skill user stayed toward the back of the pack without rushing until the start of late-race.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Rational",
+    "effect": "Slightly increase velocity when positioned toward the back in the early part of mid-race after recovering endurance with a skill.\n\n\n(Dirt)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Comeback",
+    "effect": "Slightly increase velocity when positioned toward the back mid-race.\n\n\n(Dirt)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Eyes on the Goal",
+    "effect": "Slightly increase velocity in the last spurt. Increase this skill's effectiveness based on the value of the user's highest attribute.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Racing Spirit: Mood",
+    "effect": "Stamina, Guts, and Wit might moderately increase when mood is good or great.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Racing Spirit: Wit",
+    "effect": "Slightly increase velocity upon activating 2 skills during the second half of the race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Racing Spirit: Guts",
+    "effect": "Slightly increase acceleration when dueling.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Prudent Positioning",
+    "effect": "Increase navigation early-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Go with the Flow",
+    "effect": "Moderately increase navigation late-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Thunderbolt Step",
+    "effect": "Moderately avoid becoming surrounded for a medium duration mid-race.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Shrewd Step",
+    "effect": "Slightly increase ability to navigate smoothly.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Keeping the Lead",
+    "effect": "Slightly increase ability to maintain the lead when leading by a fair margin mid-race.\n\n\n(Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Long Corners ◯",
+    "effect": "Slightly increase velocity on a corner.\n\n\n(Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Corner Adept ◯",
+    "effect": "Slightly increase velocity on a corner with skilled turning.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Pace Chaser Corners ◯",
+    "effect": "Slightly increase velocity on a corner.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Pressure",
+    "effect": "Slightly increase velocity and very minimally increase acceleration after passing another runner late-race.\n\n\n(Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "I Can See Right Through You",
+    "effect": "Slightly widen field of view with situational awareness when moving sideways.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Uma Stan",
+    "effect": "Slightly increase velocity when close to many runners.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Focus",
+    "effect": "Slightly decrease time lost to slow starts.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Final Push",
+    "effect": "Slightly increase ability to keep the lead on the final corner.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Fast-Paced",
+    "effect": "Slightly increase ability to go to the front mid-race.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Up-Tempo",
+    "effect": "Slightly increase positioning ability when positioned toward the front mid-race.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Prepared to Pass",
+    "effect": "Slightly increase ability to break out of the pack on the final corner.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Slick Surge",
+    "effect": "Slightly increase acceleration when positioned midpack or further back in the early part of late-race.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Updrafters",
+    "effect": "Slightly increase passing ability when positioned toward the back late-race.\n\n\n(Mile)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Straightaway Acceleration",
+    "effect": "Slightly increase acceleration on a straight.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Mile Straightaways ◯",
+    "effect": "Slightly increase velocity on a straight.\n\n\n(Mile)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Homestretch Haste",
+    "effect": "Slightly increase velocity in the last spurt.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Steadfast",
+    "effect": "Slightly increase velocity and very minimally increase acceleration when pressured on the final corner or later.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Outer Swell",
+    "effect": "Slightly increase velocity when passing another runner on the outside on the final corner.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Straightaway Adept",
+    "effect": "Slightly increase velocity on a straight.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Early Lead",
+    "effect": "Slightly increase ability to go to the front early-race.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Shifting Gears",
+    "effect": "Slightly increase passing ability when positioned toward the front mid-race.\n\n\n(Mile)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Acceleration",
+    "effect": "Slightly increase acceleration when passing another runner in the second half of the race. \n\n\n(Mile)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Corner Acceleration ◯",
+    "effect": "Slightly increase acceleration on a corner with masterful turning.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Nimble Navigator",
+    "effect": "Slightly increase maneuverability when the way ahead is blocked in the last spurt.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Productive Plan",
+    "effect": "Slightly widen the margin when positioned toward the front upon approaching mid-race.\n\n\n(Mile)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Straight Descent",
+    "effect": "Slightly improve running on a downhill.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Highlander",
+    "effect": "Slightly improve running on an uphill.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Front Runner Straightaways ◯",
+    "effect": "Slightly increase velocity on a straight.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Front Runner Corners ◯",
+    "effect": "Slightly increase velocity on a corner.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Position Pilfer",
+    "effect": "Slightly increase velocity when positioned midpack or further back mid-race.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Pace Chaser Straightaways ◯",
+    "effect": "Slightly increase velocity on a straight.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Hawkeye",
+    "effect": "Moderately widen field of view with heigthened observation early-race.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Leader's Pride",
+    "effect": "Slightly increase ability to pass or challenge another runner early-race or mid-race.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Ramp Up",
+    "effect": "Slightly increase velocity when passing another runner mid-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Medium Straightaways ◯",
+    "effect": "Slightly increase velocity on a straight.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Medium Corners ◯",
+    "effect": "Slightly increase velocity on a corner.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Fighter",
+    "effect": "Slightly increase acceleration for a medium duration when trying to pass another runner.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Late Surger Corners ◯",
+    "effect": "Slightly increase velocity on a corner.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sprinting Gear",
+    "effect": "Slightly increase acceleration late-race.\n\n\n(Sprint)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Huge Lead",
+    "effect": "Slightly increase ability to maintain the lead when leading by a large margin mid-race.\n\n\n(Sprint)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Countermeasure",
+    "effect": "Slightly increase passing ability when positioned toward the front upon approaching late-race.\n\n\n(Sprint)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "1,500,000 CC",
+    "effect": "Slightly increase velocity on an uphill.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Studious",
+    "effect": "Slightly widen field of view with heightened observation mid-race.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Gap Closer",
+    "effect": "Slightly increase spurting ability when positioned toward the back late-race.\n\n\n(Sprint)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Unyielding Spirit",
+    "effect": "Slightly increase passing ability.\n\n\n(Mile)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Straightaway Spurt",
+    "effect": "Slightly increase acceleration on a straight in the last spurt.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Inside Scoop",
+    "effect": "Slightly increase velocity when near the inner rail on the final corner.\n\n\n(Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Strategist",
+    "effect": "Slightly widen field of view when positioned toward the back late-race.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Groundwork",
+    "effect": "Slightly increase acceleration after activating many skills early-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Tail Held High",
+    "effect": "Slightly increase velocity after activating many skills mid-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Second Wind",
+    "effect": "Moderately expend endurance to slightly increase acceleration late-race.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Slipstream",
+    "effect": "Slightly decrease wind resistance when following directly behind another runner.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Playtime's Over!",
+    "effect": "Slightly increase velocity when followed by another runner directly behind for a long time.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sprint Straightaways ◯",
+    "effect": "Slightly increase velocity on a straight.\n\n\n(Sprint)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sprint Corners ◯",
+    "effect": "Slightly increase velocity on a corner.\n\n\n(Sprint)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Meticulous Measures",
+    "effect": "Moderately prepare to make for the finish line for a medium duration mid-race.\n\n\n(Sprint)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Mile Corners ◯",
+    "effect": "Slightly increase velocity on a corner\n\n\n(Mile)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "End Closer Straightaways ◯",
+    "effect": "Slightly increase velocity on a straight.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Masterful Gambit",
+    "effect": "Slightly increase velocity during the last spurt when positioned toward the back late-race.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Long Straightaways ◯",
+    "effect": "Slightly increase velocity on a straight.\n\n\n(Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Late Surger Straightaways ◯",
+    "effect": "Slightly increase velocity on a straight.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "End Closer Corners ◯",
+    "effect": "Slightly increase velocity on a corner.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Tactical Tweak",
+    "effect": "Slightly increase acceleration when positioned toward the back mid-race.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Dodging Danger",
+    "effect": "Moderately avoid becoming surrounded early-race.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Top Pick",
+    "effect": "Slightly increase velocity when engaged in a challenge mid-race.\n\n\n(Dirt)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "End Closer Corners ◎",
+    "effect": "Moderately increase velocity on a corner.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "End Closer Straightaways ◎",
+    "effect": "Moderately increase velocity on a straight.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Front Runner Corners ◎",
+    "effect": "Moderately increase velocity on a corner.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Front Runner Straightaways ◎",
+    "effect": "Moderately increase velocity on a straight.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Late Surger Corners ◎",
+    "effect": "Moderately increase velocity on a corner.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Late Surger Straightaways ◎",
+    "effect": "Moderately increase velocity on a straight.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Long Corners ◎",
+    "effect": "Moderately increase velocity on a corner.\n\n\n(Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Long Straightaways ◎",
+    "effect": "Moderately increase velocity on a straight.\n\n\n(Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Medium Corners ◎",
+    "effect": "Moderately increase velocity on a corner.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Medium Straightaways ◎",
+    "effect": "Moderately increase velocity on a straight.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Mile Corners ◎",
+    "effect": "Moderately increase velocity on a corner\n\n\n(Mile)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Mile Straightaways ◎",
+    "effect": "Moderately increase velocity on a straight.\n\n\n(Mile)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Pace Chaser Corners ◎",
+    "effect": "Moderately increase velocity on a corner.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Pace Chaser Straightaways ◎",
+    "effect": "Moderately increase velocity on a straight.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sprint Corners ◎",
+    "effect": "Moderately increase velocity on a corner.\n\n\n(Sprint)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sprint Straightaways ◎",
+    "effect": "Moderately increase velocity on a straight.\n\n\n(Sprint)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Gatekept",
+    "effect": "Moderately increase time lost to slow starts.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Forward, March!",
+    "effect": "Moderately prepare to aim for the front late-race. (Dirt)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Rapid Gain",
+    "effect": "Slightly increase acceleration when positioned midpack or further back late-race.\n\n\n(Dirt)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Ignited Spirit SPD",
+    "effect": "Burn bright with team spirit, slightly increasing velocity in proportion to the total Speed of racing team members mid-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Ignited Spirit PWR",
+    "effect": "Burn bright with team spirit, slightly increasing acceleration in proportion to the total Power of racing team members late-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Ignited Spirit GUTS",
+    "effect": "Burn bright with team spirit, very slightly increasing vigor in proportion to the total Guts of racing team members late-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Ignited Spirit WIT",
+    "effect": "Burn bright with team spirit, slightly increasing strategic navigation in proportion to the total Wit of racing team members early-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Risky Business",
+    "effect": "Moderately increase velocity in the second half of the race, but also greatly increase fatigue sometimes.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Early Start",
+    "effect": "Very slightly increase velocity for a medium duration when positioned toward the back mid-race.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "All I've Got",
+    "effect": "Slightly increase velocity when well-positioned on a straight in the last spurt.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Head-On",
+    "effect": "Slightly increase acceleration when positioned toward the front in the early part of late-race.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Feature Act",
+    "effect": "Slightly increase velocity when positioned toward the front upon approaching late-race.\n\n\n(Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Light as a Feather",
+    "effect": "Slightly increase velocity when positioned toward the front upon approaching late-race.\n\n\n(Sprint)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Fighting Spirit",
+    "effect": "When engaged in a challenge midpack mid-race, very slightly recover endurance and slightly increase velocity.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Take the Chance",
+    "effect": "Slightly increase acceleration when positioned midpack or further back in the early part of late-race.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Eager",
+    "effect": "When positioned toward the back mid-race, slightly increase velocity.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Fearless",
+    "effect": "When positioned in the midpack during the second half of the race, slightly increase velocity and very minimally increase acceleration.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Pumped",
+    "effect": "When positioned toward the back on the final corner, slightly increase velocity.\n\n\n(Mile)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "With All My Soul",
+    "effect": "When positioned toward the front mid-race, slightly increase velocity and minimally decrease the velocity of runners behind the skill user.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Full Throttle",
+    "effect": "Moderately expend endurance to moderately increase velocity mid-race.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Soft Step",
+    "effect": "Slightly decrease fatigue when moving sideways.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Stamina to Spare",
+    "effect": "Slightly decrease fatigue upon approaching mid-race.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Hydrate",
+    "effect": "Slightly recover endurance mid-race.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Preferred Position",
+    "effect": "Slightly decrease fatigue mid-race.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "After-School Stroll",
+    "effect": "Slightly reduce fatigue on a downhill.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Standing By",
+    "effect": "Slightly decrease fatigue mid-race.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Rosy Outlook",
+    "effect": "Slightly decrease fatigue when positioned toward the front mid-race.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Straightaway Recovery",
+    "effect": "Slightly recover endurance on a mid-race straight.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Deep Breaths",
+    "effect": "Take a breather and slightly decrease fatigue mid-race.\n\n\n(Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Corner Recovery ◯",
+    "effect": "Slightly recover endurance on a corner with efficient turning.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Pace Strategy",
+    "effect": "Slightly recover endurance when passed by another runner mid-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Lay Low",
+    "effect": "When the way ahead is jammed early or mid-race, lay low to slightly recover endurance and slightly increase navigation.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "A Small Breather",
+    "effect": "Slightly recover endurance when positioned midpack or further back mid-race.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Triple 7s",
+    "effect": "Slightly gain energy with 777m remaining.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Extra Tank",
+    "effect": "Slightly regain the energy to run when close to exhausting strength.\n\n\n(Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Calm in a Crowd",
+    "effect": "Slightly recover endurance when surrounded mid-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Moxie",
+    "effect": "Slightly reduce fatigue on an uphill.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Levelheaded",
+    "effect": "Relax and slightly recover endurance when following directly behind a runner.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Watchful Eye",
+    "effect": "Slightly decrease fatigue, then very slightly decrease velocity of runners ahead when positioned toward the back upon approaching mid-race.\n\n\n(Mile)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Wait-and-See",
+    "effect": "Slightly decrease fatigue and very slightly increase acceleration when positioned toward the back mid-race.\n\n\n(Sprint)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Passing Pro",
+    "effect": "Slightly decrease fatigue when determined to pass another runner.\n\n\n(Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Shake It Out",
+    "effect": "Slightly recover endurance after activating many skills late-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Ignited Spirit STA",
+    "effect": "Burn bright with team spirit, slightly recovering endurance in proportion to the total Stamina of racing team members mid-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Be Still",
+    "effect": "Slightly recover endurance when positioned midpack or further back upon approaching mid-race.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Familiar Ground",
+    "effect": "Slightly recover endurance when positioned toward the back mid-race.\n\n\n(Dirt)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Corner Recovery ×",
+    "effect": "Moderately lose endurance on a corner with inefficient turning.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Free-Spirited",
+    "effect": "If positioned in the midpack around when the mid-race starts, slightly decrease velocity and moderately recover endurance.\n\n\n(Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "All Set",
+    "effect": "If the skill user began the race without a late start, moderately recover endurance in the early part of the mid-race.\n\n\n(Pace, Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Risk-Taker",
+    "effect": "Very occasionally tap into untold inner strength, moderately increasing Speed, Power, and Guts. More likely to activate when skill user is unfavored.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Chukyo Racecourse ◯",
+    "effect": "Moderately increase performance at Chukyo Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Chukyo Racecourse ◎",
+    "effect": "Increase performance at Chukyo Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Muddy ◯",
+    "effect": "Increase performance on soft and heavy ground, moderately increasing Speed.\n\n\n(Dirt)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Night Races ◎",
+    "effect": "Increase Wit at night.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Restraint",
+    "effect": "Increase Wit and moderately decrease the chance of being Rushed.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "99 Problems",
+    "effect": "Decreases Guts and Wit",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Solid Steps",
+    "effect": "Slightly increase Speed when the Power attribute exceeds 1000. If Power 1200 or higher, increase Speed moderately instead.\n\n\n(Dirt)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Kawasaki Racecourse ◎",
+    "effect": "Increases Stamina at Kawasaki Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Kawasaki Racecourse ◯",
+    "effect": "Moderately increases Stamina at Kawasaki Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Funabashi Racecourse ◎",
+    "effect": "Increases Stamina at Funabashi Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Funabashi Racecourse ◯",
+    "effect": "Moderately increases Stamina at Funabashi Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Morioka Racecourse ◎",
+    "effect": "Increases Stamina at Morioka Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Night Races ◯",
+    "effect": "Moderately increase Wit at night.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sharp Turns ◎",
+    "effect": "Increase Wit on tracks with sharp turns.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sharp Turns ◯",
+    "effect": "Moderately increase Wit on tracks with sharp turns.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Collaborative Graded Races ◎",
+    "effect": "Increase Speed on Kawasaki, Funabashi, Morioka, and Oi Racecourses.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Collaborative Graded Races ◯",
+    "effect": "Moderately increase Speed on Kawasaki, Funabashi, Morioka, and Oi Racecourses.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "You're Not the Boss of Me!",
+    "effect": "Increase time lost to slow starts and moderately decrease Wit.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Muddy ◎",
+    "effect": "Increase performance on soft and heavy ground, increasing Speed.\n\n\n(Dirt)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Spring Runner ◯",
+    "effect": "Moderately increase performance in spring.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Left-Handed ◯",
+    "effect": "Moderately increase performance on left-handed tracks.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Competitive Spirit ◯",
+    "effect": "Moderately increase performance when many other runners are using the same strategy.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Wet Conditions ◯",
+    "effect": "Moderately increase performance on good, soft, and heavy ground.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Cloudy Days ◯",
+    "effect": "Moderately increase performance in cloudy weather.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Pace Chaser Savvy ◯",
+    "effect": "Moderately increase ability to get into a good position.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Non-Standard Distance ◯",
+    "effect": "Moderately increase performance over non-standard distances (non-multiples of 400m)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Rainy Days ◯",
+    "effect": "Moderately increase performance in rainy weather.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Standard Distance ◯",
+    "effect": "Moderately increase performance over standard distances (multiples of 400m).",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Firm Conditions ◯",
+    "effect": "Moderately increase performance on firm ground.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Long Shot ◯",
+    "effect": "Moderately increase performance when 4th favorite or below.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Lucky Seven",
+    "effect": "Moderately good things may happen when in bracket 7.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Kokura Racecourse ◯",
+    "effect": "Moderately increase performance at Kokura Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Outer Post Proficiency ◯",
+    "effect": "Moderately increase performance in brackets 6-8.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Late Surger Savvy ◯",
+    "effect": "Moderately increase ability to get into a good position.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Front Runner Savvy ◯",
+    "effect": "Moderately increase ability to get into a good position.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "End Closer Savvy ◯",
+    "effect": "Moderately increase ability to get into a good position.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sympathy",
+    "effect": "Moderately increase performance when many runner share a sympathetic heart.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Hanshin Racecourse ◯",
+    "effect": "Moderately increase performance at Hanshin Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Tokyo Racecourse ◯",
+    "effect": "Moderately increase performance at Tokyo Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Nakayama Racecourse ◯",
+    "effect": "Moderately increase performance at Nakayama Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Target in Sight ◯",
+    "effect": "Moderately increase performance when the favorite is using the same strategy.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sunny Days ◯",
+    "effect": "Moderately increase performance in sunny weather.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Inner Post Proficiency ◯",
+    "effect": "Moderately increase performance in brackets 1-3.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Right-Handed ◯",
+    "effect": "Moderately increase performance on right-handed tracks.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Fall Runner ◯",
+    "effect": "Moderately increase performance in fall.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sapporo Racecourse ◯",
+    "effect": "Moderately increase performance at Sapporo Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Oi Racecourse ◯",
+    "effect": "Moderately increase performance at Oi Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Summer Runner ◯",
+    "effect": "Moderately increase performance in summer.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Snowy Days ◯",
+    "effect": "Moderately increase performance in snowy weather.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Winter Runner ◯",
+    "effect": "Moderately increase performance in winter.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Lone Wolf",
+    "effect": "Moderately increase performance when no other runners have the heart of a lone wolf.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Maverick ◯",
+    "effect": "Increase performance when no other runners are using the same strategy.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Hakodate Racecourse ◯",
+    "effect": "Moderately increase performance at Hakodate Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Kyoto Racecourse ◯",
+    "effect": "Moderately increase performance at Kyoto Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Cloudy Days ◎",
+    "effect": "Increase performance in cloudy weather.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Competitive Spirit ◎",
+    "effect": "Increase performance when many other runners are using the same strategy.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "End Closer Savvy ◎",
+    "effect": "Increase ability to get into a good position.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Fall Runner ◎",
+    "effect": "Increase performance in fall.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Firm Conditions ◎",
+    "effect": "Increase performance on firm ground.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Front Runner Savvy ◎",
+    "effect": "Increase ability to get into a good position.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Hakodate Racecourse ◎",
+    "effect": "Increase performance at Hakodate Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Hanshin Racecourse ◎",
+    "effect": "Increase performance at Hanshin Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Inner Post Proficiency ◎",
+    "effect": "Increase performance in brackets 1-3.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Kokura Racecourse ◎",
+    "effect": "Increase performance at Kokura Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Kyoto Racecourse ◎",
+    "effect": "Increase performance at Kyoto Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Late Surger Savvy ◎",
+    "effect": "Increase ability to get into a good position.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Left-Handed ◎",
+    "effect": "Increase performance on left-handed tracks.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Long Shot ◎",
+    "effect": "Increase performance when 4th favorite or below.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Maverick ◎",
+    "effect": "Greatly increase performance when no other runners are using the same strategy.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Nakayama Racecourse ◎",
+    "effect": "Increase performance at Nakayama Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Non-Standard Distance ◎",
+    "effect": "Increase performance over non-standard distances (non-multiples of 400m)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Oi Racecourse ◎",
+    "effect": "Increase performance at Oi Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Outer Post Proficiency ◎",
+    "effect": "Increase performance in brackets 6-8.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Pace Chaser Savvy ◎",
+    "effect": "Increase ability to get into a good position.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Rainy Days ◎",
+    "effect": "Increase performance in rainy weather.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Right-Handed ◎",
+    "effect": "Increase performance on right-handed tracks.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sapporo Racecourse ◎",
+    "effect": "Increase performance at Sapporo Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Snowy Days ◎",
+    "effect": "Increase performance in snowy weather.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Spring Runner ◎",
+    "effect": "Moderatey increase performance in spring.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Standard Distance ◎",
+    "effect": "Increase performance over standard distances (multiples of 400m).",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Summer Runner ◎",
+    "effect": "Increase performance in summer.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sunny Days ◎",
+    "effect": "Increase performance in sunny weather.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Target in Sight ◎",
+    "effect": "Increase performance when the favorite is using the same strategy.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Tokyo Racecourse ◎",
+    "effect": "Increase performance at Tokyo Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Wet Conditions ◎",
+    "effect": "Increase performance on good, soft, and heavy ground.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Winter Runner ◎",
+    "effect": "Increase performance in winter.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Paddock Fright",
+    "effect": "Moderately decrease performance when the favorite.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Outer Post Averseness",
+    "effect": "Moderately decrease performance in brackets 6-8",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "G1 Averseness",
+    "effect": "Moderately decrease performance G1 or otherwise important races",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Inner Post Averseness",
+    "effect": "Moderately decrease performance in brackets 1-3",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Non-Standard Distance x",
+    "effect": "Moderately decrease performance over standard distances (multiples of 400)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Standard Distance x",
+    "effect": "Moderately decrease performance over non-standard distances (non-multiples of 400m)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Hanshin Racecourse x",
+    "effect": "Decrease performance at Hanshi Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Kokura Racecourse x",
+    "effect": "Decrease performance at Kokura Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Kyoto Racecourse x",
+    "effect": "Decrease performance at Kyoto Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Nakayama Racecourse x",
+    "effect": "Decrease performance at Nakayama Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Oi Racecourse x",
+    "effect": "Decrease performance at Oi Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sapporo Racecourse x",
+    "effect": "Decrease performance at Sapporo Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Tokyo Racecourse x",
+    "effect": "Decrease performance at Tokyo Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Winter Runner x",
+    "effect": "Moderately decrease performance in winter.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Summer Runner x",
+    "effect": "Moderately decrease performance in summer.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Fall Runner x",
+    "effect": "Moderately decrease performance in fall.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Spring Runner x",
+    "effect": "Moderately decrease performance in spring.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Running Idle",
+    "effect": "Moderately increase fatigue when in the lead by too large of a margin.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Morioka Racecourse ◯",
+    "effect": "Moderately increases Stamina at Morioka Racecourse.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Wallflower",
+    "effect": "Moderately decrease performance when many other runners are using the same strategy.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Tether",
+    "effect": "Slightly decrease velocity of runners ahead when positioned toward the back late-race.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Subdued Late Surgers",
+    "effect": "Slightly increase fatigue for late surgers early-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Subdued Pace Chasers",
+    "effect": "Slightly increase fatigue for pace chasers early-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Flustered Pace Chasers",
+    "effect": "Slightly increase fatigue for pace chasers mid-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Disorient",
+    "effect": "Slighty narrow the field of view for runners behind when positioned toward the front late-race.\n\n\n(Pace Chaser)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Hesitant End Closers",
+    "effect": "Slightly decrease velocity of end closers late-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Flustered End Closers",
+    "effect": "Slightly increase fatigue for end closers mid-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Hesitant Pace Chasers",
+    "effect": "Slightly decrease velocity of pace chasers late-race",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Flustered Front Runners",
+    "effect": "Slightly increase fatigue for front runners mid-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Smoke Screen",
+    "effect": "Moderately narrow the field of view for runner ahead late-race.\n\n\n(Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Trick (Rear)",
+    "effect": "Slightly increase fatigue for rushed runners ahead when positioned toward the back mid-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Sharp Gaze",
+    "effect": "Slightly startle other runners late-race.\n\n\n(Late Surger)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Murmur",
+    "effect": "Slightly disturb runners directly ahead mid-race.\n\n\n(Medium)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Hesitant Late Surgers",
+    "effect": "Slightly decrease velocity of late surgers late-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Intense Gaze",
+    "effect": "Slightly unnerve runners in focus late-race.\n\n\n(End Closer)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Frenzied Pace Chasers",
+    "effect": "Increase time needed for pace chasers to calm down when they become rushed.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Trick (Front)",
+    "effect": "Slightly increase fatigue for rushed runners behind when positioned toward the front mid-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Frenzied Late Surgers",
+    "effect": "Increase time needed for late surgers to calm down when they become rushed.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Flustered Late Surgers",
+    "effect": "Slightly increase fatigue for late surgers mid-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Speed Eater",
+    "effect": "Slightly steal velocity from runners behind when positioned toward the front mid-race.\n\n\n(Mile)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Frenzied Front Runners",
+    "effect": "Increase time needed for front runners to calm down when they become rushed.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Intimidate",
+    "effect": "Moderately intimidate runners behind when positioned toward the front early-race.\n\n\n(Sprint)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Restart",
+    "effect": "Slightly dull movement for runners ahead when not in the lead early-race.\n\n\n(Front Runner)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Stop Right There!",
+    "effect": "Slightly cause panic in and very slightly dull movement for runners ahead when positioned toward the back early-race.\n\n\n(Sprint)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Frenzied End Closers",
+    "effect": "Increase time needed for end closers to calm down when they become rushed.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Stamina Eater",
+    "effect": "Very slightly steal endurance from runners ahead when positioned toward the back mid-race.\n\n\n(Long)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Subdued Front Runners",
+    "effect": "Slightly increase fatigue for front runners early-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Hesitant Front Runners",
+    "effect": "Slightly decrease velocity of front runners late-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Subdued End Closers",
+    "effect": "Slightly increase fatigue for end closers early-race.",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Opening Gambit",
+    "effect": "Slightly dull movement for runners ahead when positioned toward the back early-race.\n\n\n(Mile)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Oppression",
+    "effect": "Slightly intimidate a runner who used a recovery skill in the second half of the race.\n\n\n(Dirt)",
+    "rarity": "normal skill"
+  },
+  {
+    "name": "Dust Cloud",
+    "effect": "Slightly decrease the velocity of a runner directly behind the skill user when leading early-race.\n\n\n(Dirt)",
+    "rarity": "normal skill"
+  }
+]
