@@ -57,7 +57,7 @@ def ocr_with_fuzzy(pil_image, model, val_transform, idx_to_char, device, choices
         return f"{raw_text} (unsure)"
 ```
 
-> **Note**: For name in mood and rank images, the extraction uses `token_set_fuzzy` instead of `Wratio`.
+> **Note**: For name in mood and rank images, the extraction uses `token_set_ratio` instead of `Wratio`.
 ```python
 name_text = ocr_with_fuzzy(name, model, val_transform, idx_to_char,device, char_names_outer, threshold=75, score_choice=fuzz.token_set_ratio)
 ```
