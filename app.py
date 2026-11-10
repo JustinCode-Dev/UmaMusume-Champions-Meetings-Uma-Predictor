@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from extract_features import extract_conditions, extract_skills
+from src.extract_features import extract_conditions, extract_skills
 import json
 import numpy as np
 import joblib
