@@ -108,7 +108,7 @@ UmaMusume-Champions-Meetings-Uma-Predictor/
 │   ├── character.json      #(not pushed — scraped via scraping/scraper_char.py)
 │   ├── frequent_skill.json
 │   ├── rule.json
-│   ├── skills.json      #(not pushed — scraped via scraping/scraper_skills.py)
+│   ├── skills.json      #(scraped via scraping/scraper_skills.py)
 │   └── style_skill.json
 ├── docs/
 │   └── ARCHITECTURE.md
