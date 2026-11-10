@@ -14,9 +14,9 @@ Every time a new Champions Meeting drops, the meta shifts drastically. Opponents
   - How accurate can a prediction model actually get for this?
   
 ## Installation / Running This Yourself
-> **Note:** This repo isn't really meant to be cloned and run end-to-end. The OCR pipeline (cropping, preprocessing, data matching), expects screenshots in a specific format, it won't work with arbitrary images. It also depends on a personal dataset of 6,000+ manually collected race screenshots (2.4GB+) that isn't included here due to size. The code is here mainly for people who want to see how it works, not to be run as a plug-and-play tool.
+> **Note:** This repo isn't really meant to be cloned and run end-to-end. The OCR pipeline (cropping, preprocessing, data matching), expects screenshots in a specific format, it won't work with arbitrary images. It also depends on a personal dataset of 7,900+ manually collected race screenshots (2.4GB+) that isn't included here due to size. The code is here mainly for people who want to see how it works, not to be run as a plug-and-play tool.
 
-- **Want to try the predictor?** → [](link)
+- **Want to try the predictor?** → [Live Demo](https://umamusume-cm-predictor.streamlit.app/)
   
   **What do the ranks mean?**
   - Rank 1 → Finishing 1st place
