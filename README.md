@@ -64,7 +64,7 @@ Every time a new Champions Meeting drops, the meta shifts drastically. Opponents
 - **🧠 Machine Learning** — Trained on thousands of umas' race records, including rank, stats, skills, race condition, etc. I use `Feature Subspace Stacking` method with 2 base models `(LightGBM and XGBoost)` and a meta model `(LogisticRegression)`, to handle `High-Dimensional Data`.
 
 ## 📁 Documentation
-For a detailed explaination, check out the [Architecture Documentation](docs/ARCHITECTURE.MD)
+For a detailed explaination, check out the [Architecture Documentation](docs/ARCHITECTURE.md)
 
 ## About This Project
 I'm a self-taught programmer, and this project is basically how I learned to code. I spent around 7 months building it from scratch. I designed the pipeline, the matching logic, and the data cleaning workflow myself, and used AI as a mentor for syntax questions and picking the right library functions (OpenCV, PyTorch).
